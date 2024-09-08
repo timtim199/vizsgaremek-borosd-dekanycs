@@ -44,6 +44,6 @@
 | **Adatbázis**                | SQLite          | (tbd) Szakmaivizsga sajátosságai okán |
 | **Adatbázis Csatoló**        | EntityFramework |                                       |
 | **Backend API Szerver**      | ASP.NET Core    |                                       |
-| **Frontend Framework**       | React           |                                       |
+| **Frontend Keretrendszer**       | React           |                                       |
 | **Frontend Design Rendszer** | Fluent UI 2     |                                       |
 | **Mobil Keretrendszer**      | .NET MAUI       | (opcionális)                          |
