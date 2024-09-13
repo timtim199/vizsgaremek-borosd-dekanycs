@@ -1,13 +1,13 @@
 # Állatmenhely nyilvántartás
 ## Projekt adatok
-|                   |                                               |                                                                   |
-|-------------------|-----------------------------------------------|-------------------------------------------------------------------|
-| **Téma**          | Backend és Fronted                            | A szoftvernek várhatóan nagyobb kitettsége ezen két tantárgy felé |
-| **Témavezető**    | Méhes József                                  | A szoftvernek várhatóan nagyobb kitettsége ezen két tantárgy felé |
-| **Cél** | Állatorvosi nyilvántartó rendszer létrehozása |                                                                   |
-| **Fő platform** | Web |                                                                   |
-| **Osztály**       | 13T-II                                        |                                                                   |
-| **Csoporttagok**  | Dékány Csaba                                  | Boros Dániel                                                      |
+|                  |                                               |                                                                   |
+|------------------|-----------------------------------------------|-------------------------------------------------------------------|
+| **Téma**         | Backend és Fronted                            | A szoftvernek várhatóan nagyobb kitettsége ezen két tantárgy felé |
+| **Témavezető**   | Méhes József                                  | A szoftvernek várhatóan nagyobb kitettsége ezen két tantárgy felé |
+| **Cél**          | Állatorvosi nyilvántartó rendszer létrehozása |                                                                   |
+| **Fő platform**  | Web                                           |                                                                   |
+| **Osztály**      | 13T-II                                        |                                                                   |
+| **Csoporttagok** | Dékány Csaba                                  | Boros Dániel                                                      |
 
 
 ## Tervezett funkciók
