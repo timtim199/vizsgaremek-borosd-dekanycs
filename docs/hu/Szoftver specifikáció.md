@@ -60,7 +60,6 @@ Biztosítani kell a mobil alkalmazások és a háttérrendszer közötti biztons
 | **Tulajdonos**   | A szoftver adatbázisában szereplő állat tulajdonosa                              |
 | **Munkavállaló** | A szoftver adatbázisában szereplő "employee" szerepkörrel rendelkező felhasználó |
 | RBAC             | Role-based access control                                                        |
-|
 
 
 ## 6. További dokumentumok
