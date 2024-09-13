@@ -42,7 +42,7 @@
 Minden érzékeny információt, kifejezetten ami a felhasználó azonosítására alkalmas titkosított formában kell eltárolni az adatbázisban
 
 #### 4.1.2 Hitelesítés és jogosultságkezelés
-![](https://ekran_site_uploads.storage.googleapis.com/wp-content/uploads/2024/05/23005257/1-Role-based-Access-Control.svg)
+![](https://treewebsolutions.com/uploads/article/63/what-is-role-based-access-control-rbac_fliclzP1bLsQm9-5.jpg)
 Biztonságos bejelentkezési módszerek (felhasználónév/jelszó) használata kétfaktoros hitelesítési lehetőséggel és jelszó nélküli mobilos belépési opcióval. Szerepkör-alapú hozzáférés-vezérlés (RBAC) megvalósítása a felhasználók számára a megfelelő adathozzáférés érdekében. 
 > Passwordless bejelentkezés és a kétfaktoros hitelesítés opcionális 
 
