@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE instance-profile
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/product-profile.dtd">
+
+<instance-profile id="in"
+                 name="Instance Name" start-page="Előzetes tervek.md">
+
+    <toc-element topic="Szoftver specifikáció.md"/>
+    <toc-element topic="Előzetes tervek.md"/>
+</instance-profile>
