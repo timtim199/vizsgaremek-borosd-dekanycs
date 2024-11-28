@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace WebApi.Controllers
+namespace vetcms.WebApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]

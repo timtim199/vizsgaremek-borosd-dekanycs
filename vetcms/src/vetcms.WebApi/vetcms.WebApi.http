@@ -1,0 +1,6 @@
+@vetcms.WebApi_HostAddress = http://localhost:5042
+
+GET {{vetcms.WebApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
