@@ -4,9 +4,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using vetcms.Application.Domain.Entity;
 
-namespace vetcms.Application.Domain.Abstractions.Data
+namespace vetcms.Application.Common.Abstractions.Data
 {
     internal abstract class AuditedEntity
     {
