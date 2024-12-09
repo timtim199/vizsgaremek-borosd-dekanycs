@@ -5,7 +5,10 @@ using vetcms.Application;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddApplicationPart(typeof(DependencyInjection).Assembly)
+    .AddControllersAsServices();
+
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddCors(options => options.AddDefaultPolicy(

@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using vetcms.Application.Infrastructure.Presistence;
+using FluentValidation;
+using vetcms.SharedModels.Common.Behaviour;
 
 namespace vetcms.Application
 {
@@ -14,6 +16,16 @@ namespace vetcms.Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
+            services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
+
+            services.AddMediatR(options =>
+            {
+                options.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly);
+
+                options.AddOpenBehavior(typeof(ValidationBehaviour<,>));
+            });
+
+
             return services;
         }
 
@@ -58,6 +70,9 @@ namespace vetcms.Application
 
         private static void AddSqliteDataBase(this IServiceCollection services, IConfiguration configuration)
         {
+            var folder = Environment.SpecialFolder.LocalApplicationData;
+            var path = Environment.GetFolderPath(folder);
+
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlite(
                     "Data Source=vetcms.db",

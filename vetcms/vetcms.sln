@@ -9,6 +9,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{14E1D375-184
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "vetcms.WebApi", "src\vetcms.WebApi\vetcms.WebApi.csproj", "{3FC32995-E575-4930-B032-EADE0CF5505E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "vetcms.SharedModels", "SharedModels\vetcms.SharedModels.csproj", "{E8691EB7-2DB6-429E-9FF5-B101F0338FA8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,10 @@ Global
 		{3FC32995-E575-4930-B032-EADE0CF5505E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3FC32995-E575-4930-B032-EADE0CF5505E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3FC32995-E575-4930-B032-EADE0CF5505E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8691EB7-2DB6-429E-9FF5-B101F0338FA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8691EB7-2DB6-429E-9FF5-B101F0338FA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8691EB7-2DB6-429E-9FF5-B101F0338FA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8691EB7-2DB6-429E-9FF5-B101F0338FA8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -30,6 +36,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{8D31DD97-6378-4DA7-AB3E-0A0EEC517938} = {14E1D375-184B-4EDA-8A52-D3556C1582D9}
 		{3FC32995-E575-4930-B032-EADE0CF5505E} = {14E1D375-184B-4EDA-8A52-D3556C1582D9}
+		{E8691EB7-2DB6-429E-9FF5-B101F0338FA8} = {14E1D375-184B-4EDA-8A52-D3556C1582D9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CCC49C0E-5310-480B-A996-A97A929CE1B5}

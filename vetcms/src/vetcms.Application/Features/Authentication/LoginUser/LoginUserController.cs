@@ -7,12 +7,17 @@ using System.Threading.Tasks;
 using vetcms.Application.Common.Abstractions.Api;
 using vetcms.SharedModels.Features.Authentication;
 
-namespace vetcms.Application.Features.Authentication.RegisterUser
+namespace vetcms.Application.Features.Authentication.LoginUser
 {
     public partial class Authentication : ApiControllerBase
     {
-        [HttpPost("register")]
-        public async Task<int> RegisterUser(LoginUserCommand command)
+        public Authentication()
+        {
+            
+        }
+
+        [HttpPost("login")]
+        public async Task<int> LoginUser(LoginUserCommand command)
         {
             return await Mediator.Send(command);
         }
