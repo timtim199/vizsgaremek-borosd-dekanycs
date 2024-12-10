@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace vetcms.Application.Common.Abstractions.Api
+namespace vetcms.ServerApplication.Common.Abstractions.Api
 {
     [ApiController]
     [Route("api/v1/[controller]")]

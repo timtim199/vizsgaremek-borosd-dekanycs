@@ -25,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Common\Behaviour\" />
     <Folder Include="Domain\Abstractions\Data\" />
   </ItemGroup>
 

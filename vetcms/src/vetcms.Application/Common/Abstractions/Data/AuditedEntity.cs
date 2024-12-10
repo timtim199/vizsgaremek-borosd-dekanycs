@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace vetcms.Application.Common.Abstractions.Data
+namespace vetcms.ServerApplication.Common.Abstractions.Data
 {
     internal abstract class AuditedEntity
     {

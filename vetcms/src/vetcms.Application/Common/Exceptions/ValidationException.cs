@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FluentValidation.Results;
 
-namespace vetcms.Application.Common.Exceptions
+namespace vetcms.ServerApplication.Common.Exceptions
 {
     public class ValidationException : Exception
     {

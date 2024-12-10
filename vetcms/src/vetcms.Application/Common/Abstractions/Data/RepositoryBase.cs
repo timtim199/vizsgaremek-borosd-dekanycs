@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using vetcms.Application.Common.Exceptions;
-using vetcms.Application.Domain.Entity;
+using vetcms.ServerApplication.Common.Exceptions;
+using vetcms.ServerApplication.Domain.Entity;
 
-namespace vetcms.Application.Common.Abstractions.Data
+namespace vetcms.ServerApplication.Common.Abstractions.Data
 {
     internal abstract class RepositoryBase<T>(DbContext context) where T : AuditedEntity
     {

@@ -5,9 +5,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using vetcms.Application.Common.Abstractions.Data;
+using vetcms.ServerApplication.Common.Abstractions.Data;
 
-namespace vetcms.Application.Domain.Entity
+namespace vetcms.ServerApplication.Domain.Entity
 {
     internal class User : AuditedEntity
     {

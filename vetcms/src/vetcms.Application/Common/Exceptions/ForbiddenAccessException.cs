@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace vetcms.Application.Common.Exceptions
+namespace vetcms.ServerApplication.Common.Exceptions
 {
     public class ForbiddenAccessException : Exception
     {

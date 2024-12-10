@@ -1,7 +1,26 @@
-﻿namespace vetcms.ClientApplication
+﻿using Microsoft.Extensions.DependencyInjection;
+using MediatR;
+using FluentValidation;
+using vetcms.SharedModels.Common.Behaviour;
+using vetcms.ClientApplication.Common.Behaviours;
+namespace vetcms.ClientApplication
 {
-    public class Class1
+    public static class ClientDependencyInitializer
     {
+        public static IServiceCollection AddClientApp(this IServiceCollection services)
+        {
+            services.AddValidatorsFromAssembly(typeof(ClientDependencyInitializer).Assembly);
 
+            services.AddMediatR(options =>
+            {
+                options.RegisterServicesFromAssembly(typeof(ClientDependencyInitializer).Assembly);
+
+                options.AddOpenBehavior(typeof(ValidationBehaviour<,>));
+                options.AddOpenBehavior(typeof(UnhandledExpectionBehaviour<,>));
+            });
+
+
+            return services;
+        }
     }
 }

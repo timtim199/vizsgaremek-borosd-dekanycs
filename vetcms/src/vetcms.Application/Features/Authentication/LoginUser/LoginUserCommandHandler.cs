@@ -1,14 +1,14 @@
 ﻿using MediatR;
-using vetcms.Application.Infrastructure.Presistence;
+using vetcms.ServerApplication.Infrastructure.Presistence;
 using vetcms.SharedModels.Features.Authentication;
 
-namespace vetcms.Application.Features.Authentication.LoginUser
+namespace vetcms.ServerApplication.Features.Authentication.LoginUser
 {
-    internal class LoginUserCommandHandler(ApplicationDbContext context) : IRequestHandler<LoginUserCommand, int>
+    internal class LoginUserCommandHandler(ApplicationDbContext context) : IRequestHandler<LoginUserApiCommand, int>
     {
         private readonly ApplicationDbContext _context = context;
 
-        public Task<int> Handle(LoginUserCommand request, CancellationToken cancellationToken)
+        public Task<int> Handle(LoginUserApiCommand request, CancellationToken cancellationToken)
         {
             // kapcsolódó logika
             throw new NotImplementedException();

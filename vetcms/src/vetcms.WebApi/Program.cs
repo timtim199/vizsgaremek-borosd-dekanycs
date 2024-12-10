@@ -1,5 +1,5 @@
 using Microsoft.OpenApi.Models;
-using vetcms.Application;
+using vetcms.ServerApplication;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,7 +22,7 @@ builder.Services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo { Title =
 
 builder.Services.AddProblemDetails();
 
-builder.Services.AddApplication();
+builder.Services.AddServerApp();
 builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddHealthChecks();

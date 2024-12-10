@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\vetcms.Application\vetcms.Application.csproj" />
+    <ProjectReference Include="..\vetcms.Application\vetcms.ServerApplication.csproj" />
   </ItemGroup>
 
 </Project>

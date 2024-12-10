@@ -5,19 +5,19 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using vetcms.Application.Common.Abstractions.Data;
-using vetcms.Application.Domain.Entity;
+using vetcms.ServerApplication.Common.Abstractions.Data;
+using vetcms.ServerApplication.Domain.Entity;
 
-namespace vetcms.Application.Infrastructure.Presistence
+namespace vetcms.ServerApplication.Infrastructure.Presistence
 {
     internal class ApplicationDbContext : DbContext
     {
         DbSet<User> Users { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> contextOptions)
-            :base(contextOptions)
+            : base(contextOptions)
         {
-            
+
         }
 
         public override async Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)

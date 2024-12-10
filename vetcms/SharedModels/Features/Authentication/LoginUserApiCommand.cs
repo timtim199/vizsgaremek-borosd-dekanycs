@@ -8,7 +8,7 @@ using vetcms.SharedModels.Common;
 
 namespace vetcms.SharedModels.Features.Authentication
 {
-    public record LoginUserCommand : UnauthenticatedApiCommandBase<int>
+    public record LoginUserApiCommand : UnauthenticatedApiCommandBase<int>
     {
         public string Email { get; init; }
         public string Password { get; init; }
@@ -24,7 +24,7 @@ namespace vetcms.SharedModels.Features.Authentication
         }
     }
 
-    public class LoginUserCommandValidator : AbstractValidator<LoginUserCommand>
+    public class LoginUserCommandValidator : AbstractValidator<LoginUserApiCommand>
     {
         public LoginUserCommandValidator()
         {

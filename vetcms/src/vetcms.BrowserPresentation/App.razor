@@ -1,6 +1,6 @@
-﻿<FluentDesignTheme StorageName="theme" />
-<Router AppAssembly="@typeof(App).Assembly">
+﻿<Router AppAssembly="@typeof(App).Assembly">
     <Found Context="routeData">
+        <FluentDialogProvider />
         <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
     </Found>
     <NotFound>

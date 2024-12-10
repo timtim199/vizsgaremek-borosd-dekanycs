@@ -10,7 +10,7 @@ namespace vetcms.ServerApplication
     public static class ServerDependencyInitializer
 
     {
-        public static IServiceCollection AddApplication(this IServiceCollection services)
+        public static IServiceCollection AddServerApp(this IServiceCollection services)
         {
             services.AddValidatorsFromAssembly(typeof(ServerDependencyInitializer).Assembly);
 
