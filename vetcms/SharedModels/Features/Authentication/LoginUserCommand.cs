@@ -12,6 +12,16 @@ namespace vetcms.SharedModels.Features.Authentication
     {
         public string Email { get; init; }
         public string Password { get; init; }
+
+        public override string GetApiEndpoint()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override HttpMethod GetApiMethod()
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class LoginUserCommandValidator : AbstractValidator<LoginUserCommand>

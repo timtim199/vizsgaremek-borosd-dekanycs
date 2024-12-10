@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
-using vetcms.Application.Common.Exceptions;
+using vetcms.ServerApplication.Common.Exceptions;
 
 namespace vetcms.WebApi.Filters
 {

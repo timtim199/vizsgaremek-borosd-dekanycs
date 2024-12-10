@@ -1,26 +1,22 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using vetcms.Application.Infrastructure.Presistence;
 using FluentValidation;
+using vetcms.ServerApplication.Infrastructure.Presistence;
 using vetcms.SharedModels.Common.Behaviour;
 
-namespace vetcms.Application
+namespace vetcms.ServerApplication
 {
-    public static class DependencyInjection
+    public static class ServerDependencyInitializer
+
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
-            services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
+            services.AddValidatorsFromAssembly(typeof(ServerDependencyInitializer).Assembly);
 
             services.AddMediatR(options =>
             {
-                options.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly);
+                options.RegisterServicesFromAssembly(typeof(ServerDependencyInitializer).Assembly);
 
                 options.AddOpenBehavior(typeof(ValidationBehaviour<,>));
             });
@@ -31,23 +27,23 @@ namespace vetcms.Application
 
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            InitializeDatabaseDriver(services, configuration);
+            services.InitializeDatabaseDriver(configuration);
             return services;
         }
 
         private static void InitializeDatabaseDriver(this IServiceCollection services, IConfiguration configuration)
         {
-            switch ((configuration.GetValue<string>("database_driver")))
+            switch (configuration.GetValue<string>("database_driver"))
             {
                 case "InMemory":
-                    AddInMemoryDatabase(services, configuration);
+                    services.AddInMemoryDatabase(configuration);
                     break;
                 case "MsSqlServer":
-                    AddMsSqlServerDatabase(services, configuration);
+                    services.AddMsSqlServerDatabase(configuration);
                     break;
                 case "sqlite":
                     Console.WriteLine("sqlite");
-                    AddSqliteDataBase(services, configuration);
+                    services.AddSqliteDataBase(configuration);
                     break;
                 default:
                     break;
@@ -77,7 +73,7 @@ namespace vetcms.Application
                 options.UseSqlite(
                     "Data Source=vetcms.db",
                     b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)
-                    
+
                 )
             );
         }

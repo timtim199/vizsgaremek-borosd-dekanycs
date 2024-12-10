@@ -9,7 +9,7 @@ using vetcms.SharedModels.Features.Authentication;
 
 namespace vetcms.Application.Features.Authentication.RegisterUser
 {
-    public partial class Authentication : ApiControllerBase
+    public partial class Authentication : ApiV1ControllerBase
     {
         [HttpPost("register")]
         public async Task<int> RegisterUser(LoginUserCommand command)

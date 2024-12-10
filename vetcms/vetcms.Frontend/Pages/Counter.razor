@@ -1,0 +1,30 @@
+﻿@page "/counter"
+@inject IDialogService DialogService
+
+<PageTitle>Counter</PageTitle>
+
+<h1>Counter</h1>
+
+<p role="status">Current count: <FluentBadge Appearance="Appearance.Neutral">@currentCount</FluentBadge></p>
+
+<FluentButton Appearance="Appearance.Accent" @onclick="IncrementCount">Click me</FluentButton>
+<FluentButton OnClick="@ShowSuccessAsync" Appearance="Appearance.Accent">Success</FluentButton>
+
+
+@code {
+    private int currentCount = 0;
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+
+    bool? canceled;
+
+    private async Task ShowSuccessAsync()
+    {
+        var dialog = await DialogService.ShowSuccessAsync("The action was a success");
+        var result = await dialog.Result;
+        canceled = result.Cancelled;
+    }
+}
