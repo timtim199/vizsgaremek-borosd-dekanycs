@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using vetcms.ServerApplication.Common;
 using vetcms.ServerApplication.Common.Abstractions.Api;
+using vetcms.SharedModels.Common;
+using vetcms.SharedModels.Common.Abstract;
 using vetcms.SharedModels.Features.Authentication;
 
 namespace vetcms.ServerApplication.Features.Authentication.LoginUser
@@ -12,8 +15,9 @@ namespace vetcms.ServerApplication.Features.Authentication.LoginUser
         }
 
         [HttpPost("login")]
-        public async Task<int> LoginUser(LoginUserApiCommand command)
+        public async Task<ICommandResult> LoginUser(LoginUserApiCommand command)
         {
+            command.Prepare(Request);
             return await Mediator.Send(command);
         }
     }

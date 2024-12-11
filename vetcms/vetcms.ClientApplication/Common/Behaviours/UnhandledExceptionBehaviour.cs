@@ -7,14 +7,15 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.FluentUI.AspNetCore.Components;
 using vetcms.ClientApplication.Common.Abstract;
+using vetcms.ClientApplication.Common.Exceptions;
 
 namespace vetcms.ClientApplication.Common.Behaviours
 {
-    public class UnhandledExpectionBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    public class UnhandledExceptionBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IClientCommand<TResponse>
     {
         private readonly IDialogService dialogService;
-        public UnhandledExpectionBehaviour(IDialogService _dialogService)
+        public UnhandledExceptionBehaviour(IDialogService _dialogService)
         {
         }
 
@@ -23,6 +24,11 @@ namespace vetcms.ClientApplication.Common.Behaviours
             try
             {
                 return await next();
+            }
+            catch(ApiCommandExecutionException ex)
+            {
+                request.DialogService.ShowError(ex.Problem.detail, $"Váratlan hiba történt: {ex.Problem.title}");
+                return default;
             }
             catch (Exception ex)
             {

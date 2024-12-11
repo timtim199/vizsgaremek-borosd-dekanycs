@@ -3,6 +3,7 @@ using MediatR;
 using FluentValidation;
 using vetcms.SharedModels.Common.Behaviour;
 using vetcms.ClientApplication.Common.Behaviours;
+using vetcms.SharedModels.Features.Authentication;
 namespace vetcms.ClientApplication
 {
     public static class ClientDependencyInitializer
@@ -14,11 +15,13 @@ namespace vetcms.ClientApplication
             services.AddMediatR(options =>
             {
                 options.RegisterServicesFromAssembly(typeof(ClientDependencyInitializer).Assembly);
-
                 options.AddOpenBehavior(typeof(ValidationBehaviour<,>));
-                options.AddOpenBehavior(typeof(UnhandledExpectionBehaviour<,>));
+                options.AddOpenBehavior(typeof(UnhandledExceptionBehaviour<,>));
+                options.RegisterGenericHandlers = true;
             });
 
+            //builder.RegisterGeneric(typeof(ApiCommandHandler<>)).AsImplementedInterfaces();
+            
 
             return services;
         }
