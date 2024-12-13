@@ -16,7 +16,7 @@ namespace vetcms.SharedModels.Features.Authentication
 
         public override string GetApiEndpoint()
         {
-            return "https://webhook.site/29c4b4f4-6bcb-4501-a1fd-41a7b2e8c3c4";
+            return Path.Join(ApiBaseUrl,"c4e75e88-a051-4f19-b7fe-1c8a492ff674");
         }
 
         public override HttpMethodEnum GetApiMethod()

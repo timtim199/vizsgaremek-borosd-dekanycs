@@ -20,9 +20,6 @@ namespace vetcms.ClientApplication
                 options.RegisterGenericHandlers = true;
             });
 
-            //builder.RegisterGeneric(typeof(ApiCommandHandler<>)).AsImplementedInterfaces();
-            
-
             return services;
         }
     }

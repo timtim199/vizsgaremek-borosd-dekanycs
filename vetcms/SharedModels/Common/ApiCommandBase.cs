@@ -11,6 +11,7 @@ namespace vetcms.SharedModels.Common
     public abstract record ApiCommandBase<T> : IRequest<T>
         where T : ICommandResult
     {
+        internal const string ApiBaseUrl = "https://webhook.site/";
         public abstract string GetApiEndpoint();
         public abstract HttpMethodEnum GetApiMethod();
     }
