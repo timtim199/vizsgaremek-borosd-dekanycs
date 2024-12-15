@@ -8,8 +8,14 @@ using vetcms.ClientApplication.Common.Abstract;
 
 namespace vetcms.ClientApplication.Presistence
 {
-    internal class BrowserPresistenceDriver(ILocalStorageService localStorageService) : IClientPresistenceDriver
+    public class BrowserPresistenceDriver : IClientPresistenceDriver
     {
+        private readonly ILocalStorageService localStorageService;
+        public BrowserPresistenceDriver(ILocalStorageService _localStorageService)
+        {
+            localStorageService = _localStorageService;   
+        }
+
         public async Task SaveItem<T>(string key, T item)
         {
             await localStorageService.SetItemAsync(key, item);
@@ -18,24 +24,17 @@ namespace vetcms.ClientApplication.Presistence
         public async Task<T> GetItem<T>(string key)
         {
             T? result = await localStorageService.GetItemAsync<T>(key);
-            if (result == null)
-            {
-                throw new KeyNotFoundException($"Item not found: {key}");
-            }
-            return result;
+            return result == null ? throw new KeyNotFoundException($"Item not found: {key}") : result;
         }
         public async Task<IEnumerable<string>> GetKeysAsync<T>()
         {
-
             IEnumerable<string> keys = await localStorageService.KeysAsync();
             return keys;
-
-            /// TODO: Continue here: Implement presistence driver, and credential store
         }
 
-        public Task ClearItems()
+        public async Task ClearItems()
         {
-            throw new NotImplementedException();
+            await localStorageService.ClearAsync();
         }
     }
 }

@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.FluentUI.AspNetCore.Components;
 using vetcms.BrowserPresentation;
-using vetcms.ClientApplication;
 
 internal class Program
 {
@@ -11,7 +10,6 @@ internal class Program
         var builder = WebAssemblyHostBuilder.CreateDefault(args);
         builder.RootComponents.Add<App>("#app");
         builder.RootComponents.Add<HeadOutlet>("head::after");
-
         IDialogService dialogService = new DialogService();
 
 

@@ -10,7 +10,7 @@ namespace vetcms.ClientApplication.Common.Abstract
 {
     public class IClientCommand<T> : IRequest<T>
     {
-        public IDialogService DialogService { get; set; }
+        public readonly IDialogService DialogService;
         public IClientCommand(IDialogService _dialogService)
         {
             DialogService = _dialogService;

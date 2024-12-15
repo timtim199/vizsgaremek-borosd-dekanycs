@@ -11,6 +11,7 @@ namespace vetcms.SharedModels.Common
         Get,
         Post,
         Put,
-        Delete
+        Delete,
+        Patch,
     }
 }

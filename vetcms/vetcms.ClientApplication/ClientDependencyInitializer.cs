@@ -4,6 +4,10 @@ using FluentValidation;
 using vetcms.SharedModels.Common.Behaviour;
 using vetcms.ClientApplication.Common.Behaviours;
 using vetcms.SharedModels.Features.Authentication;
+using vetcms.ClientApplication.Common.Abstract;
+using vetcms.ClientApplication.Presistence;
+using vetcms.ClientApplication.Common.Authentication;
+using Blazored.LocalStorage;
 namespace vetcms.ClientApplication
 {
     public static class ClientDependencyInitializer
@@ -20,7 +24,17 @@ namespace vetcms.ClientApplication
                 options.RegisterGenericHandlers = true;
             });
 
+            services.AddScoped<CredentialStore, CredentialStore>();
+
             return services;
+        }
+
+        public static IServiceCollection AddBrowserPresistence(this IServiceCollection services)
+        {
+            services.AddBlazoredLocalStorage();
+            services.AddScoped<IClientPresistenceDriver, BrowserPresistenceDriver>();
+            return services;
+
         }
     }
 }

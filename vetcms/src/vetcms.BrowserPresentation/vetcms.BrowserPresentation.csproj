@@ -19,8 +19,4 @@
     <ProjectReference Include="..\..\vetcms.ClientApplication\vetcms.ClientApplication.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Common\Behaviour\" />
-  </ItemGroup>
-
 </Project>

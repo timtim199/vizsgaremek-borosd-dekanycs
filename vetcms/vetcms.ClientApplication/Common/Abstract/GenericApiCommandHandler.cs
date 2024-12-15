@@ -1,7 +1,10 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
+using vetcms.ClientApplication.Common.Authentication;
 using vetcms.ClientApplication.Common.Exceptions;
 using vetcms.SharedModels.Common;
 using vetcms.SharedModels.Common.Abstract;
@@ -13,46 +16,102 @@ namespace vetcms.ClientApplication.Common.Abstract
     where TResult : ICommandResult
     {
         private readonly HttpClient _httpClient;
-        public GenericApiCommandHandler(HttpClient httpClient)
+        private readonly CredentialStore _credentialStore;
+        public GenericApiCommandHandler(HttpClient httpClient, CredentialStore credentialStore)
         {
             _httpClient = httpClient;
+            _credentialStore = credentialStore;
 
         }
 
         public async Task<TResult> Handle(TCommand request, CancellationToken cancellationToken)
         {
-            return await DispatchRequest(request);
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",await _credentialStore.GetAccessToken()
+                );
+            var response = await DispatchRequest(request);
+            return await ProcessResponse(response);
         }
 
-        private async Task<TResult> DispatchRequest(TCommand request)
+        private async Task<HttpResponseMessage?> DispatchRequest(TCommand request)
         {
             switch (request.GetApiMethod())
             {
                 case HttpMethodEnum.Get:
                     return await ProcessGet(request);
+                case HttpMethodEnum.Post:
+                    return await ProcessPost(request);
+                case HttpMethodEnum.Patch:
+                    return await ProcessPatch(request);
+                case HttpMethodEnum.Put:
+                    return await ProcessPut(request);
+                case HttpMethodEnum.Delete:
+                    return await ProcessDelete(request);
                 default:
-                    throw new NotImplementedException();
+                    throw new NotImplementedException($"Http method not found: {Enum.GetName(request.GetApiMethod())}");
             }
         }
 
-        private async Task<TResult> ProcessGet(TCommand command)
+        private async Task<HttpResponseMessage?> ProcessGet(TCommand command)
         {
-            var response = await _httpClient.GetAsync(command.GetApiEndpoint());
+            return await _httpClient.GetAsync(command.GetApiEndpoint());
+        }
+
+        private async Task<HttpResponseMessage?> ProcessPost(TCommand command)
+        {
+            return await _httpClient.PostAsJsonAsync(command.GetApiEndpoint(), command);
+        }
+
+        private async Task<HttpResponseMessage?> ProcessPatch(TCommand command)
+        {
+            return await _httpClient.PatchAsJsonAsync(command.GetApiEndpoint(), command);
+        }
+
+        private async Task<HttpResponseMessage?> ProcessPut(TCommand command)
+        {
+            return await _httpClient.PutAsJsonAsync(command.GetApiEndpoint(), command);
+        }
+
+        private async Task<HttpResponseMessage?> ProcessDelete(TCommand command)
+        {
+            return await _httpClient.DeleteAsync(command.GetApiEndpoint());
+        }
+
+
+        private async Task<TResult> ProcessResponse(HttpResponseMessage? response)
+        {
+            if(response == null)
+            {
+                throw new Exception("A szerver nem válaszolt a kérésre");
+            }
             if (response.IsSuccessStatusCode)
             {
-                string content = await response.Content.ReadAsStringAsync();
-                throw new Exception(content);
+                return await ProcessResult(response);
             }
-            else if(response.StatusCode == HttpStatusCode.InternalServerError)
+            else if (response.StatusCode == HttpStatusCode.InternalServerError)
             {
                 ProblemDetails? problem = await response.Content.ReadFromJsonAsync<ProblemDetails>();
-                if(problem != null)
+                if (problem != null)
                 {
                     throw new ApiCommandExecutionException(problem);
                 }
+                throw new Exception("Szerveroldali hiba történt a kérés során");
+            }
+            else
+            {
                 throw new Exception("Ismeretlen hiba történt a kérés során");
             }
-            return default;
+        }
+
+        private async Task<TResult> ProcessResult(HttpResponseMessage response)
+        {
+            string content = await response.Content.ReadAsStringAsync();
+            TResult? result = JsonSerializer.Deserialize<TResult>(content);
+            if(result == null)
+            {
+                throw new Exception("Üres vagy helytelen Http válasz.");
+            }
+            return result;
         }
     }
 }

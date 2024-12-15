@@ -8,9 +8,9 @@ namespace vetcms.ClientApplication.Common.Abstract
 {
     internal interface IClientPresistenceDriver
     {
-        public Task SaveItem<T>(string key, T item);
-        public Task<T> GetItem<T>(string key);
-        public Task<List<T>> GetKeysAsync<T>();
-        public Task ClearItems();
+        internal Task SaveItem<T>(string key, T item);
+        internal Task<T> GetItem<T>(string key);
+        internal Task<IEnumerable<string>> GetKeysAsync<T>();
+        internal Task ClearItems();
     }
 }
