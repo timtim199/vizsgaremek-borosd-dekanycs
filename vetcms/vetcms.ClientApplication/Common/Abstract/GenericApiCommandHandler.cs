@@ -16,8 +16,8 @@ namespace vetcms.ClientApplication.Common.Abstract
     where TResult : ICommandResult
     {
         private readonly HttpClient _httpClient;
-        private readonly CredentialStore _credentialStore;
-        public GenericApiCommandHandler(HttpClient httpClient, CredentialStore credentialStore)
+        private readonly AuthenticationManger _credentialStore;
+        public GenericApiCommandHandler(HttpClient httpClient, AuthenticationManger credentialStore)
         {
             _httpClient = httpClient;
             _credentialStore = credentialStore;

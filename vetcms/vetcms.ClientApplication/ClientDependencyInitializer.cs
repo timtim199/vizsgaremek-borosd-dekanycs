@@ -24,7 +24,7 @@ namespace vetcms.ClientApplication
                 options.RegisterGenericHandlers = true;
             });
 
-            services.AddScoped<CredentialStore, CredentialStore>();
+            services.AddScoped<AuthenticationManger, AuthenticationManger>();
 
             return services;
         }

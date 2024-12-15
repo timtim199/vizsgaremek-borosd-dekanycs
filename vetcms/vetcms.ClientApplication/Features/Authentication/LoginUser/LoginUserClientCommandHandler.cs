@@ -24,7 +24,7 @@ namespace vetcms.ClientApplication.Features.Authentication.LoginUser
 
     internal class LoginUserApiCommandHandler : GenericApiCommandHandler<LoginUserApiCommand, ICommandResult>
     {
-        public LoginUserApiCommandHandler(HttpClient httpClient, CredentialStore credentialStore)
+        public LoginUserApiCommandHandler(HttpClient httpClient, AuthenticationManger credentialStore)
             :base(httpClient, credentialStore)
         {
         }

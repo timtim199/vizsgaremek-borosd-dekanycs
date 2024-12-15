@@ -8,13 +8,13 @@ using vetcms.ClientApplication.Presistence;
 
 namespace vetcms.ClientApplication.Common.Authentication
 {
-    internal class CredentialStore
+    internal class AuthenticationManger
     {
         private readonly IClientPresistenceDriver _presistenceDriver;
 
 
         const string accessTokenPresistenceKey = "access-token";
-        public CredentialStore(IClientPresistenceDriver presistenceDriver)
+        public AuthenticationManger(IClientPresistenceDriver presistenceDriver)
         {
             _presistenceDriver = presistenceDriver;
         }

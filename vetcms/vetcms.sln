@@ -15,7 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentatio
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "vetcms.ClientApplication", "vetcms.ClientApplication\vetcms.ClientApplication.csproj", "{0CF13B1F-254A-4E00-A35D-4B0E290E9EBA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "vetcms.BrowserPresentation", "src\vetcms.BrowserPresentation\vetcms.BrowserPresentation.csproj", "{CF37AC65-4AD5-4A4C-8D7C-9526C8CC3FF4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "vetcms.BrowserPresentation", "src\vetcms.BrowserPresentation\vetcms.BrowserPresentation.csproj", "{CF37AC65-4AD5-4A4C-8D7C-9526C8CC3FF4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
