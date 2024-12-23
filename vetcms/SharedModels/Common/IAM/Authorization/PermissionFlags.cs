@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace vetcms.ServerApplication.Infrastructure.Presistence.Repository
+namespace vetcms.SharedModels.Common.IAM.Authorization
 {
-    internal class UserRepositoryCommands
+    public enum PermissionFlags
     {
+        IAM_LOGIN
     }
 }

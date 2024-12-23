@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using vetcms.ClientApplication.Common.Abstract;
 
-namespace vetcms.ClientApplication.Features.Authentication.LoginUser
+namespace vetcms.ClientApplication.Features.IAM.LoginUser
 {
     public class LoginUserClientCommand : IClientCommand<bool>
     {

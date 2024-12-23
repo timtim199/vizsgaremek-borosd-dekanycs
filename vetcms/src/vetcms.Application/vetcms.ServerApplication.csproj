@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Domain\Abstractions\**" />
+    <EmbeddedResource Remove="Domain\Abstractions\**" />
+    <None Remove="Domain\Abstractions\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="FluentValidation" Version="11.11.0" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageReference Include="MediatR" Version="12.4.1" />
@@ -26,7 +32,6 @@
 
   <ItemGroup>
     <Folder Include="Common\Behaviour\" />
-    <Folder Include="Domain\Abstractions\Data\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using vetcms.ClientApplication.Common.Abstract;
 
-namespace vetcms.ClientApplication.Common.Authentication.Commands.AuthenticationStatus
+namespace vetcms.ClientApplication.Common.IAM.Commands.AuthenticationStatus
 {
     public class AuthenticatedStatusQuery : IClientCommand<AuthenticatedStatusResponseModel>
     {

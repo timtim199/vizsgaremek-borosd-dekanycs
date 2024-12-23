@@ -17,6 +17,7 @@ namespace vetcms.WebApi.Filters
                 { typeof(NotFoundException), HandleNotFoundException },
                 { typeof(UnauthorizedAccessException), HandleUnauthorizedAccessException },
                 { typeof(ForbiddenAccessException), HandleForbiddenAccessException },
+                { typeof(CommonBusinessLogicException), HandleCommonBusinessLogicException },
             };
         }
 
@@ -115,6 +116,26 @@ namespace vetcms.WebApi.Filters
             context.ExceptionHandled = true;
         }
 
+        private void HandleCommonBusinessLogicException(ExceptionContext context)
+        {
+            if(!(context.Exception is CommonBusinessLogicException) || context.Exception == null)
+            {
+                HandleUnknownException(context);
+                return;
+            }
+            int status = (context.Exception as CommonBusinessLogicException).status;
+            ProblemDetails details = new()
+            {
+                Status = status,
+                Title = "An error occurred while processing your request.",
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.3",
+            };
+
+            context.Result = new ObjectResult(details) { StatusCode = First3Digits(status) };
+
+            context.ExceptionHandled = true;
+        }
+
         private void HandleUnknownException(ExceptionContext context)
         {
             ProblemDetails details = new()
@@ -127,6 +148,13 @@ namespace vetcms.WebApi.Filters
             context.Result = new ObjectResult(details) { StatusCode = StatusCodes.Status500InternalServerError };
 
             context.ExceptionHandled = true;
+        }
+
+        private int First3Digits(int number)
+        {
+            string firstThreeDigits = number.ToString().Substring(0, 3);
+            int firstThreeDigitsAsNumber = int.Parse(firstThreeDigits);
+            return firstThreeDigitsAsNumber;    
         }
     }
 }
