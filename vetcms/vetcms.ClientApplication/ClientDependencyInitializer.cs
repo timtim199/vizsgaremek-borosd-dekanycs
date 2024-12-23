@@ -3,11 +3,11 @@ using MediatR;
 using FluentValidation;
 using vetcms.SharedModels.Common.Behaviour;
 using vetcms.ClientApplication.Common.Behaviours;
-using vetcms.SharedModels.Features.Authentication;
+using vetcms.SharedModels.Features.IAM;
 using vetcms.ClientApplication.Common.Abstract;
 using vetcms.ClientApplication.Presistence;
-using vetcms.ClientApplication.Common.Authentication;
 using Blazored.LocalStorage;
+using vetcms.ClientApplication.Common.IAM;
 namespace vetcms.ClientApplication
 {
     public static class ClientDependencyInitializer

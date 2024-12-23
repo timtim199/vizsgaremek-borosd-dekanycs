@@ -6,17 +6,18 @@ using System.Text;
 using System.Threading.Tasks;
 using vetcms.SharedModels.Common;
 using vetcms.SharedModels.Common.Abstract;
+using vetcms.SharedModels.Common.IAM.Authorization;
 
-namespace vetcms.SharedModels.Features.Authentication
+namespace vetcms.SharedModels.Features.IAM
 {
-    public record LoginUserApiCommand : UnauthenticatedApiCommandBase<ICommandResult>
+    public record LoginUserApiCommand : UnauthenticatedApiCommandBase<LoginUserApiCommandResponse>
     {
         public string Email { get; init; }
         public string Password { get; init; }
 
         public override string GetApiEndpoint()
         {
-            return Path.Join(ApiBaseUrl,"c4e75e88-a051-4f19-b7fe-1c8a492ff674");
+            return Path.Join(ApiBaseUrl, "c4e75e88-a051-4f19-b7fe-1c8a492ff674");
         }
 
         public override HttpMethodEnum GetApiMethod()
@@ -31,6 +32,18 @@ namespace vetcms.SharedModels.Features.Authentication
         {
             RuleFor(x => x.Email).NotEmpty().EmailAddress();
             RuleFor(x => x.Password).NotEmpty();
+        }
+    }
+
+    public record LoginUserApiCommandResponse : ICommandResult
+    {
+        public bool Success { get; set; }
+        public string Message { get; set; }
+        public string PermissionSet { get; set; }
+        public string AccessToken { get; set; }
+        public EntityPermissions GetPermissions()
+        {
+            return new EntityPermissions(PermissionSet);
         }
     }
 }

@@ -3,9 +3,9 @@ using vetcms.ServerApplication.Common;
 using vetcms.ServerApplication.Common.Abstractions.Api;
 using vetcms.SharedModels.Common;
 using vetcms.SharedModels.Common.Abstract;
-using vetcms.SharedModels.Features.Authentication;
+using vetcms.SharedModels.Features.IAM;
 
-namespace vetcms.ServerApplication.Features.Authentication.LoginUser
+namespace vetcms.ServerApplication.Features.IAM.LoginUser
 {
     public partial class Authentication : ApiV1ControllerBase
     {

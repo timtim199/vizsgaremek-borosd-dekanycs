@@ -14,6 +14,11 @@ namespace vetcms.ServerApplication.Infrastructure.Presistence
     {
         DbSet<User> Users { get; set; }
 
+        public ApplicationDbContext()
+        {
+            
+        }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> contextOptions)
             : base(contextOptions)
         {

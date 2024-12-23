@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using vetcms.ClientApplication.Common.Abstract;
 using vetcms.ClientApplication.Presistence;
 
-namespace vetcms.ClientApplication.Common.Authentication
+namespace vetcms.ClientApplication.Common.IAM
 {
     internal class AuthenticationManger
     {

@@ -1,0 +1,71 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace vetcms.ServerApplication.Features.IAM
+{
+    internal class PasswordUtility
+    {
+        internal const int SaltSize = 16;
+
+        internal byte[] GenerateSalt(int size = SaltSize)
+        {
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                byte[] salt = new byte[size];
+                rng.GetBytes(salt);
+                return salt;
+            }
+        }
+
+        internal byte[] HashPasswordWithSalt(string password, byte[] salt)
+        {
+            using (var sha256 = SHA256.Create())
+            {
+                string saltedPassword = Convert.ToBase64String(salt) + password;
+                byte[] plainSaltedPassword = Encoding.UTF8.GetBytes(saltedPassword);
+                byte[] hashedPassword = salt.Concat(sha256.ComputeHash(plainSaltedPassword)).ToArray();
+
+                return hashedPassword;
+            }
+        }
+
+        internal byte[] GetSaltFromHashedPassword(byte[] hashedPasswordBytes)
+        {
+            byte[] salt = hashedPasswordBytes.Take(SaltSize).ToArray();
+            return salt;
+        }
+
+        public string HashPassword(string password)
+        {
+            return Convert.ToBase64String(HashPasswordWithSalt(password, GenerateSalt()));
+        }
+
+        public bool VerifyPassword(string password, string hashedPassword)
+        {
+            try
+            {
+                byte[] hashedPasswordBytes = Convert.FromBase64String(hashedPassword);
+                byte[] salt = GetSaltFromHashedPassword(hashedPasswordBytes);
+
+                byte[] inputPasswordHash = HashPasswordWithSalt(password, salt);
+
+
+                return hashedPasswordBytes.SequenceEqual(inputPasswordHash);
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+
+        }
+
+        public string GenerateRandomString(int length = 16)
+        {
+            return Guid.NewGuid().ToString("N").Substring(0, length);
+        }
+    }
+}

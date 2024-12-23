@@ -15,6 +15,11 @@ namespace vetcms.ServerApplication.Infrastructure.Presistence.Repository
         {
         }
 
+        public User GetByEmail(string email)
+        {
+            return Where((u) => u.Email == email).First();
+        }
+
         public override Task SeedSampleData()
         {
             throw new NotImplementedException();

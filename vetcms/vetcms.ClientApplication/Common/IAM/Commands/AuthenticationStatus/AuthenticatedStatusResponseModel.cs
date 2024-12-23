@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace vetcms.ClientApplication.Common.Authentication.Commands.AuthenticationStatus
+namespace vetcms.ClientApplication.Common.IAM.Commands.AuthenticationStatus
 {
     public record AuthenticatedStatusResponseModel
     {

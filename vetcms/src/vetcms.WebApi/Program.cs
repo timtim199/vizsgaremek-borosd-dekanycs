@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using vetcms.ServerApplication;
 
@@ -22,8 +23,11 @@ builder.Services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo { Title =
 
 builder.Services.AddProblemDetails();
 
+// csekkolja hogy az ef add-migrationba futtatja, és akkor nem hajtja végre, mert magyarázni fog a mediatr
+if(!EF.IsDesignTime)
+    builder.Services.AddInfrastructure(builder.Configuration);
+
 builder.Services.AddServerApp();
-builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddHealthChecks();
 builder.Services.AddHttpContextAccessor();

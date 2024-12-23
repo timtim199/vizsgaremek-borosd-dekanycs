@@ -10,6 +10,10 @@ namespace vetcms.SharedModels.Common
     public abstract record AuthenticatedApiCommandBase<T> : ApiCommandBase<T>
         where T : ICommandResult
     {
+        protected AuthenticatedApiCommandBase()
+        {
+            
+        }
         public string? BearerToken { get; set; }
     }
 }
