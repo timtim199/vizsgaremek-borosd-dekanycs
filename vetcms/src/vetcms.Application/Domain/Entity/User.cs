@@ -18,10 +18,16 @@ namespace vetcms.ServerApplication.Domain.Entity
         public string VisibleName { get; set; }
         public string Password { get; set; }
 
-        public string PermissionSet { get; set; }
+        public string PermissionSet { get; private set; } = new EntityPermissions().AddFlag(PermissionFlags.CAN_LOGIN).ToString();
         public EntityPermissions GetPermissions()
         {
             return new EntityPermissions(PermissionSet);
+        }
+
+        public User OverwritePermissions(EntityPermissions newPermissions)
+        {
+            PermissionSet = newPermissions.ToString();
+            return this;    
         }
     }
 }

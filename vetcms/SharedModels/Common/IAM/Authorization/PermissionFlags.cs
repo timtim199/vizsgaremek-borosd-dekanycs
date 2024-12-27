@@ -8,6 +8,6 @@ namespace vetcms.SharedModels.Common.IAM.Authorization
 {
     public enum PermissionFlags
     {
-        IAM_LOGIN
+        CAN_LOGIN
     }
 }

@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using FluentValidation;
 using vetcms.ServerApplication.Infrastructure.Presistence;
 using vetcms.SharedModels.Common.Behaviour;
+using vetcms.ServerApplication.Infrastructure.Presistence.Repository;
+using Microsoft.AspNetCore.Routing;
+using vetcms.ServerApplication.Common.IAM;
 
 namespace vetcms.ServerApplication
 {
@@ -21,6 +24,10 @@ namespace vetcms.ServerApplication
                 options.AddOpenBehavior(typeof(ValidationBehaviour<,>));
             });
 
+            services.Configure<RouteOptions>(o =>
+            {
+                o.LowercaseUrls = true;
+            });
 
             return services;
         }
@@ -28,6 +35,8 @@ namespace vetcms.ServerApplication
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             services.InitializeDatabaseDriver(configuration);
+            services.InitializeRepositoryComponents(configuration);
+            services.AddScoped<AuthenticationCommon>();
             return services;
         }
 
@@ -46,8 +55,14 @@ namespace vetcms.ServerApplication
                     services.AddSqliteDataBase(configuration);
                     break;
                 default:
+                    Console.WriteLine("no db specified");
                     break;
             }
+        }
+
+        private static void InitializeRepositoryComponents(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddScoped<UserRepository>();
         }
 
         private static void AddInMemoryDatabase(this IServiceCollection services, IConfiguration configuration)

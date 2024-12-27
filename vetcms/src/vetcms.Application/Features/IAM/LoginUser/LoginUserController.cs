@@ -7,9 +7,9 @@ using vetcms.SharedModels.Features.IAM;
 
 namespace vetcms.ServerApplication.Features.IAM.LoginUser
 {
-    public partial class Authentication : ApiV1ControllerBase
+    public partial class IamController : ApiV1ControllerBase
     {
-        public Authentication()
+        public IamController()
         {
 
         }

@@ -11,7 +11,7 @@ namespace vetcms.ServerApplication.Infrastructure.Presistence.Repository
 {
     internal class UserRepository : RepositoryBase<User>
     {
-        public UserRepository(DbContext context) : base(context)
+        public UserRepository(ApplicationDbContext context) : base(context)
         {
         }
 

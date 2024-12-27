@@ -38,29 +38,44 @@ namespace vetcms.SharedModels.Common.IAM.Authorization
             return (permissionSet & (BigInteger.One << position)) != 0;
         }
 
-        public void ClearAllFlags()
+        public EntityPermissions ClearAllFlags()
         {
             permissionSet = BigInteger.Zero;
+            return this;
         }
 
-        public void RemoveFlag(PermissionFlags flag)
+        public EntityPermissions RemoveFlag(PermissionFlags flag)
         {
             RemoveFlagAtPosition((int)flag);
+            return this;
         }
 
-        private void RemoveFlagAtPosition(int position)
+        private EntityPermissions RemoveFlagAtPosition(int position)
         {
             permissionSet &= ~(BigInteger.One << position);
+            return this;
+
         }
 
-        public void AddFlag(PermissionFlags flag)
+        public EntityPermissions AddFlag(PermissionFlags flag)
         {
             AddFlagAtPosition((int)flag);
+            return this;
         }
 
-        public void AddFlagAtPosition(int position)
+        public EntityPermissions AddFlag(params PermissionFlags[] flags)
+        {
+            foreach(PermissionFlags permissionFlag in flags)
+            {
+                AddFlagAtPosition((int)permissionFlag);
+            }
+            return this;
+        }
+
+        private EntityPermissions AddFlagAtPosition(int position)
         {
             permissionSet |= BigInteger.One << position;
+            return this;
         }
 
         public EntityPermissions MergePermissions(EntityPermissions other)
