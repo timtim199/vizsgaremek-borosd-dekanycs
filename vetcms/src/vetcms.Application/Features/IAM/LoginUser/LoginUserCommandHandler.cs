@@ -18,8 +18,7 @@ namespace vetcms.ServerApplication.Features.IAM.LoginUser
             User user = userRepository.GetByEmail(request.Email);
             if (user.GetPermissions().HasPermissionFlag(PermissionFlags.CAN_LOGIN))
             {
-                PasswordUtility utility = new PasswordUtility();
-                if(utility.VerifyPassword(request.Password, user.Password))
+                if(PasswordUtility.VerifyPassword(request.Password, user.Password))
                 {
                     return Task.FromResult(new LoginUserApiCommandResponse()
                     {

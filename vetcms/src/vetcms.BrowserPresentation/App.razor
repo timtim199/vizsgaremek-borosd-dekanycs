@@ -1,4 +1,5 @@
-﻿<Router AppAssembly="@typeof(App).Assembly">
+﻿<FluentToastProvider MaxToastCount="10" />
+<Router AppAssembly="@typeof(App).Assembly">
     <Found Context="routeData">
         <FluentDialogProvider />
         <RouteView @rendermode="InteractiveAuto" RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />

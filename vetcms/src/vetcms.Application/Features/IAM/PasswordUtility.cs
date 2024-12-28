@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace vetcms.ServerApplication.Features.IAM
 {
-    internal class PasswordUtility
+    internal static class PasswordUtility
     {
         internal const int SaltSize = 16;
 
-        internal byte[] GenerateSalt(int size = SaltSize)
+        internal static byte[] GenerateSalt(int size = SaltSize)
         {
             using (var rng = RandomNumberGenerator.Create())
             {
@@ -21,7 +21,7 @@ namespace vetcms.ServerApplication.Features.IAM
             }
         }
 
-        internal byte[] HashPasswordWithSalt(string password, byte[] salt)
+        internal static byte[] HashPasswordWithSalt(string password, byte[] salt)
         {
             using (var sha256 = SHA256.Create())
             {
@@ -33,18 +33,18 @@ namespace vetcms.ServerApplication.Features.IAM
             }
         }
 
-        internal byte[] GetSaltFromHashedPassword(byte[] hashedPasswordBytes)
+        internal static byte[] GetSaltFromHashedPassword(byte[] hashedPasswordBytes)
         {
             byte[] salt = hashedPasswordBytes.Take(SaltSize).ToArray();
             return salt;
         }
 
-        public string HashPassword(string password)
+        public static string HashPassword(string password)
         {
             return Convert.ToBase64String(HashPasswordWithSalt(password, GenerateSalt()));
         }
 
-        public bool VerifyPassword(string password, string hashedPassword)
+        public static bool VerifyPassword(string password, string hashedPassword)
         {
             try
             {
@@ -63,7 +63,7 @@ namespace vetcms.ServerApplication.Features.IAM
 
         }
 
-        public string GenerateRandomString(int length = 16)
+        public static string GenerateRandomString(int length = 16)
         {
             return Guid.NewGuid().ToString("N").Substring(0, length);
         }

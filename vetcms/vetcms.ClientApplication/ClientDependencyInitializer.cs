@@ -8,6 +8,7 @@ using vetcms.ClientApplication.Common.Abstract;
 using vetcms.ClientApplication.Presistence;
 using Blazored.LocalStorage;
 using vetcms.ClientApplication.Common.IAM;
+using vetcms.ClientApplication.Features.IAM.LoginUser;
 namespace vetcms.ClientApplication
 {
     public static class ClientDependencyInitializer
@@ -25,6 +26,9 @@ namespace vetcms.ClientApplication
             });
 
             services.AddScoped<AuthenticationManger, AuthenticationManger>();
+
+            services.AddValidatorsFromAssemblyContaining<LoginUserCommandValidator>();  // minden validatort adjon hozzá a shared lib-ből
+            services.AddValidatorsFromAssemblyContaining<LoginUserClientCommand>(); // minden validatort adjon hozzá a client appból
 
             return services;
         }

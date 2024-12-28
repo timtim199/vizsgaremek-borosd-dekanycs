@@ -25,9 +25,11 @@ builder.Services.AddProblemDetails();
 
 // csekkolja hogy az ef add-migrationba futtatja, és akkor nem hajtja végre, mert magyarázni fog a mediatr
 if(!EF.IsDesignTime)
-    builder.Services.AddInfrastructure(builder.Configuration);
+    builder.Services.AddServerApp();
 
-builder.Services.AddServerApp();
+
+builder.Services.AddInfrastructure(builder.Configuration);
+
 
 builder.Services.AddHealthChecks();
 builder.Services.AddHttpContextAccessor();

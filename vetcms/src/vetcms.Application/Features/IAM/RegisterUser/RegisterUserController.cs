@@ -13,7 +13,7 @@ namespace vetcms.ServerApplication.Features.IAM.RegisterUser
     public partial class IamController : ApiV1ControllerBase
     {
         [HttpPost("register")]
-        public async Task<ICommandResult> RegisterUser(LoginUserApiCommand command)
+        public async Task<ICommandResult> RegisterUser(RegisterUserApiCommand command)
         {
             return await Mediator.Send(command);
         }

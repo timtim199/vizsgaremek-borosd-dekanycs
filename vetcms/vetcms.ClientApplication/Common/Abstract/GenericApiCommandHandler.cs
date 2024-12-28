@@ -48,7 +48,7 @@ namespace vetcms.ClientApplication.Common.Abstract
                 case HttpMethodEnum.Delete:
                     return await ProcessDelete(request);
                 default:
-                    throw new NotImplementedException($"Http method not found: {Enum.GetName(request.GetApiMethod())}");
+                    throw new NotImplementedException($"Http method not implemented in request dispatcher: {Enum.GetName(request.GetApiMethod())}");
             }
         }
 

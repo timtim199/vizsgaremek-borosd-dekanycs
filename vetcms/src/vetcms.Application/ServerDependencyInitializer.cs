@@ -7,6 +7,7 @@ using vetcms.SharedModels.Common.Behaviour;
 using vetcms.ServerApplication.Infrastructure.Presistence.Repository;
 using Microsoft.AspNetCore.Routing;
 using vetcms.ServerApplication.Common.IAM;
+using vetcms.SharedModels.Features.IAM;
 
 namespace vetcms.ServerApplication
 {
@@ -20,7 +21,6 @@ namespace vetcms.ServerApplication
             services.AddMediatR(options =>
             {
                 options.RegisterServicesFromAssembly(typeof(ServerDependencyInitializer).Assembly);
-
                 options.AddOpenBehavior(typeof(ValidationBehaviour<,>));
             });
 
@@ -28,6 +28,9 @@ namespace vetcms.ServerApplication
             {
                 o.LowercaseUrls = true;
             });
+
+            services.AddValidatorsFromAssemblyContaining<LoginUserCommandValidator>(); // minden validatort adjon hozzá a shared lib-ből
+            services.AddValidatorsFromAssemblyContaining<ApplicationDbContext>();  // minden validatort adjon hozzá a server appból
 
             return services;
         }

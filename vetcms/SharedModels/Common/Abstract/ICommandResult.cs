@@ -8,5 +8,7 @@ namespace vetcms.SharedModels.Common.Abstract
 {
     public interface ICommandResult
     {
+        public bool Success { get; set; }
+        public string Message { get; set; }
     }
 }

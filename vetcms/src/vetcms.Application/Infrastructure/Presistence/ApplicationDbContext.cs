@@ -1,12 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using vetcms.ServerApplication.Common.Abstractions.Data;
 using vetcms.ServerApplication.Domain.Entity;
+
+//Migration: WebApi appból kell indítani.
+//    PM > add - migration PrepareUserModelToComplyWithSRS -Project vetcms.ServerApplication
+//    PM> Update-database -Project vetcms.ServerApplication
 
 namespace vetcms.ServerApplication.Infrastructure.Presistence
 {

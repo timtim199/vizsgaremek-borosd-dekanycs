@@ -11,13 +11,15 @@ using vetcms.SharedModels.Features.IAM;
 
 namespace vetcms.ClientApplication.Features.IAM.LoginUser
 {
-    internal class LoginUserClientCommandHandler(IMediator mediator) : IRequestHandler<LoginUserClientCommand, bool>
+    internal class LoginUserClientCommandHandler(IMediator mediator, AuthenticationManger authenticationManger) : IRequestHandler<LoginUserClientCommand, bool>
     {
         public async Task<bool> Handle(LoginUserClientCommand request, CancellationToken cancellationToken)
         {
             LoginUserApiCommandResponse response =  await mediator.Send(new LoginUserApiCommand());
             if(response.Success)
             {
+                await authenticationManger.SaveAccessToken(response.AccessToken);
+                await authenticationManger.SavePermissionSet(response.PermissionSet);
                 return true;
             }
             else

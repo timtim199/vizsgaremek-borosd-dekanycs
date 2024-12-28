@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using vetcms.ClientApplication.Common.Abstract;
 using vetcms.ClientApplication.Presistence;
+using vetcms.SharedModels.Common.IAM.Authorization;
 
 namespace vetcms.ClientApplication.Common.IAM
 {
@@ -14,6 +15,7 @@ namespace vetcms.ClientApplication.Common.IAM
 
 
         const string accessTokenPresistenceKey = "access-token";
+        const string permissionSetPresistenceKey = "permission-set";
         public AuthenticationManger(IClientPresistenceDriver presistenceDriver)
         {
             _presistenceDriver = presistenceDriver;
@@ -22,6 +24,11 @@ namespace vetcms.ClientApplication.Common.IAM
         internal async Task SaveAccessToken(string accessToken)
         {
             await _presistenceDriver.SaveItem(accessTokenPresistenceKey, accessToken);
+        }
+
+        internal async Task SavePermissionSet(string set)
+        {
+            await _presistenceDriver.SaveItem(permissionSetPresistenceKey, set);
         }
 
         internal async Task<string> GetAccessToken()
@@ -33,6 +40,18 @@ namespace vetcms.ClientApplication.Common.IAM
             catch (KeyNotFoundException)
             {
                 throw new UnauthorizedAccessException("Access token not found");
+            }
+        }
+
+        internal async Task<EntityPermissions> GetPermissionSet()
+        {
+            try
+            {
+                return new EntityPermissions(await _presistenceDriver.GetItem<string>(permissionSetPresistenceKey));
+            }
+            catch (KeyNotFoundException)
+            {
+                throw new UnauthorizedAccessException("Permission set not found");
             }
         }
 
@@ -52,5 +71,28 @@ namespace vetcms.ClientApplication.Common.IAM
                 return false;
             }
         }
+
+        internal async Task<bool> HasPermissionSet()
+        {
+            try
+            {
+                string token = await _presistenceDriver.GetItem<string>(permissionSetPresistenceKey);
+                if (string.IsNullOrEmpty(token))
+                {
+                    return false;
+                }
+                return true;
+            }
+            catch (KeyNotFoundException)
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> IsAuthenticated()
+            => await HasPermissionSet() &&  await HasAccessToken();
+
+        public async Task<bool> HasPermission(params PermissionFlags[] permissions)
+            => (await GetPermissionSet()).HasPermissionFlag(permissions);
     }
 }

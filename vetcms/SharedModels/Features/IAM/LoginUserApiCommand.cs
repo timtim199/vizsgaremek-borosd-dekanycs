@@ -22,7 +22,7 @@ namespace vetcms.SharedModels.Features.IAM
 
         public override HttpMethodEnum GetApiMethod()
         {
-            return HttpMethodEnum.Get;
+            return HttpMethodEnum.Post;
         }
     }
 

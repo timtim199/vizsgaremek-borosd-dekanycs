@@ -10,11 +10,11 @@ using vetcms.SharedModels.Features.IAM;
 
 namespace vetcms.ClientApplication.Common.IAM.Commands.AuthenticationStatus
 {
-    internal class AuthenticatedStatusQueryHandler : IRequestHandler<AuthenticatedStatusQuery, AuthenticatedStatusResponseModel>
+    internal class AuthenticatedStatusQueryHandler(AuthenticationManger authenticationManger) : IRequestHandler<AuthenticatedStatusQuery, AuthenticatedStatusResponseModel>
     {
         public async Task<AuthenticatedStatusResponseModel> Handle(AuthenticatedStatusQuery request, CancellationToken cancellationToken)
         {
-            return new AuthenticatedStatusResponseModel(true);
+            return new AuthenticatedStatusResponseModel(await authenticationManger.IsAuthenticated());
         }
     }
 }

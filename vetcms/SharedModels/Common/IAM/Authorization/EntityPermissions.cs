@@ -33,6 +33,16 @@ namespace vetcms.SharedModels.Common.IAM.Authorization
             return HasFlagAtPosition((int)flag);
         }
 
+        public bool HasPermissionFlag(params PermissionFlags[] flags)
+        {
+            foreach (PermissionFlags flag in flags) 
+            {
+                if(!HasFlagAtPosition((int)flag))
+                    return false;
+            }
+            return true;
+        }
+
         private bool HasFlagAtPosition(int position)
         {
             return (permissionSet & (BigInteger.One << position)) != 0;

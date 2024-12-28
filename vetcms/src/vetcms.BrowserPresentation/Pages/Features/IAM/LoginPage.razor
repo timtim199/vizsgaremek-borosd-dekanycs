@@ -1,30 +1,20 @@
 ﻿@layout UnauthenticatedLayout
-@page "/register"
+@page "/iam/login"
+@inject NavigationManager Navigation
+@inject IToastService ToastService
 
-
-<FluentGrid Justify="JustifyContent.Center">
+<FluentGrid  Justify="JustifyContent.Center" >
     <FluentGridItem xs="12" sm="6" md="4" lg="3">
         <FluentCard>
 
-            <FluentGrid Justify="JustifyContent.Center">
+            <FluentGrid Justify="JustifyContent.Center" >
 
                 <FluentGridItem xs="12" sm="12" md="12" lg="12">
-                    <h3 style="text-align:center">Regisztrálás</h3>
-                </FluentGridItem>
-
-                <FluentGridItem xs="12" sm="12" md="12" lg="12">
-                    <FluentTextField Label="Megjelenített név" TextFieldType="TextFieldType.Text" Placeholder="gipszJakab1" Required Style="width: 100%;">
-                    </FluentTextField>
+                    <h3 style="text-align:center">Bejelentkezés</h3>
                 </FluentGridItem>
 
                 <FluentGridItem xs="12" sm="12" md="12" lg="12">
                     <FluentTextField Label="Email" TextFieldType="TextFieldType.Email" Placeholder="johndoe01@example.com" Required Style="width: 100%;">
-                    </FluentTextField>
-                </FluentGridItem>
-
-
-                <FluentGridItem xs="12" sm="12" md="12" lg="12">
-                    <FluentTextField Label="Telefonszám" TextFieldType="TextFieldType.Tel" Required Style="width: 100%;">
                     </FluentTextField>
                 </FluentGridItem>
 
@@ -34,26 +24,46 @@
                     </FluentTextField>
                 </FluentGridItem>
 
-                <FluentGridItem xs="12" sm="12" md="12" lg="12">
-                    <FluentTextField Label="Jelszó mégegyszer" TextFieldType="@(ShowPassword ? TextFieldType.Text : TextFieldType.Password)" Required Style="width: 100%;">
-                        <FluentIcon Value="@ChangeIcon()" @onclick="ToglePasswordVisibility" Color="@Color.Neutral" Slot="end" />
-                    </FluentTextField>
+                <FluentGridItem xs="12" sm="12" md="12" lg="12" Justify="JustifyContent.Center">
+                    <FluentCheckbox Label="Jegyezzen meg">
+                    </FluentCheckbox>
+                </FluentGridItem>
+
+                <FluentGridItem xs="12" sm="12" md="6" lg="6"  Justify="JustifyContent.Center">
+                    <FluentButton Type="ButtonType.Submit" Appearance="Appearance.Accent">
+                        Bejelentkezés
+                    </FluentButton>
                 </FluentGridItem>
 
                 <FluentGridItem xs="12" sm="12" md="6" lg="6" Justify="JustifyContent.Center">
-                    <FluentButton Type="ButtonType.Submit" Appearance="Appearance.Accent">
+                    <FluentButton @onclick="NavigateToRegisterPage" BackgroundColor="#EA4300" Color="#ffffff">
                         Regisztráció
                     </FluentButton>
                 </FluentGridItem>
+
+
+
             </FluentGrid>
 
         </FluentCard>
     </FluentGridItem>
 </FluentGrid>
 
-@code {
 
+@code {
     private bool ShowPassword = false;
+
+    [SupplyParameterFromQuery]
+    public bool? redirected { get; set; }
+
+    protected override  Task OnInitializedAsync()
+    {
+        if(redirected.HasValue && redirected.Value)
+        {
+            ToastService.ShowInfo("Folytatáshoz előbb be kell jelentkeznie.");
+        }
+        return Task.CompletedTask;
+    }
 
     private Icon ChangeIcon()
     {
@@ -66,6 +76,11 @@
             return new Icons.Regular.Size16.Eye();
         }
     }
+    private void NavigateToRegisterPage()
+    {
+        Navigation.NavigateTo("/iam/register");
+    }
+
     private void ToglePasswordVisibility()
     {
         ShowPassword = !ShowPassword;

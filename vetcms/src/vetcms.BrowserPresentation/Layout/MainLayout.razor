@@ -3,6 +3,7 @@
 @inject IDialogService DialogService;
 @inject NavigationManager navigationManager;
 @inject MediatR.IMediator Mediator
+@inject IToastService ToastService
 
 <FluentLayout>
     <FluentHeader>
@@ -42,8 +43,10 @@
         var result = await Mediator.Send(new AuthenticatedStatusQuery(DialogService));
         if (!result.IsAuthenticated)
         {
-            navigationManager.NavigateTo("/login");
+            ToastService.ShowWarning("Folytatáshoz előbb be kell jelentkeznie.");
+            navigationManager.NavigateTo("/iam/login?redirected=true");
         }
+
     }
 }
 
