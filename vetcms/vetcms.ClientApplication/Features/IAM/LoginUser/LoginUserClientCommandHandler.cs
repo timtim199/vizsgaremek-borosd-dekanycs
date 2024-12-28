@@ -15,7 +15,12 @@ namespace vetcms.ClientApplication.Features.IAM.LoginUser
     {
         public async Task<bool> Handle(LoginUserClientCommand request, CancellationToken cancellationToken)
         {
-            LoginUserApiCommandResponse response =  await mediator.Send(new LoginUserApiCommand());
+            LoginUserApiCommand loginUserApiCommand = new LoginUserApiCommand()
+            {
+                Email = request.Username,
+                Password = request.Password
+            };
+            LoginUserApiCommandResponse response =  await mediator.Send(loginUserApiCommand);
             if(response.Success)
             {
                 await authenticationManger.SaveAccessToken(response.AccessToken);
@@ -24,6 +29,7 @@ namespace vetcms.ClientApplication.Features.IAM.LoginUser
             }
             else
             {
+                Console.WriteLine(response);
                 request.DialogService.ShowError(response.Message, "Hiba!");
                 return false;
             }

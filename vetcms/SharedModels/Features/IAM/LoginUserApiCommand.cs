@@ -17,7 +17,7 @@ namespace vetcms.SharedModels.Features.IAM
 
         public override string GetApiEndpoint()
         {
-            return Path.Join(ApiBaseUrl, "c4e75e88-a051-4f19-b7fe-1c8a492ff674");
+            return Path.Join(ApiBaseUrl, "/api/v1/iam/login");
         }
 
         public override HttpMethodEnum GetApiMethod()
