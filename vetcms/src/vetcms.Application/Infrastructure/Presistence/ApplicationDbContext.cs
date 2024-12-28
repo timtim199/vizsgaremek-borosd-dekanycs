@@ -24,27 +24,27 @@ namespace vetcms.ServerApplication.Infrastructure.Presistence
 
         }
 
-        public override async Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
-        {
-            foreach (var entry in ChangeTracker.Entries<AuditedEntity>())
-            {
-                switch (entry.State)
-                {
-                    case EntityState.Added:
-                        entry.Entity.CreatedByUserId = 0;
-                        entry.Entity.Created = DateTime.Now;
-                        break;
-                    case EntityState.Modified:
-                        entry.Entity.LastModifiedByUserId = 0;
-                        entry.Entity.LastModified = DateTime.Now;
-                        break;
-                    default:
-                        break;
-                }
-            }
-            var result = await base.SaveChangesAsync(cancellationToken);
-            return result;
-        }
+        //public override async Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
+        //{
+        //    foreach (var entry in ChangeTracker.Entries<AuditedEntity>())
+        //    {
+        //        switch (entry.State)
+        //        {
+        //            case EntityState.Added:
+        //                entry.Entity.CreatedByUserId = 0;
+        //                entry.Entity.Created = DateTime.Now;
+        //                break;
+        //            case EntityState.Modified:
+        //                entry.Entity.LastModifiedByUserId = 0;
+        //                entry.Entity.LastModified = DateTime.Now;
+        //                break;
+        //            default:
+        //                break;
+        //        }
+        //    }
+        //    var result = await base.SaveChangesAsync(cancellationToken);
+        //    return result;
+        //}
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

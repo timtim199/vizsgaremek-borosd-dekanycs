@@ -13,14 +13,15 @@ namespace vetcms.ServerApplication.Common.Abstractions.Data
     {
         protected readonly DbSet<T> Entities = context.Set<T>();
 
-        public async Task<IEnumerable<T>> GetAllAsync()
+        public async Task<IEnumerable<T>> GetAllAsync(bool includeDeleted)
         {
-            return await Entities.ToListAsync();
+            return await Entities.Where(e => includeDeleted || !e.Deleted).ToListAsync();
         }
 
-        public async Task<T> GetByIdAsync(int id)
+        public async Task<T> GetByIdAsync(int id, bool includeDeleted)
         {
-            var result = await Entities.FindAsync(id);
+
+            var result = await Entities.Where(e => (includeDeleted || !e.Deleted) && e.Id == id).FirstAsync();
             if (result == null)
             {
                 throw new NotFoundException(nameof(T), id);
@@ -29,9 +30,9 @@ namespace vetcms.ServerApplication.Common.Abstractions.Data
             return result;
         }
 
-        public IEnumerable<T> Where(Func<T, bool> predicate)
+        public IEnumerable<T> Where(Func<T, bool> predicate, bool includeDeleted = false)
         {
-            return Entities.Where(predicate);
+            return Entities.Where(predicate).Where(e => includeDeleted || !e.Deleted);
         }
 
         public async Task<T> AddAsync(T entity)
@@ -50,7 +51,7 @@ namespace vetcms.ServerApplication.Common.Abstractions.Data
 
         public async Task<T> DeleteAsync(int id)
         {
-            var entity = await Entities.FindAsync(id);
+            var entity = await Entities.Where(e => !e.Deleted && e.Id == id).FirstAsync();
             if (entity == null)
             {
                 throw new NotFoundException(nameof(T), id);

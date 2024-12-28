@@ -10,7 +10,7 @@ using vetcms.SharedModels.Common.IAM.Authorization;
 
 namespace vetcms.SharedModels.Features.IAM
 {
-    public record LoginUserApiCommand : UnauthenticatedApiCommandBase<LoginUserApiCommandResponse>
+    public record LoginUserApiCommand() : UnauthenticatedApiCommandBase<LoginUserApiCommandResponse>
     {
         public string Email { get; init; }
         public string Password { get; init; }
