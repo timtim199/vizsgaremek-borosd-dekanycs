@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace vetcms.SharedModels.Common.ApiLogicExceptionHandling
 {
-    internal class CommonApiLogicException : Exception
+    public class CommonApiLogicException : Exception
     {
         public ApiLogicExceptionCode ExceptionCode { get; private set; }
         public string Message { get; set; }

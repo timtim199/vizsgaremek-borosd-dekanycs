@@ -9,16 +9,16 @@ using vetcms.ServerApplication.Domain.Entity;
 
 namespace vetcms.ServerApplication.Common.Abstractions.Data
 {
-    internal abstract class RepositoryBase<T>(DbContext context) where T : AuditedEntity
+    public abstract class RepositoryBase<T>(DbContext context) where T : AuditedEntity
     {
         protected readonly DbSet<T> Entities = context.Set<T>();
 
-        public async Task<IEnumerable<T>> GetAllAsync(bool includeDeleted)
+        public async Task<IEnumerable<T>> GetAllAsync(bool includeDeleted = false)
         {
             return await Entities.Where(e => includeDeleted || !e.Deleted).ToListAsync();
         }
 
-        public async Task<T> GetByIdAsync(int id, bool includeDeleted)
+        public async Task<T> GetByIdAsync(int id, bool includeDeleted = false)
         {
 
             var result = await Entities.Where(e => (includeDeleted || !e.Deleted) && e.Id == id).FirstAsync();

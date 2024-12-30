@@ -10,7 +10,7 @@ using vetcms.SharedModels.Common.IAM.Authorization;
 
 namespace vetcms.ServerApplication.Domain.Entity
 {
-    internal class User : AuditedEntity
+    public class User : AuditedEntity
     {
         [Key]
         public int Id { get; set; }

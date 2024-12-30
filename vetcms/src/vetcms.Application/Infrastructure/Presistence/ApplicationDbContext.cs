@@ -9,7 +9,7 @@ using vetcms.ServerApplication.Domain.Entity;
 
 namespace vetcms.ServerApplication.Infrastructure.Presistence
 {
-    internal class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : DbContext
     {
         DbSet<User> Users { get; set; }
 

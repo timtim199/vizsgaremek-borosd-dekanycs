@@ -9,7 +9,7 @@ using vetcms.ServerApplication.Domain.Entity;
 
 namespace vetcms.ServerApplication.Infrastructure.Presistence.Repository
 {
-    internal class UserRepository : RepositoryBase<User>
+    public class UserRepository : RepositoryBase<User>
     {
         public UserRepository(ApplicationDbContext context) : base(context)
         {

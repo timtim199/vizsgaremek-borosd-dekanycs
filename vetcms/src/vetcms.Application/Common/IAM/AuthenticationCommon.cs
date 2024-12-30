@@ -12,7 +12,7 @@ using vetcms.ServerApplication.Infrastructure.Presistence.Repository;
 
 namespace vetcms.ServerApplication.Common.IAM
 {
-    internal class AuthenticationCommon
+    public class AuthenticationCommon
     {
 
         private readonly IConfiguration configuration;
@@ -39,7 +39,7 @@ namespace vetcms.ServerApplication.Common.IAM
             var claims = new[] {
                     new Claim(CLAIM_KEY_ID, user.Id.ToString()),
                     new Claim(CLAIM_KEY_TRACKING_ID, CreateTrackingId(user.Password)),
-                    new Claim(CLAIM_KEY_PERMISSION_SET, "")
+                    new Claim(CLAIM_KEY_PERMISSION_SET, user.PermissionSet)
                 };
 
             var signing = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -53,42 +53,20 @@ namespace vetcms.ServerApplication.Common.IAM
             return tokenHandler.WriteToken(token);
         }
 
-        public bool ValidateToken(string token)
+        public async Task<bool> ValidateToken(string token)
         {
-            if (token == null)
-                throw new ArgumentNullException(nameof(token));
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(configuration["Jwt:Key"]);
-
-            string audience = configuration["Jwt:WebAPIAudience"];
-
             try
             {
-                tokenHandler.ValidateToken(token, new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = true,
-                    ValidIssuers = new List<string>()
-                    {
-                        configuration["Jwt:Issuer"]
-                    },
+                JwtSecurityToken jwtToken = ProccessToken(token);
 
-                    ValidateAudience = true,
-                    ValidAudiences = new List<string>()
-                    {
-                        audience
-                    },
-
-                    ClockSkew = TimeSpan.Zero
-                }, out SecurityToken validatedToken);
-
-                var jwtToken = (JwtSecurityToken)validatedToken;
-
-                int userId = int.Parse(jwtToken.Claims.First(x => x.Type == CLAIM_KEY_ID).Value);
+                User user = await GetUser(jwtToken);
                 string trackingId = jwtToken.Claims.First(x => x.Type == CLAIM_KEY_TRACKING_ID).Value;
                 string permissionSet = jwtToken.Claims.First(x => x.Type == CLAIM_KEY_PERMISSION_SET).Value;
+
+                if(CreateTrackingId(user.Password) != trackingId || user.PermissionSet != permissionSet)
+                {
+                    return false;
+                }
 
                 return true;
             }
@@ -122,6 +100,52 @@ namespace vetcms.ServerApplication.Common.IAM
                 // }
                 // return sb.ToString();
             }
+        }
+
+        private async Task<User> GetUser(JwtSecurityToken jwtToken)
+        {
+            int userId = int.Parse(jwtToken.Claims.First(x => x.Type == CLAIM_KEY_ID).Value);
+            User user = await userRepository.GetByIdAsync(userId, false);
+            return user;
+        }
+
+        public async Task<User> GetUser(string token)
+        {
+            JwtSecurityToken jwtToken = ProccessToken(token);
+            return await GetUser(jwtToken);
+        }
+
+        private JwtSecurityToken ProccessToken(string token)
+        {
+            if (token == null)
+                throw new ArgumentNullException(nameof(token));
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(configuration["Jwt:Key"]);
+
+            string audience = configuration["Jwt:WebAPIAudience"];
+
+            tokenHandler.ValidateToken(token, new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ValidateIssuer = true,
+                ValidIssuers = new List<string>()
+                {
+                    configuration["Jwt:Issuer"]
+                },
+
+                ValidateAudience = true,
+                ValidAudiences = new List<string>()
+                {
+                    audience
+                },
+
+                ClockSkew = TimeSpan.Zero
+            }, out SecurityToken validatedToken);
+
+            var jwtToken = (JwtSecurityToken)validatedToken;
+            return jwtToken;
         }
     }
 }

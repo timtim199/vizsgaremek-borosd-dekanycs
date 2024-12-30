@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace vetcms.ServerApplication.Common.Abstractions.Data
 {
-    internal abstract class AuditedEntity
+    public abstract class AuditedEntity
     {
         [Key]
         public int Id { get; set; }
