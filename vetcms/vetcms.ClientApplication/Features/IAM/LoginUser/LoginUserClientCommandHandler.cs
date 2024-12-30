@@ -29,7 +29,6 @@ namespace vetcms.ClientApplication.Features.IAM.LoginUser
             }
             else
             {
-                Console.WriteLine(response);
                 request.DialogService.ShowError(response.Message, "Hiba!");
                 return false;
             }

@@ -19,7 +19,7 @@ namespace vetcms.SharedModels.Features.IAM
 
         public override string GetApiEndpoint()
         {
-            return Path.Join(ApiBaseUrl, "c4e75e88-a051-4f19-b7fe-1c8a492ff674");
+            return Path.Join(ApiBaseUrl, "/api/v1/iam/register");
         }
 
         public override HttpMethodEnum GetApiMethod()
@@ -35,7 +35,7 @@ namespace vetcms.SharedModels.Features.IAM
             RuleFor(x => x.Email).NotEmpty().EmailAddress().WithMessage("Email mező nem maradhat üresen, és email formátumban kell lennie, pl.: kallapal@example.hu");
             RuleFor(x => x.Password).NotEmpty().WithMessage("Jelszó mező nem lehet üres!");
             RuleFor(x => x.Name).NotEmpty().WithMessage("Név mező nem lehet üres!");
-            RuleFor(x => x.PhoneNumber).Length(9).WithMessage("Helytelen telefonszám!");
+            RuleFor(x => x.PhoneNumber).Length(11).WithMessage("Helytelen telefonszám!");
         }
     }
 
