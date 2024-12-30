@@ -8,6 +8,11 @@ using System.Threading.Tasks;
 using Microsoft.FluentUI.AspNetCore.Components;
 using vetcms.ClientApplication.Common.Abstract;
 using vetcms.ClientApplication.Common.Exceptions;
+using vetcms.SharedModels.Common.ApiLogicExceptionHandling;
+using Microsoft.AspNetCore.Components;
+using System.Net;
+using vetcms.ClientApplication.Common.IAM;
+using Microsoft.AspNetCore.Http.Authentication;
 
 namespace vetcms.ClientApplication.Common.Behaviours
 {
@@ -15,8 +20,13 @@ namespace vetcms.ClientApplication.Common.Behaviours
     where TRequest : IClientCommand<TResponse>
     {
         private readonly IDialogService dialogService;
-        public UnhandledExceptionBehaviour(IDialogService _dialogService)
+        private readonly NavigationManager navigationManager;
+        private readonly AuthenticationManger authenticationManger;
+        public UnhandledExceptionBehaviour(IDialogService _dialogService, NavigationManager _navigationManager, AuthenticationManger _authenticationManger)
         {
+            navigationManager = _navigationManager;
+            dialogService = _dialogService;
+            authenticationManger = _authenticationManger;
         }
 
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
@@ -25,7 +35,11 @@ namespace vetcms.ClientApplication.Common.Behaviours
             {
                 return await next();
             }
-            catch(ApiCommandExecutionException ex)
+            catch(CommonApiLogicException ex)
+            {
+                return await HandleApiLogicException(request, ex);
+            }
+            catch(ApiCommandExecutionUnknownException ex)
             {
                 request.DialogService.ShowError(ex.Problem.detail, $"Váratlan hiba történt: {ex.Problem.title}");
                 return default;
@@ -36,5 +50,25 @@ namespace vetcms.ClientApplication.Common.Behaviours
                 return default;
             }
         }
+        
+        private async Task<TResponse> HandleApiLogicException(TRequest request, CommonApiLogicException ex)
+        {
+            IDialogReference r = await request.DialogService.ShowErrorAsync(ex.GetExceptionCodeDescription(), "Hiba történt a kérés feldolgozása közben.");
+            await r.Result;
+            switch (ex.ExceptionCode)
+            {
+                case ApiLogicExceptionCode.INVALID_AUTHENTICATION:
+                    await authenticationManger.ClearAuthenticationDetails();
+                    navigationManager.NavigateTo("/iam/login?redirected=true");
+                    break;
+                case ApiLogicExceptionCode.INSUFFICIENT_PERMISSIONS:
+                    navigationManager.NavigateTo("/");
+                    break;
+            }
+
+            return default!;
+        }
+
     }
+
 }

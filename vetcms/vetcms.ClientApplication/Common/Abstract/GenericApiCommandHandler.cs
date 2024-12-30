@@ -8,6 +8,7 @@ using vetcms.ClientApplication.Common.Exceptions;
 using vetcms.ClientApplication.Common.IAM;
 using vetcms.SharedModels.Common;
 using vetcms.SharedModels.Common.Abstract;
+using vetcms.SharedModels.Common.ApiLogicExceptionHandling;
 
 namespace vetcms.ClientApplication.Common.Abstract
 {
@@ -26,9 +27,13 @@ namespace vetcms.ClientApplication.Common.Abstract
 
         public async Task<TResult> Handle(TCommand request, CancellationToken cancellationToken)
         {
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                "Bearer",await _credentialStore.GetAccessToken()
+            if(await _credentialStore.HasAccessToken())
+            {
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                    "Bearer", await _credentialStore.GetAccessToken()
                 );
+            }
+            
             var response = await DispatchRequest(request);
             return await ProcessResponse(response);
         }
@@ -52,32 +57,6 @@ namespace vetcms.ClientApplication.Common.Abstract
             }
         }
 
-        private async Task<HttpResponseMessage?> ProcessGet(TCommand command)
-        {
-            return await _httpClient.GetAsync(command.GetApiEndpoint());
-        }
-
-        private async Task<HttpResponseMessage?> ProcessPost(TCommand command)
-        {
-            return await _httpClient.PostAsJsonAsync(command.GetApiEndpoint(), command);
-        }
-
-        private async Task<HttpResponseMessage?> ProcessPatch(TCommand command)
-        {
-            return await _httpClient.PatchAsJsonAsync(command.GetApiEndpoint(), command);
-        }
-
-        private async Task<HttpResponseMessage?> ProcessPut(TCommand command)
-        {
-            return await _httpClient.PutAsJsonAsync(command.GetApiEndpoint(), command);
-        }
-
-        private async Task<HttpResponseMessage?> ProcessDelete(TCommand command)
-        {
-            return await _httpClient.DeleteAsync(command.GetApiEndpoint());
-        }
-
-
         private async Task<TResult> ProcessResponse(HttpResponseMessage? response)
         {
             if(response == null)
@@ -88,19 +67,28 @@ namespace vetcms.ClientApplication.Common.Abstract
             {
                 return await ProcessResult(response);
             }
-            else if (response.StatusCode == HttpStatusCode.InternalServerError)
-            {
-                ProblemDetails? problem = await response.Content.ReadFromJsonAsync<ProblemDetails>();
-                if (problem != null)
-                {
-                    throw new ApiCommandExecutionException(problem);
-                }
-                throw new Exception("Szerveroldali hiba történt a kérés során");
-            }
             else
             {
-                throw new Exception("Ismeretlen hiba történt a kérés során");
+                await HandleFailedRequest(response);
+                return default!;
             }
+        }
+
+        private async Task HandleFailedRequest(HttpResponseMessage? response)
+        {
+            ProblemDetails? problem = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+            if (problem != null)
+            {
+                if (problem.type == typeof(CommonApiLogicException).ToString())
+                {
+                    throw new CommonApiLogicException((ApiLogicExceptionCode)problem.status, problem.detail);
+                }
+                else
+                {
+                    throw new ApiCommandExecutionUnknownException(problem);
+                }
+            }
+            throw new Exception("Szerveroldali hiba történt a kérés során");
         }
 
         private async Task<TResult> ProcessResult(HttpResponseMessage response)
@@ -113,5 +101,19 @@ namespace vetcms.ClientApplication.Common.Abstract
             }
             return result;
         }
+
+        private async Task<HttpResponseMessage?> ProcessGet(TCommand command)
+            => await _httpClient.GetAsync(command.GetApiEndpoint());
+        private async Task<HttpResponseMessage?> ProcessPost(TCommand command)
+            => await _httpClient.PostAsJsonAsync(command.GetApiEndpoint(), command);
+
+        private async Task<HttpResponseMessage?> ProcessPatch(TCommand command)
+            => await _httpClient.PatchAsJsonAsync(command.GetApiEndpoint(), command);
+
+        private async Task<HttpResponseMessage?> ProcessPut(TCommand command)
+            => await _httpClient.PutAsJsonAsync(command.GetApiEndpoint(), command);
+
+        private async Task<HttpResponseMessage?> ProcessDelete(TCommand command)
+            => await _httpClient.DeleteAsync(command.GetApiEndpoint());
     }
 }

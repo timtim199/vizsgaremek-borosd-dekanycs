@@ -9,7 +9,7 @@ using vetcms.SharedModels.Common.IAM.Authorization;
 
 namespace vetcms.ClientApplication.Common.IAM
 {
-    internal class AuthenticationManger
+    public class AuthenticationManger
     {
         private readonly IClientPresistenceDriver _presistenceDriver;
 
@@ -35,7 +35,6 @@ namespace vetcms.ClientApplication.Common.IAM
         {
             try
             {
-                return string.Empty;
                 return await _presistenceDriver.GetItem<string>(accessTokenPresistenceKey);
             }
             catch (KeyNotFoundException)
@@ -95,5 +94,10 @@ namespace vetcms.ClientApplication.Common.IAM
 
         public async Task<bool> HasPermission(params PermissionFlags[] permissions)
             => (await GetPermissionSet()).HasPermissionFlag(permissions);
+
+        public async Task ClearAuthenticationDetails()
+        {
+            await _presistenceDriver.ClearItems();
+        }
     }
 }
