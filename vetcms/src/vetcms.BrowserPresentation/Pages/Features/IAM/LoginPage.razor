@@ -1,7 +1,10 @@
 ﻿@layout UnauthenticatedLayout
 @page "/iam/login"
+@using vetcms.ClientApplication.Features.IAM.LoginUser
 @inject NavigationManager Navigation
 @inject IToastService ToastService
+@inject MediatR.IMediator Mediator
+@inject IDialogService DialogService
 
 <FluentGrid  Justify="JustifyContent.Center" >
     <FluentGridItem xs="12" sm="6" md="4" lg="3">
@@ -14,12 +17,12 @@
                 </FluentGridItem>
 
                 <FluentGridItem xs="12" sm="12" md="12" lg="12">
-                    <FluentTextField Label="Email" TextFieldType="TextFieldType.Email" Placeholder="johndoe01@example.com" Required Style="width: 100%;">
+                    <FluentTextField @bind-Value="username" Label="Email" TextFieldType="TextFieldType.Email" Placeholder="johndoe01@example.com" Required Style="width: 100%;">
                     </FluentTextField>
                 </FluentGridItem>
 
                 <FluentGridItem xs="12" sm="12" md="12" lg="12">
-                    <FluentTextField Label="Jelszó" TextFieldType="@(ShowPassword ? TextFieldType.Text : TextFieldType.Password)" Required Style="width: 100%;">
+                    <FluentTextField @bind-Value=password Label="Jelszó" TextFieldType="@(ShowPassword ? TextFieldType.Text : TextFieldType.Password)" Required Style="width: 100%;">
                         <FluentIcon Value="@ChangeIcon()" @onclick="ToglePasswordVisibility" Color="@Color.Neutral" Slot="end" />
                     </FluentTextField>
                 </FluentGridItem>
@@ -30,7 +33,7 @@
                 </FluentGridItem>
 
                 <FluentGridItem xs="12" sm="12" md="6" lg="6"  Justify="JustifyContent.Center">
-                    <FluentButton Type="ButtonType.Submit" Appearance="Appearance.Accent">
+                    <FluentButton @onclick="Login" Appearance="Appearance.Accent">
                         Bejelentkezés
                     </FluentButton>
                 </FluentGridItem>
@@ -52,6 +55,7 @@
 
 @code {
     private bool ShowPassword = false;
+    string username, password;
 
     [SupplyParameterFromQuery]
     public bool? redirected { get; set; }
@@ -63,6 +67,15 @@
             ToastService.ShowInfo("Folytatáshoz előbb be kell jelentkeznie.");
         }
         return Task.CompletedTask;
+    }
+    private async void Login()
+    {
+        LoginUserClientCommand userClienCommand = new LoginUserClientCommand(DialogService)
+        {
+                Username = username,
+                Password = password
+        };
+        await Mediator.Send(userClienCommand);
     }
 
     private Icon ChangeIcon()
@@ -85,5 +98,4 @@
     {
         ShowPassword = !ShowPassword;
     }
-
 }

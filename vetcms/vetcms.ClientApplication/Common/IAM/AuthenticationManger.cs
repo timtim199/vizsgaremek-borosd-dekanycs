@@ -35,6 +35,7 @@ namespace vetcms.ClientApplication.Common.IAM
         {
             try
             {
+                return string.Empty;
                 return await _presistenceDriver.GetItem<string>(accessTokenPresistenceKey);
             }
             catch (KeyNotFoundException)

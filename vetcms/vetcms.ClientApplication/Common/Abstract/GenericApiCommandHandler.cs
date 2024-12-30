@@ -106,7 +106,7 @@ namespace vetcms.ClientApplication.Common.Abstract
         private async Task<TResult> ProcessResult(HttpResponseMessage response)
         {
             string content = await response.Content.ReadAsStringAsync();
-            TResult? result = JsonSerializer.Deserialize<TResult>(content);
+            TResult? result = JsonSerializer.Deserialize<TResult>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true});
             if(result == null)
             {
                 throw new Exception("Üres vagy helytelen Http válasz.");

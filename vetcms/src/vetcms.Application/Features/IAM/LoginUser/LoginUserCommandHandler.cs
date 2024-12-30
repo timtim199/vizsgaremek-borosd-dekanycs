@@ -14,8 +14,21 @@ namespace vetcms.ServerApplication.Features.IAM.LoginUser
         public Task<LoginUserApiCommandResponse> Handle(LoginUserApiCommand request, CancellationToken cancellationToken)
         {
             // kapcsolódó logika
+            User user;
 
-            User user = userRepository.GetByEmail(request.Email);
+            try
+            {
+                user = userRepository.GetByEmail(request.Email);
+            }
+            catch (InvalidOperationException ex) 
+            {
+                return Task.FromResult(new LoginUserApiCommandResponse()
+                {
+                    Success = false,
+                    Message = "Nem létező felhasználó"
+                });
+            }
+
             if (user.GetPermissions().HasPermissionFlag(PermissionFlags.CAN_LOGIN))
             {
                 if(PasswordUtility.VerifyPassword(request.Password, user.Password))
