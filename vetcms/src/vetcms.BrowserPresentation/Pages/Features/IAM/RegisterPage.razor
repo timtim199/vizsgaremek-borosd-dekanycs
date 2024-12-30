@@ -1,5 +1,8 @@
 ﻿@layout UnauthenticatedLayout
 @page "/iam/register"
+@using vetcms.ClientApplication.Features.IAM.RegisterUser
+@inject MediatR.IMediator Mediator
+@inject IDialogService DialogService
 
 
 <FluentGrid Justify="JustifyContent.Center">
@@ -13,35 +16,35 @@
                 </FluentGridItem>
 
                 <FluentGridItem xs="12" sm="12" md="12" lg="12">
-                    <FluentTextField Label="Megjelenített név" TextFieldType="TextFieldType.Text" Placeholder="gipszJakab1" Required Style="width: 100%;">
+                    <FluentTextField Label="Megjelenített név" @bind-Value="username" TextFieldType="TextFieldType.Text" Placeholder="johndoe01" Required Style="width: 100%;">
                     </FluentTextField>
                 </FluentGridItem>
 
                 <FluentGridItem xs="12" sm="12" md="12" lg="12">
-                    <FluentTextField Label="Email" TextFieldType="TextFieldType.Email" Placeholder="johndoe01@example.com" Required Style="width: 100%;">
+                    <FluentTextField Label="Email" @bind-Value="email" TextFieldType="TextFieldType.Email" Placeholder="johndoe01@example.com" Required Style="width: 100%;">
                     </FluentTextField>
                 </FluentGridItem>
 
 
                 <FluentGridItem xs="12" sm="12" md="12" lg="12">
-                    <FluentTextField Label="Telefonszám" TextFieldType="TextFieldType.Tel" Required Style="width: 100%;">
+                    <FluentTextField Label="Telefonszám" @bind-Value="phoneNumber" TextFieldType="TextFieldType.Tel" Required Style="width: 100%;">
                     </FluentTextField>
                 </FluentGridItem>
 
                 <FluentGridItem xs="12" sm="12" md="12" lg="12">
-                    <FluentTextField Label="Jelszó" TextFieldType="@(ShowPassword ? TextFieldType.Text : TextFieldType.Password)" Required Style="width: 100%;">
+                    <FluentTextField Label="Jelszó" @bind-Value="pass1" TextFieldType="@(ShowPassword ? TextFieldType.Text : TextFieldType.Password)" Required Style="width: 100%;">
                         <FluentIcon Value="@ChangeIcon()" @onclick="ToglePasswordVisibility" Color="@Color.Neutral" Slot="end" />
                     </FluentTextField>
                 </FluentGridItem>
 
                 <FluentGridItem xs="12" sm="12" md="12" lg="12">
-                    <FluentTextField Label="Jelszó mégegyszer" TextFieldType="@(ShowPassword ? TextFieldType.Text : TextFieldType.Password)" Required Style="width: 100%;">
+                    <FluentTextField Label="Jelszó mégegyszer" @bind-Value="pass2" TextFieldType="@(ShowPassword ? TextFieldType.Text : TextFieldType.Password)" Required Style="width: 100%;">
                         <FluentIcon Value="@ChangeIcon()" @onclick="ToglePasswordVisibility" Color="@Color.Neutral" Slot="end" />
                     </FluentTextField>
                 </FluentGridItem>
 
                 <FluentGridItem xs="12" sm="12" md="6" lg="6" Justify="JustifyContent.Center">
-                    <FluentButton Type="ButtonType.Submit" Appearance="Appearance.Accent">
+                    <FluentButton @onclick="Register" Appearance="Appearance.Accent">
                         Regisztráció
                     </FluentButton>
                 </FluentGridItem>
@@ -52,6 +55,7 @@
 </FluentGrid>
 
 @code {
+    string username, email, phoneNumber, pass1, pass2;
 
     private bool ShowPassword = false;
 
@@ -70,5 +74,29 @@
     {
         ShowPassword = !ShowPassword;
     }
+    private async void Register()
+    {
+        RegisterUserClientCommand registerUserClientCommand = new RegisterUserClientCommand(DialogService)
+        {
+            Username = username,
+            Email = email,
+            PhoneNumber = phoneNumber,
+            Password = pass1,
+            Password2 = pass2
+        };
+        await Mediator.Send(registerUserClientCommand);
 
+    }
+
+    private bool SameInputPassword()
+    {
+        if(pass1 == pass2)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 }
