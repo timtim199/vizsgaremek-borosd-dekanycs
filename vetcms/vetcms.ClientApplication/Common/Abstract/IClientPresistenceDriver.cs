@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace vetcms.ClientApplication.Common.Abstract
 {
-    internal interface IClientPresistenceDriver
+    public interface IClientPresistenceDriver
     {
         internal Task SaveItem<T>(string key, T item);
         internal Task<T> GetItem<T>(string key);

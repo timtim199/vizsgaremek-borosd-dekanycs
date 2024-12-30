@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
 using vetcms.ServerApplication.Common.Exceptions;
-
+using vetcms.SharedModels.Common.ApiLogicExceptionHandling;
 namespace vetcms.WebApi.Filters
 {
     public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
@@ -17,7 +17,7 @@ namespace vetcms.WebApi.Filters
                 { typeof(NotFoundException), HandleNotFoundException },
                 { typeof(UnauthorizedAccessException), HandleUnauthorizedAccessException },
                 { typeof(ForbiddenAccessException), HandleForbiddenAccessException },
-                { typeof(CommonBusinessLogicException), HandleCommonBusinessLogicException },
+                { typeof(CommonApiLogicException), HandleCommonApiLogicException },
             };
         }
 
@@ -116,19 +116,20 @@ namespace vetcms.WebApi.Filters
             context.ExceptionHandled = true;
         }
 
-        private void HandleCommonBusinessLogicException(ExceptionContext context)
+        private void HandleCommonApiLogicException(ExceptionContext context)
         {
-            if(!(context.Exception is CommonBusinessLogicException) || context.Exception == null)
+            if(!(context.Exception is CommonApiLogicException) || context.Exception == null)
             {
                 HandleUnknownException(context);
                 return;
             }
-            int status = (context.Exception as CommonBusinessLogicException).status;
+            int status = (int)((context.Exception as CommonApiLogicException).ExceptionCode);
+            string message = (string)((context.Exception as CommonApiLogicException).Message);
             ProblemDetails details = new()
             {
                 Status = status,
-                Title = "An error occurred while processing your request.",
-                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.3",
+                Title = message,
+                Type = typeof(CommonApiLogicException).ToString(),
             };
 
             context.Result = new ObjectResult(details) { StatusCode = First3Digits(status) };

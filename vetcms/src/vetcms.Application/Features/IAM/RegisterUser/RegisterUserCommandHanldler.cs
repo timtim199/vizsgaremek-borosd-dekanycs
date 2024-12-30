@@ -7,6 +7,7 @@ using MediatR;
 using vetcms.ServerApplication.Common.IAM;
 using vetcms.ServerApplication.Domain.Entity;
 using vetcms.ServerApplication.Infrastructure.Presistence.Repository;
+using vetcms.SharedModels.Common.ApiLogicExceptionHandling;
 using vetcms.SharedModels.Features.IAM;
 
 namespace vetcms.ServerApplication.Features.IAM.RegisterUser

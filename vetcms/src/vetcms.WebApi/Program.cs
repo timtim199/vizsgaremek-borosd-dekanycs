@@ -1,12 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using System.Web.Http;
 using vetcms.ServerApplication;
+using vetcms.WebApi.Filters;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers()
+builder.Services.AddControllers(options => options.Filters.Add<ApiExceptionFilterAttribute>())
     .AddApplicationPart(typeof(ServerDependencyInitializer).Assembly)
     .AddControllersAsServices();
 

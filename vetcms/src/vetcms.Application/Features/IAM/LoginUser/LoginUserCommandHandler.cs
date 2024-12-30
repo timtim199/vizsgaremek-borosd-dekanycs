@@ -6,6 +6,7 @@ using vetcms.SharedModels.Common.Abstract;
 using vetcms.SharedModels.Features.IAM;
 using vetcms.SharedModels.Common.IAM.Authorization;
 using vetcms.ServerApplication.Common.IAM;
+using vetcms.SharedModels.Common.ApiLogicExceptionHandling;
 namespace vetcms.ServerApplication.Features.IAM.LoginUser
 {
     internal class LoginUserCommandHandler(UserRepository userRepository, AuthenticationCommon authenticationCommon) : IRequestHandler<LoginUserApiCommand, LoginUserApiCommandResponse>
