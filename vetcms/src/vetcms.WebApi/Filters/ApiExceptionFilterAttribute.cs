@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using vetcms.ServerApplication.Common.Exceptions;
 using vetcms.SharedModels.Common.ApiLogicExceptionHandling;
+using Microsoft.Extensions.Hosting;
 namespace vetcms.WebApi.Filters
 {
     public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
@@ -43,7 +44,7 @@ namespace vetcms.WebApi.Filters
                 return;
             }
 
-            HandleUnknownException(context);
+            //HandleUnknownException(context);
         }
 
         private void HandleValidationException(ExceptionContext context)

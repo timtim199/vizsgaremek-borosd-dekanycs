@@ -15,6 +15,7 @@ namespace vetcms.ServerApplication.Features.IAM.RegisterUser
         [HttpPost("register")]
         public async Task<ICommandResult> RegisterUser(RegisterUserApiCommand command)
         {
+            command.Prepare(Request);
             return await Mediator.Send(command);
         }
     }

@@ -19,7 +19,7 @@ namespace vetcms.ServerApplication.Features.IAM.RegisterUser
             User newUser = new User();
             newUser.PhoneNumber = request.PhoneNumber;
             newUser.Email = request.Email;
-            newUser.Password = PasswordUtility.HashPassword(request.Password);
+            newUser.Password = PasswordUtility.CreateUserPassword(newUser, request.Password);
             newUser.VisibleName = request.Name;
 
             await userRepository.AddAsync(newUser);

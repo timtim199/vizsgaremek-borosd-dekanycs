@@ -8,6 +8,9 @@ using vetcms.ServerApplication.Infrastructure.Presistence.Repository;
 using Microsoft.AspNetCore.Routing;
 using vetcms.ServerApplication.Common.IAM;
 using vetcms.SharedModels.Features.IAM;
+using vetcms.ServerApplication.Common.Abstractions;
+using vetcms.ServerApplication.Common;
+using vetcms.ServerApplication.Infrastructure.Communication.Mail;
 
 namespace vetcms.ServerApplication
 {
@@ -35,15 +38,29 @@ namespace vetcms.ServerApplication
             return services;
         }
 
-        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration baseConfiguration)
         {
+            var configuration = SecuredConfiguration.FromPlainConfiguration(baseConfiguration);
             services.InitializeDatabaseDriver(configuration);
             services.InitializeRepositoryComponents(configuration);
+            services.AddCommunicationServices(configuration);
             services.AddScoped<AuthenticationCommon>();
             return services;
         }
 
-        private static void InitializeDatabaseDriver(this IServiceCollection services, IConfiguration configuration)
+        private static void AddCommunicationServices(this IServiceCollection services, SecuredConfiguration configuration)
+        {
+            services.AddSingleton<IMailDeliveryProviderWrapper>(p =>
+                new MailgunServiceWrapper(
+                    configuration.GetValue<string>("MailServices:Mailgun:Domain"),
+                    configuration.GetValue<string>("MailServices:Mailgun:ApiKey"),
+                    configuration.GetValue<string>("MailServices:Mailgun:Sender")
+                    )
+            );
+            services.AddSingleton<IMailService, MailService>();
+        }
+
+        private static void InitializeDatabaseDriver(this IServiceCollection services, SecuredConfiguration configuration)
         {
             switch (configuration.GetValue<string>("database_driver"))
             {
@@ -63,18 +80,18 @@ namespace vetcms.ServerApplication
             }
         }
 
-        private static void InitializeRepositoryComponents(this IServiceCollection services, IConfiguration configuration)
+        private static void InitializeRepositoryComponents(this IServiceCollection services, SecuredConfiguration configuration)
         {
             services.AddScoped<UserRepository>();
         }
 
-        private static void AddInMemoryDatabase(this IServiceCollection services, IConfiguration configuration)
+        private static void AddInMemoryDatabase(this IServiceCollection services, SecuredConfiguration configuration)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseInMemoryDatabase("vetcms"));
         }
 
-        private static void AddMsSqlServerDatabase(this IServiceCollection services, IConfiguration configuration)
+        private static void AddMsSqlServerDatabase(this IServiceCollection services, SecuredConfiguration configuration)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
@@ -82,7 +99,7 @@ namespace vetcms.ServerApplication
                     b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
         }
 
-        private static void AddSqliteDataBase(this IServiceCollection services, IConfiguration configuration)
+        private static void AddSqliteDataBase(this IServiceCollection services, SecuredConfiguration configuration)
         {
             var folder = Environment.SpecialFolder.LocalApplicationData;
             var path = Environment.GetFolderPath(folder);

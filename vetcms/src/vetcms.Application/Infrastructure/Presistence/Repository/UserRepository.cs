@@ -13,11 +13,16 @@ namespace vetcms.ServerApplication.Infrastructure.Presistence.Repository
     {
         public UserRepository(ApplicationDbContext context) : base(context)
         {
+            context.Set<User>().Include(u => u.PasswordResets);
         }
 
+        public bool HasUserByEmail(string email)
+            => Where(u => u.Email == email).Any();
+                
         public User GetByEmail(string email)
         {
-            return Where((u) => u.Email == email).First();
+            var result = Where((u) => u.Email == email).First();
+            return result;
         }
 
         public override Task SeedSampleData()

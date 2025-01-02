@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using vetcms.ServerApplication.Common.Exceptions;
@@ -64,7 +66,15 @@ namespace vetcms.ServerApplication.Common.Abstractions.Data
 
         public async Task<bool> ExistAsync(int id)
         {
+
+
             return await Entities.AnyAsync(e => e.Id == id);
+        }
+
+        public void LoadReferencedCollection<TProperty>(T entity, Expression<Func<T, IEnumerable<TProperty>>> propertyExpression)
+            where TProperty : class
+        {
+            Entities.Entry(entity).Collection(propertyExpression).Load();
         }
 
         public abstract Task SeedSampleData();

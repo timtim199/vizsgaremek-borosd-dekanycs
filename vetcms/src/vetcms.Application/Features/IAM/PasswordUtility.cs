@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using vetcms.ServerApplication.Domain.Entity;
 
 namespace vetcms.ServerApplication.Features.IAM
 {
@@ -42,6 +43,11 @@ namespace vetcms.ServerApplication.Features.IAM
         public static string HashPassword(string password)
         {
             return Convert.ToBase64String(HashPasswordWithSalt(password, GenerateSalt()));
+        }
+
+        public static string CreateUserPassword(User user, string password)
+        {
+            return HashPassword(password);
         }
 
         public static bool VerifyPassword(string password, string hashedPassword)
