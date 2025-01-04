@@ -28,6 +28,12 @@
                 </FluentGridItem>
 
                 <FluentGridItem xs="12" sm="12" md="12" lg="12" Justify="JustifyContent.Center">
+                    <FluentButton @onclick="PasswordResetStart" Appearance="Appearance.Accent">
+                        Elfelejtette a jelszavát?
+                    </FluentButton>
+                </FluentGridItem>
+
+                <FluentGridItem xs="12" sm="12" md="12" lg="12" Justify="JustifyContent.Center">
                     <FluentCheckbox Label="Jegyezzen meg">
                     </FluentCheckbox>
                 </FluentGridItem>
@@ -68,6 +74,12 @@
         }
         return Task.CompletedTask;
     }
+
+    private void PasswordResetStart()
+    {
+        Navigation.NavigateTo("/iam/lost-pass");
+    }
+
     private async void Login()
     {
         LoginUserClientCommand userClienCommand = new LoginUserClientCommand(DialogService)
