@@ -14,7 +14,7 @@ using vetcms.ServerApplication.Common.Abstractions.Data;
 using vetcms.ServerApplication.Common.Abstractions.IAM;
 using vetcms.ServerApplication.Features.IAM;
 
-namespace tests.vetcms.ServerApplicationTests.IntegrationTests.Features.IAM
+namespace vetcms.ServerApplicationTests.UnitTests.Features.IAM
 {
     public class LoginUserCommandHandlerTests
     {
