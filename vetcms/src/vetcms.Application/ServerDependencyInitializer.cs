@@ -11,6 +11,8 @@ using vetcms.SharedModels.Features.IAM;
 using vetcms.ServerApplication.Common.Abstractions;
 using vetcms.ServerApplication.Common;
 using vetcms.ServerApplication.Infrastructure.Communication.Mail;
+using vetcms.ServerApplication.Common.Abstractions.Data;
+using vetcms.ServerApplication.Common.Abstractions.IAM;
 
 namespace vetcms.ServerApplication
 {
@@ -44,7 +46,7 @@ namespace vetcms.ServerApplication
             services.InitializeDatabaseDriver(configuration);
             services.InitializeRepositoryComponents(configuration);
             services.AddCommunicationServices(configuration);
-            services.AddScoped<AuthenticationCommon>();
+            services.AddScoped<IAuthenticationCommon, AuthenticationCommon>();
             return services;
         }
 
@@ -82,7 +84,7 @@ namespace vetcms.ServerApplication
 
         private static void InitializeRepositoryComponents(this IServiceCollection services, SecuredConfiguration configuration)
         {
-            services.AddScoped<UserRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
         }
 
         private static void AddInMemoryDatabase(this IServiceCollection services, SecuredConfiguration configuration)

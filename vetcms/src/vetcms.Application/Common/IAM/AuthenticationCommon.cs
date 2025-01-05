@@ -7,12 +7,13 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using vetcms.ServerApplication.Common.Abstractions.IAM;
 using vetcms.ServerApplication.Domain.Entity;
 using vetcms.ServerApplication.Infrastructure.Presistence.Repository;
 
 namespace vetcms.ServerApplication.Common.IAM
 {
-    public class AuthenticationCommon
+    public class AuthenticationCommon : IAuthenticationCommon
     {
 
         private readonly IConfiguration configuration;

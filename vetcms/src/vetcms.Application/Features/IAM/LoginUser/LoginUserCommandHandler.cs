@@ -7,9 +7,14 @@ using vetcms.SharedModels.Features.IAM;
 using vetcms.SharedModels.Common.IAM.Authorization;
 using vetcms.ServerApplication.Common.IAM;
 using vetcms.SharedModels.Common.ApiLogicExceptionHandling;
+using System.Runtime.CompilerServices;
+using vetcms.ServerApplication.Common.Abstractions.Data;
+using vetcms.ServerApplication.Common.Abstractions.IAM;
+
+[assembly: InternalsVisibleTo("vetcms.ServerApplicationTests")]
 namespace vetcms.ServerApplication.Features.IAM.LoginUser
 {
-    internal class LoginUserCommandHandler(UserRepository userRepository, AuthenticationCommon authenticationCommon) : IRequestHandler<LoginUserApiCommand, LoginUserApiCommandResponse>
+    internal class LoginUserCommandHandler(IUserRepository userRepository, IAuthenticationCommon authenticationCommon) : IRequestHandler<LoginUserApiCommand, LoginUserApiCommandResponse>
     {
 
         public Task<LoginUserApiCommandResponse> Handle(LoginUserApiCommand request, CancellationToken cancellationToken)

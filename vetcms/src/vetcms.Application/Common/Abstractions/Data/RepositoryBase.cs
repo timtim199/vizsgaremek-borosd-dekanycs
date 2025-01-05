@@ -11,7 +11,8 @@ using vetcms.ServerApplication.Domain.Entity;
 
 namespace vetcms.ServerApplication.Common.Abstractions.Data
 {
-    public abstract class RepositoryBase<T>(DbContext context) where T : AuditedEntity
+    public abstract class RepositoryBase<T>(DbContext context) : IRepositoryBase<T>
+        where T : AuditedEntity
     {
         protected readonly DbSet<T> Entities = context.Set<T>();
 
