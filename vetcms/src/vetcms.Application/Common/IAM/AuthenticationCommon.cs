@@ -31,8 +31,12 @@ namespace vetcms.ServerApplication.Common.IAM
             userRepository = _userRepository;
         }
 
-        public string GenerateAccessToken(User user)
+        public string GenerateAccessToken(User user, DateTime expirationDate = default)
         {
+            if (expirationDate == default)
+            {
+                expirationDate = DateTime.Now.AddDays(7);
+            }
             string audience = configuration["Jwt:WebAPIAudience"];
 
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -49,7 +53,7 @@ namespace vetcms.ServerApplication.Common.IAM
                 configuration["Jwt:Issuer"],
                 audience,
                 claims,
-                expires: DateTime.UtcNow.AddDays(7),
+                expires: expirationDate,
                 signingCredentials: signing);
 
             return tokenHandler.WriteToken(token);

@@ -93,7 +93,7 @@ namespace vetcms.ServerApplicationTests.IntegrationTests.Features.IAM
             await _dbContext.SaveChangesAsync();
 
             var command = new LoginUserApiCommand() { Email = "user@example.com", Password = "hashedpassword" };
-            _authenticationCommonMock.Setup(auth => auth.GenerateAccessToken(It.IsAny<User>())).Returns("token");
+            _authenticationCommonMock.Setup(auth => auth.GenerateAccessToken(It.IsAny<User>(), default)).Returns("token");
 
             // Act
             var result = await _handler.Handle(command, CancellationToken.None);

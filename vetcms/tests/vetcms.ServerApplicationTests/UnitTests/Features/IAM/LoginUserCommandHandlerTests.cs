@@ -84,7 +84,7 @@ namespace vetcms.ServerApplicationTests.UnitTests.Features.IAM
             string password = PasswordUtility.HashPassword("password");
             var user = new User { Email = "user@example.com", Password = password };
             _userRepositoryMock.Setup(repo => repo.GetByEmail(It.IsAny<string>())).Returns(user);
-            _authenticationCommonMock.Setup(auth => auth.GenerateAccessToken(It.IsAny<User>())).Returns("token");
+            _authenticationCommonMock.Setup(auth => auth.GenerateAccessToken(It.IsAny<User>(), default)).Returns("token");
             var command = new LoginUserApiCommand { Email = "user@example.com", Password = "password" };
 
             // Act

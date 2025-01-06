@@ -9,7 +9,7 @@ namespace vetcms.ServerApplication.Common.Abstractions.IAM
 {
     public interface IAuthenticationCommon
     {
-        string GenerateAccessToken(User user);
+        string GenerateAccessToken(User user, DateTime expirationDate = default);
         Task<bool> ValidateToken(string token);
         Task<User> GetUser(string token);
     }
