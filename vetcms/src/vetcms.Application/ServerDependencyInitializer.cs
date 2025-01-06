@@ -19,6 +19,7 @@ namespace vetcms.ServerApplication
     public static class ServerDependencyInitializer
 
     {
+        public static bool IsTestEnviroment { get => IsRunningUnitTest();  }
         public static IServiceCollection AddServerApp(this IServiceCollection services)
         {
             services.AddValidatorsFromAssembly(typeof(ServerDependencyInitializer).Assembly);
@@ -43,7 +44,10 @@ namespace vetcms.ServerApplication
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration baseConfiguration)
         {
             var configuration = SecuredConfiguration.FromPlainConfiguration(baseConfiguration);
-            services.InitializeDatabaseDriver(configuration);
+            if(!IsTestEnviroment)
+            {
+                services.InitializeDatabaseDriver(configuration);
+            }
             services.InitializeRepositoryComponents(configuration);
             services.AddCommunicationServices(configuration);
             services.AddScoped<IAuthenticationCommon, AuthenticationCommon>();
@@ -113,6 +117,14 @@ namespace vetcms.ServerApplication
 
                 )
             );
+        }
+
+        public static bool IsRunningUnitTest()
+        {
+            var testAssemblies = new[] { "xunit", "nunit", "mstest" };
+            var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
+
+            return loadedAssemblies.Any(a => testAssemblies.Any(t => a.FullName.ToLower().Contains(t)));
         }
     }
 }
