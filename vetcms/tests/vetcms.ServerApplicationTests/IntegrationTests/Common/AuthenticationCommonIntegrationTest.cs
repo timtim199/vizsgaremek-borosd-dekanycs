@@ -44,7 +44,13 @@ namespace vetcms.ServerApplicationTests.IntegrationTests.Common
         public async Task GenerateAndValidateToken_ShouldReturnTrueForValidToken()
         {
             // Arrange
-            var user = new User { Id = 1, Password = "password" };
+            var user = new User
+            {
+                Password = "password",
+                Email = "test@example.com",
+                PhoneNumber = "1234567890",
+                VisibleName = "Test User"
+            };
             await _userRepository.AddAsync(user);
 
             // Act
@@ -59,7 +65,13 @@ namespace vetcms.ServerApplicationTests.IntegrationTests.Common
         public async Task GenerateAndValidateToken_ShouldReturnFalseForExpiredToken()
         {
             // Arrange
-            var user = new User { Id = 1, Password = "password" };
+            var user = new User
+            {
+                Password = "password",
+                Email = "test@example.com",
+                PhoneNumber = "1234567890",
+                VisibleName = "Test User"
+            };
             await _userRepository.AddAsync(user);
 
             // Act
@@ -74,7 +86,13 @@ namespace vetcms.ServerApplicationTests.IntegrationTests.Common
         public async Task GenerateAndValidateToken_ShouldReturnFalseForTamperedToken()
         {
             // Arrange
-            var user = new User { Id = 1, Password = "password" };
+            var user = new User
+            {
+                Password = "password",
+                Email = "test@example.com",
+                PhoneNumber = "1234567890",
+                VisibleName = "Test User"
+            };
             await _userRepository.AddAsync(user);
 
             // Act
@@ -90,7 +108,13 @@ namespace vetcms.ServerApplicationTests.IntegrationTests.Common
         public async Task GetUser_ShouldReturnUserForValidToken()
         {
             // Arrange
-            var user = new User { Id = 1, Password = "password" };
+            var user = new User
+            {
+                Password = "password",
+                Email = "test@example.com",
+                PhoneNumber = "1234567890",
+                VisibleName = "Test User"
+            };
             await _userRepository.AddAsync(user);
 
             // Act
