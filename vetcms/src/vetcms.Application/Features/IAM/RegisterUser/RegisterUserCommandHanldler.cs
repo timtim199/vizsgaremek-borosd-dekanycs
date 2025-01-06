@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MediatR;
+using vetcms.ServerApplication.Common.Abstractions.Data;
 using vetcms.ServerApplication.Common.IAM;
 using vetcms.ServerApplication.Domain.Entity;
 using vetcms.ServerApplication.Infrastructure.Presistence.Repository;
@@ -12,7 +13,7 @@ using vetcms.SharedModels.Features.IAM;
 
 namespace vetcms.ServerApplication.Features.IAM.RegisterUser
 {
-    internal class RegisterUserCommandHanldler(UserRepository userRepository) : IRequestHandler<RegisterUserApiCommand, RegisterUserApiCommandResponse>
+    internal class RegisterUserCommandHanldler(IUserRepository userRepository) : IRequestHandler<RegisterUserApiCommand, RegisterUserApiCommandResponse>
     {
         public async Task<RegisterUserApiCommandResponse> Handle(RegisterUserApiCommand request, CancellationToken cancellationToken)
         {

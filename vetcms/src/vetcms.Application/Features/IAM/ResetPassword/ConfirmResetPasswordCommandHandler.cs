@@ -5,13 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using vetcms.ServerApplication.Common.Abstractions;
+using vetcms.ServerApplication.Common.Abstractions.Data;
 using vetcms.ServerApplication.Domain.Entity;
 using vetcms.ServerApplication.Infrastructure.Presistence.Repository;
 using vetcms.SharedModels.Features.IAM;
 
 namespace vetcms.ServerApplication.Features.IAM.ResetPassword
 {
-    internal class ConfirmResetPasswordCommandHandler(UserRepository userRepository) : IRequestHandler<ConfirmResetPasswordApiCommand, ConfirmResetPasswordApiCommandResponse>
+    internal class ConfirmResetPasswordCommandHandler(IUserRepository userRepository) : IRequestHandler<ConfirmResetPasswordApiCommand, ConfirmResetPasswordApiCommandResponse>
     {
         public async Task<ConfirmResetPasswordApiCommandResponse> Handle(ConfirmResetPasswordApiCommand request, CancellationToken cancellationToken)
         {

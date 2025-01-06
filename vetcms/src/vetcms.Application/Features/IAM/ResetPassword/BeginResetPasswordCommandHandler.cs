@@ -6,13 +6,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using vetcms.ServerApplication.Common.Abstractions;
+using vetcms.ServerApplication.Common.Abstractions.Data;
 using vetcms.ServerApplication.Domain.Entity;
 using vetcms.ServerApplication.Infrastructure.Presistence.Repository;
 using vetcms.SharedModels.Features.IAM;
 
 namespace vetcms.ServerApplication.Features.IAM.ResetPassword
 {
-    internal class BeginResetPasswordCommandHandler(UserRepository userRepository, IMailService mailService) : IRequestHandler<BeginResetPasswordApiCommand, BeginResetPasswordApiCommandResponse>
+    internal class BeginResetPasswordCommandHandler(IUserRepository userRepository, IMailService mailService) : IRequestHandler<BeginResetPasswordApiCommand, BeginResetPasswordApiCommandResponse>
     {
         public async Task<BeginResetPasswordApiCommandResponse> Handle(BeginResetPasswordApiCommand request, CancellationToken cancellationToken)
         {

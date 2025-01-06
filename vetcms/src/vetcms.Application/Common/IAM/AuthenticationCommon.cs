@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using vetcms.ServerApplication.Common.Abstractions.Data;
 using vetcms.ServerApplication.Common.Abstractions.IAM;
 using vetcms.ServerApplication.Domain.Entity;
 using vetcms.ServerApplication.Infrastructure.Presistence.Repository;
@@ -17,14 +18,14 @@ namespace vetcms.ServerApplication.Common.IAM
     {
 
         private readonly IConfiguration configuration;
-        private readonly UserRepository userRepository;
+        private readonly IUserRepository userRepository;
 
         private const string CLAIM_KEY_ID = "id";
         private const string CLAIM_KEY_TRACKING_ID = "tracking-id";
         private const string CLAIM_KEY_PERMISSION_SET = "permission-set";
 
 
-        public AuthenticationCommon(IConfiguration _config, UserRepository _userRepository)
+        public AuthenticationCommon(IConfiguration _config, IUserRepository _userRepository)
         {
             configuration = _config;
             userRepository = _userRepository;
