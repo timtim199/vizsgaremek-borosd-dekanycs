@@ -67,7 +67,7 @@ namespace vetcms.ServerApplicationTests.IntegrationTests.Features.IAM
             _dbContext.Set<User>().Add(user);
             await _dbContext.SaveChangesAsync();
 
-            var command = new LoginUserApiCommand() { Email = "user@example.com", Password = "hashedpassword" };
+            var command = new LoginUserApiCommand() { Email = "user@example.com", Password = "invalidpassword" };
 
             // Act
             var result = await _handler.Handle(command, CancellationToken.None);
