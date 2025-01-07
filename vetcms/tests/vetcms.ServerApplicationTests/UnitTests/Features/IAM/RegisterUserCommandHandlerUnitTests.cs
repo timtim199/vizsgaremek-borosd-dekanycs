@@ -11,12 +11,12 @@ using Xunit;
 
 namespace vetcms.ServerApplicationTests.UnitTests.Features.IAM
 {
-    public class RegisterUserCommandHandlerTests
+    public class RegisterUserCommandHandlerUnitTests
     {
         private readonly Mock<IUserRepository> _userRepositoryMock;
         private readonly RegisterUserCommandHandler _handler;
 
-        public RegisterUserCommandHandlerTests()
+        public RegisterUserCommandHandlerUnitTests()
         {
             _userRepositoryMock = new Mock<IUserRepository>();
             _handler = new RegisterUserCommandHandler(_userRepositoryMock.Object);
