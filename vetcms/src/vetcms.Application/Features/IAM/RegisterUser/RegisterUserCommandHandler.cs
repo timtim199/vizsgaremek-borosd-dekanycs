@@ -23,6 +23,15 @@ namespace vetcms.ServerApplication.Features.IAM.RegisterUser
             newUser.Password = PasswordUtility.CreateUserPassword(newUser, request.Password);
             newUser.VisibleName = request.Name;
 
+            if(userRepository.GetByEmail(newUser.Email) != null)
+            {
+                return new RegisterUserApiCommandResponse()
+                {
+                    Success = false,
+                    Message = "Az E-mail cím már foglalt."
+                };
+            }
+
             await userRepository.AddAsync(newUser);
 
             return new RegisterUserApiCommandResponse(true);
