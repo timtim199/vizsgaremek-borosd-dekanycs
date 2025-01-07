@@ -13,7 +13,7 @@ using vetcms.SharedModels.Features.IAM;
 
 namespace vetcms.ServerApplication.Features.IAM.RegisterUser
 {
-    internal class RegisterUserCommandHanldler(IUserRepository userRepository) : IRequestHandler<RegisterUserApiCommand, RegisterUserApiCommandResponse>
+    internal class RegisterUserCommandHandler(IUserRepository userRepository) : IRequestHandler<RegisterUserApiCommand, RegisterUserApiCommandResponse>
     {
         public async Task<RegisterUserApiCommandResponse> Handle(RegisterUserApiCommand request, CancellationToken cancellationToken)
         {
