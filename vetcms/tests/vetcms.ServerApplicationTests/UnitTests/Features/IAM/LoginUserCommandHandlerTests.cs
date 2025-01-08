@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Moq;
@@ -49,7 +49,7 @@ namespace vetcms.ServerApplicationTests.UnitTests.Features.IAM
         {
             // Arrange
             var user = new User { Email = "user@example.com", Password = "hashedpassword" };
-            user.GetPermissions().RemoveFlag(PermissionFlags.CAN_LOGIN);
+            user.OverwritePermissions(user.GetPermissions().RemoveFlag(PermissionFlags.CAN_LOGIN));
             _userRepositoryMock.Setup(repo => repo.GetByEmail(It.IsAny<string>())).Returns(user);
             var command = new LoginUserApiCommand { Email = "user@example.com", Password = "password" };
 

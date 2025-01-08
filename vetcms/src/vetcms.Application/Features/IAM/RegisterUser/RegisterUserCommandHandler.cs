@@ -13,7 +13,7 @@ using vetcms.SharedModels.Features.IAM;
 
 namespace vetcms.ServerApplication.Features.IAM.RegisterUser
 {
-    internal class RegisterUserCommandHanldler(IUserRepository userRepository) : IRequestHandler<RegisterUserApiCommand, RegisterUserApiCommandResponse>
+    internal class RegisterUserCommandHandler(IUserRepository userRepository) : IRequestHandler<RegisterUserApiCommand, RegisterUserApiCommandResponse>
     {
         public async Task<RegisterUserApiCommandResponse> Handle(RegisterUserApiCommand request, CancellationToken cancellationToken)
         {
@@ -22,6 +22,15 @@ namespace vetcms.ServerApplication.Features.IAM.RegisterUser
             newUser.Email = request.Email;
             newUser.Password = PasswordUtility.CreateUserPassword(newUser, request.Password);
             newUser.VisibleName = request.Name;
+
+            if(userRepository.HasUserByEmail(newUser.Email))
+            {
+                return new RegisterUserApiCommandResponse()
+                {
+                    Success = false,
+                    Message = "Az E-mail cím már foglalt."
+                };
+            }
 
             await userRepository.AddAsync(newUser);
 
