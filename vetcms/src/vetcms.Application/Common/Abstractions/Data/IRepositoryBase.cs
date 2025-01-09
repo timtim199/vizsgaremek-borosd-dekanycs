@@ -17,6 +17,5 @@ namespace vetcms.ServerApplication.Common.Abstractions.Data
         Task<T> DeleteAsync(int id);
         Task<bool> ExistAsync(int id);
         void LoadReferencedCollection<TProperty>(T entity, Expression<Func<T, IEnumerable<TProperty>>> propertyExpression) where TProperty : class;
-        Task SeedSampleData();
     }
 }
