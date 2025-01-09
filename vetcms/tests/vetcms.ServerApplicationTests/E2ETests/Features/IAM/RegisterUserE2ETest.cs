@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,144 +19,138 @@ using Microsoft.Extensions.Configuration;
 
 namespace vetcms.ServerApplicationTests.E2ETests.Features.IAM
 {
-    public class LoginUserE2ETests : IClassFixture<WebApplicationFactory<WebApi.Program>>, IDisposable
+    public class RegisterUserE2ETests : IClassFixture<WebApplicationFactory<WebApi.Program>>, IDisposable
     {
         private readonly WebApplicationFactory<WebApi.Program> _factory;
         private IServiceScope _scope;
         private ApplicationDbContext _dbContext;
 
-        public LoginUserE2ETests(WebApplicationFactory<WebApi.Program> factory)
+        public RegisterUserE2ETests(WebApplicationFactory<WebApi.Program> factory)
         {
             _factory = factory.WithWebHostBuilder(builder =>
             {
-
                 builder.ConfigureServices(services =>
                 {
                     // Replace the real database with an in-memory database for testing
                     services.AddDbContext<ApplicationDbContext>(options =>
                     {
-                        options.UseInMemoryDatabase("TestDb_Login");
+                        options.UseInMemoryDatabase("TestDb");
                     });
 
                     // Build the service provider
                     var serviceProvider = services.BuildServiceProvider();
+
+                    // Create a scope to obtain a reference to the database context
                     _scope = serviceProvider.CreateScope();
                     _dbContext = _scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
                     // Ensure the database is created
                     _dbContext.Database.EnsureCreated();
-
-                    // Seed the database with test data
-                    SeedDatabase(_dbContext);
                 });
             });
         }
 
-        private void SeedDatabase(ApplicationDbContext dbContext)
-        {
-            var password = PasswordUtility.HashPassword("ValidPassword123");
-            // Add a test user to the database
-            var testUser = new User
-            {
-                Email = "test@example.com",
-                Password = password, // Ensure this is hashed if your application uses hashed passwords
-                PhoneNumber = "1234567890", // Provide a valid phone number
-                VisibleName = "Test User" // Provide a visible name
-            };
-            dbContext.Set<User>().Add(testUser);
-            dbContext.SaveChanges();
-        }
-
         [Fact]
-        public async Task LoginUser_ShouldReturnSuccess_WhenCredentialsAreValid()
+        public async Task RegisterUser_ShouldReturnSuccess_WhenDataIsValid()
         {
             // Arrange
             var client = _factory.CreateClient();
-            var command = new LoginUserApiCommand
+            var command = new RegisterUserApiCommand
             {
-                Email = "test@example.com",
-                Password = "ValidPassword123"
+                Email = "newuser@example.com",
+                Password = "ValidPassword123",
+                PhoneNumber = "12345678901",
+                Name = "New User"
             };
 
             // Act
-            var response = await client.PostAsJsonAsync("/api/v1/iam/login", command);
+            var response = await client.PostAsJsonAsync("/api/v1/iam/register", command);
 
             // Assert
             response.EnsureSuccessStatusCode();
-            var result = await response.Content.ReadFromJsonAsync<LoginUserApiCommandResponse>();
+            var result = await response.Content.ReadFromJsonAsync<RegisterUserApiCommandResponse>();
             Assert.True(result.Success);
         }
 
         [Fact]
-        public async Task LoginUser_ShouldReturnFailure_WhenCredentialsAreInvalid()
+        public async Task RegisterUser_ShouldReturnFailure_WhenEmailIsInvalid()
         {
             // Arrange
             var client = _factory.CreateClient();
-            var command = new LoginUserApiCommand
-            {
-                Email = "test@example.com",
-                Password = "InvalidPassword"
-            };
-
-            // Act
-            var response = await client.PostAsJsonAsync("/api/v1/iam/login", command);
-
-            // Assert
-            var result = await response.Content.ReadFromJsonAsync<LoginUserApiCommandResponse>();
-            Assert.False(result.Success);
-        }
-        [Fact]
-        public async Task LoginUser_ShouldReturnFailure_WhenEmailIsMissing()
-        {
-            // Arrange
-            var client = _factory.CreateClient();
-            var command = new LoginUserApiCommand
-            {
-                Password = "ValidPassword123"
-            };
-
-            // Act
-            var response = await client.PostAsJsonAsync("/api/v1/iam/login", command);
-
-            // Assert
-            var result = await response.Content.ReadFromJsonAsync<LoginUserApiCommandResponse>();
-            Assert.False(result.Success);
-        }
-
-        [Fact]
-        public async Task LoginUser_ShouldReturnFailure_WhenPasswordIsMissing()
-        {
-            // Arrange
-            var client = _factory.CreateClient();
-            var command = new LoginUserApiCommand
-            {
-                Email = "test@example.com"
-            };
-
-            // Act
-            var response = await client.PostAsJsonAsync("/api/v1/iam/login", command);
-
-            // Assert
-            var result = await response.Content.ReadFromJsonAsync<LoginUserApiCommandResponse>();
-            Assert.False(result.Success);
-        }
-
-        [Fact]
-        public async Task LoginUser_ShouldReturnFailure_WhenEmailIsInvalid()
-        {
-            // Arrange
-            var client = _factory.CreateClient();
-            var command = new LoginUserApiCommand
+            var command = new RegisterUserApiCommand
             {
                 Email = "invalid-email",
-                Password = "ValidPassword123"
+                Password = "ValidPassword123",
+                PhoneNumber = "12345678901",
+                Name = "New User"
             };
 
             // Act
-            var response = await client.PostAsJsonAsync("/api/v1/iam/login", command);
+            var response = await client.PostAsJsonAsync("/api/v1/iam/register", command);
 
             // Assert
-            var result = await response.Content.ReadFromJsonAsync<LoginUserApiCommandResponse>();
+            var result = await response.Content.ReadFromJsonAsync<RegisterUserApiCommandResponse>();
+            Assert.False(result.Success);
+        }
+
+        [Fact]
+        public async Task RegisterUser_ShouldReturnFailure_WhenEmailIsMissing()
+        {
+            // Arrange
+            var client = _factory.CreateClient();
+            var command = new RegisterUserApiCommand
+            {
+                Password = "ValidPassword123",
+                PhoneNumber = "12345678901",
+                Name = "New User"
+            };
+
+            // Act
+            var response = await client.PostAsJsonAsync("/api/v1/iam/register", command);
+
+            // Assert
+            var result = await response.Content.ReadFromJsonAsync<RegisterUserApiCommandResponse>();
+            Assert.False(result.Success);
+        }
+
+        [Fact]
+        public async Task RegisterUser_ShouldReturnFailure_WhenPasswordIsMissing()
+        {
+            // Arrange
+            var client = _factory.CreateClient();
+            var command = new RegisterUserApiCommand
+            {
+                Email = "newuser@example.com",
+                PhoneNumber = "12345678901",
+                Name = "New User"
+            };
+
+            // Act
+            var response = await client.PostAsJsonAsync("/api/v1/iam/register", command);
+
+            // Assert
+            var result = await response.Content.ReadFromJsonAsync<RegisterUserApiCommandResponse>();
+            Assert.False(result.Success);
+        }
+
+        [Fact]
+        public async Task RegisterUser_ShouldReturnFailure_WhenPhoneNumberIsInvalid()
+        {
+            // Arrange
+            var client = _factory.CreateClient();
+            var command = new RegisterUserApiCommand
+            {
+                Email = "newuser@example.com",
+                Password = "ValidPassword123",
+                PhoneNumber = "12345",
+                Name = "New User"
+            };
+
+            // Act
+            var response = await client.PostAsJsonAsync("/api/v1/iam/register", command);
+
+            // Assert
+            var result = await response.Content.ReadFromJsonAsync<RegisterUserApiCommandResponse>();
             Assert.False(result.Success);
         }
 
