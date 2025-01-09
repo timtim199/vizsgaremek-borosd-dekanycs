@@ -24,10 +24,5 @@ namespace vetcms.ServerApplication.Infrastructure.Presistence.Repository
             var result = Where((u) => u.Email == email).First();
             return result;
         }
-
-        public override Task SeedSampleData()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

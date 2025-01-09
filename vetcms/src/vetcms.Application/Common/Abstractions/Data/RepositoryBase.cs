@@ -77,7 +77,5 @@ namespace vetcms.ServerApplication.Common.Abstractions.Data
         {
             Entities.Entry(entity).Collection(propertyExpression).Load();
         }
-
-        public abstract Task SeedSampleData();
     }
 }
