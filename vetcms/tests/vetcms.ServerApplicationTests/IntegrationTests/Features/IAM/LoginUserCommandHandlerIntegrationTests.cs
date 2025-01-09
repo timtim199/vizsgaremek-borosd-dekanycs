@@ -36,13 +36,37 @@ namespace vetcms.ServerApplicationTests.IntegrationTests.Features.IAM
             _userRepository = new UserRepository(_dbContext);
             _authenticationCommonMock = new Mock<IAuthenticationCommon>();
             _handler = new LoginUserCommandHandler(_userRepository, _authenticationCommonMock.Object);
+            SeedDatabase();
+        }
+
+        private string SeedDatabase()
+        {
+            var guid = Guid.NewGuid().ToString();
+            var user = new User
+            {
+                Email = $"{guid}@example.com",
+                Password = PasswordUtility.HashPassword("hashedpassword"),
+                PhoneNumber = "1234567890",
+                VisibleName = guid
+            };
+            _dbContext.Set<User>().Add(user);
+            _dbContext.SaveChanges();
+
+            return guid;
+        }
+
+        private void ClearDatabase(string guid)
+        {
+            _dbContext.Set<User>().RemoveRange(_dbContext.Set<User>().Where(u => u.Email == $"{guid}@example.com"));
+            _dbContext.SaveChanges();
         }
 
         [Fact]
         public async Task Handle_UserDoesNotExist_ReturnsFailureResponse()
         {
             // Arrange
-            var command = new LoginUserApiCommand() { Email = "none@none.com", Password = "hashed" };
+            var guid = Guid.NewGuid().ToString();
+            var command = new LoginUserApiCommand() { Email = $"{guid}@none.com", Password = "hashed" };
 
             // Act
             var result = await _handler.Handle(command, CancellationToken.None);
@@ -56,18 +80,8 @@ namespace vetcms.ServerApplicationTests.IntegrationTests.Features.IAM
         public async Task Handle_InvalidPassword_ReturnsFailureResponse()
         {
             // Arrange
-            string password = PasswordUtility.HashPassword("hashedpassword");
-            var user = new User
-            {
-                Email = "user@example.com",
-                Password = password,
-                PhoneNumber = "1234567890",
-                VisibleName = "Test User"
-            };
-            _dbContext.Set<User>().Add(user);
-            await _dbContext.SaveChangesAsync();
-
-            var command = new LoginUserApiCommand() { Email = "user@example.com", Password = "invalidpassword" };
+            var guid = SeedDatabase();
+            var command = new LoginUserApiCommand() { Email = $"{guid}@example.com", Password = "invalidpassword" };
 
             // Act
             var result = await _handler.Handle(command, CancellationToken.None);
@@ -75,24 +89,16 @@ namespace vetcms.ServerApplicationTests.IntegrationTests.Features.IAM
             // Assert
             Assert.False(result.Success);
             Assert.Equal("Hibás bejelentkezési adatok.", result.Message);
+
+            ClearDatabase(guid);
         }
 
         [Fact]
         public async Task Handle_ValidCredentials_ReturnsSuccessResponse()
         {
             // Arrange
-            string password = PasswordUtility.HashPassword("hashedpassword");
-            var user = new User
-            {
-                Email = "user@example.com",
-                Password = password,
-                PhoneNumber = "1234567890",
-                VisibleName = "Test User"
-            };
-            _dbContext.Set<User>().Add(user);
-            await _dbContext.SaveChangesAsync();
-
-            var command = new LoginUserApiCommand() { Email = "user@example.com", Password = "hashedpassword" };
+            var guid = SeedDatabase();
+            var command = new LoginUserApiCommand() { Email = $"{guid}@example.com", Password = "hashedpassword" };
             _authenticationCommonMock.Setup(auth => auth.GenerateAccessToken(It.IsAny<User>(), default)).Returns("token");
 
             // Act
@@ -101,25 +107,20 @@ namespace vetcms.ServerApplicationTests.IntegrationTests.Features.IAM
             // Assert
             Assert.True(result.Success);
             Assert.Equal("token", result.AccessToken);
+
+            ClearDatabase(guid);
         }
 
         [Fact]
         public async Task Handle_UserWithoutLoginPermission_ReturnsFailureResponse()
         {
             // Arrange
-            string password = PasswordUtility.HashPassword("password");
-            var user = new User
-            {
-                Email = "user@example.com",
-                Password = password,
-                PhoneNumber = "1234567890",
-                VisibleName = "Test User"
-            };
-            user.GetPermissions().RemoveFlag(PermissionFlags.CAN_LOGIN);
-            _dbContext.Set<User>().Add(user);
-            await _dbContext.SaveChangesAsync();
+            var guid = SeedDatabase();
+            var user = _dbContext.Set<User>().First(u => u.Email == $"{guid}@example.com");
+            user.OverwritePermissions(user.GetPermissions().RemoveFlag(PermissionFlags.CAN_LOGIN));
+            _dbContext.SaveChanges();
 
-            var command = new LoginUserApiCommand() { Email = "user@example.com", Password = "password" };
+            var command = new LoginUserApiCommand() { Email = $"{guid}@example.com", Password = "hashedpassword" };
 
             // Act
             var result = await _handler.Handle(command, CancellationToken.None);
@@ -127,6 +128,8 @@ namespace vetcms.ServerApplicationTests.IntegrationTests.Features.IAM
             // Assert
             Assert.False(result.Success);
             Assert.Equal("Hibás bejelentkezési adatok.", result.Message);
+
+            ClearDatabase(guid);
         }
     }
 }
