@@ -106,7 +106,7 @@ namespace vetcms.ServerApplicationTests.UnitTests.Common
             _mockUserRepository.Setup(r => r.GetByIdAsync(It.IsAny<int>(), false)).ReturnsAsync(user);
 
             var token = _authenticationCommon.GenerateAccessToken(user);
-            token = token.Substring(0, token.Length - 1) + "X"; // Tamper with the token
+            token = token.Substring(0, token.Length - 1) + new Guid().ToString(); // Tamper with the token
 
             // Act
             var isValid = await _authenticationCommon.ValidateToken(token);
