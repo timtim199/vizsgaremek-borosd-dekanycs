@@ -5,6 +5,7 @@ using vetcms.ServerApplication.Common.Abstractions;
 using vetcms.ServerApplication.Common.Abstractions.Data;
 using vetcms.ServerApplication.Domain.Entity;
 using vetcms.ServerApplication.Features.IAM.ResetPassword;
+using vetcms.ServerApplication.Infrastructure.Communication.Mail;
 using vetcms.SharedModels.Features.IAM;
 using Xunit;
 
@@ -108,6 +109,29 @@ namespace vetcms.ServerApplicationTests.UnitTests.Features.IAM
             // Assert
             Assert.False(result.Success);
             Assert.Equal("Nincs ilyen felhasználó.", result.Message);
+        }
+
+        [Fact]
+        public async Task SendPasswordResetEmailAsync_ShouldCallSendEmailAsync()
+        {
+            // Arrange
+            var mockMailServiceWrapper = new Mock<IMailDeliveryProviderWrapper>();
+            var mailService = new MailService(mockMailServiceWrapper.Object);
+            const string code = "123456";
+            var passwordReset = new PasswordReset
+            {
+                Code = "123456",
+                User = new User { Email = "test@example.com", VisibleName = "Test User" }
+            };
+
+            // Act
+            await mailService.SendPasswordResetEmailAsync(passwordReset);
+
+            // Assert
+            mockMailServiceWrapper.Verify(m => m.SendEmailAsync(
+                "test@example.com",
+                "VETCMS: Elfelejtett jelszó",
+                It.Is<string>(m => m.Contains(code))), Times.Once);
         }
     }
 }

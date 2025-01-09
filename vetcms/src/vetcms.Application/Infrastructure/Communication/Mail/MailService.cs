@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using vetcms.ServerApplication.Common.Abstractions;
 using vetcms.ServerApplication.Domain.Entity;
 
+[assembly: InternalsVisibleTo("vetcms.ServerApplication.Tests")]
 namespace vetcms.ServerApplication.Infrastructure.Communication.Mail
 {
     internal class MailService(IMailDeliveryProviderWrapper mailServiceWrapper) : IMailService
