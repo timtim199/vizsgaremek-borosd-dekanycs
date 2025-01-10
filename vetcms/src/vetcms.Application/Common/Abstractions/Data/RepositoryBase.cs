@@ -24,13 +24,15 @@ namespace vetcms.ServerApplication.Common.Abstractions.Data
         public async Task<T> GetByIdAsync(int id, bool includeDeleted = false)
         {
 
-            var result = await Entities.Where(e => (includeDeleted || !e.Deleted) && e.Id == id).FirstAsync();
-            if (result == null)
+            try
+            {
+                var result = await Entities.Where(e => (includeDeleted || !e.Deleted) && e.Id == id).FirstAsync();
+                return result;
+            }
+            catch(InvalidOperationException)
             {
                 throw new NotFoundException(nameof(T), id);
             }
-
-            return result;
         }
 
         public IEnumerable<T> Where(Func<T, bool> predicate, bool includeDeleted = false)
