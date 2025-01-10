@@ -13,6 +13,7 @@ using vetcms.ServerApplication.Common;
 using vetcms.ServerApplication.Infrastructure.Communication.Mail;
 using vetcms.ServerApplication.Common.Abstractions.Data;
 using vetcms.ServerApplication.Common.Abstractions.IAM;
+using vetcms.ServerApplication.Common.Behaviour;
 
 namespace vetcms.ServerApplication
 {
@@ -28,6 +29,8 @@ namespace vetcms.ServerApplication
             {
                 options.RegisterServicesFromAssembly(typeof(ServerDependencyInitializer).Assembly);
                 options.AddOpenBehavior(typeof(ValidationBehaviour<,>));
+                options.AddOpenBehavior(typeof(UserValidationBehavior<,>));
+                options.AddOpenBehavior(typeof(PermissionRequirementBehaviour<,>));
             });
 
             services.Configure<RouteOptions>(o =>
