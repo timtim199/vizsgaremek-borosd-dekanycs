@@ -2,6 +2,7 @@
 @page "/iam/register"
 @using vetcms.ClientApplication.Features.IAM.RegisterUser
 @inject MediatR.IMediator Mediator
+@inject NavigationManager Navigation
 @inject IDialogService DialogService
 
 
@@ -85,18 +86,13 @@
             Password2 = pass2
         };
         await Mediator.Send(registerUserClientCommand);
-
+        NavigateToLogin();
     }
 
-    private bool SameInputPassword()
+
+
+    private void NavigateToLogin()
     {
-        if(pass1 == pass2)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        Navigation.NavigateTo("/iam/login");
     }
 }
