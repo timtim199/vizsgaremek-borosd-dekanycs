@@ -9,10 +9,11 @@ using vetcms.SharedModels.Common;
 using vetcms.ServerApplication.Common.IAM;
 using vetcms.ServerApplication.Domain.Entity;
 using vetcms.SharedModels.Common.ApiLogicExceptionHandling;
+using vetcms.ServerApplication.Common.Abstractions.IAM;
 
 namespace vetcms.ServerApplication.Common.Behaviour
 {
-    public class PermissionRequirementBehaviour<TRequest, TResponse>(AuthenticationCommon authenticationCommon) : IPipelineBehavior<TRequest, TResponse>
+    public class PermissionRequirementBehaviour<TRequest, TResponse>(IAuthenticationCommon authenticationCommon) : IPipelineBehavior<TRequest, TResponse>
     where TRequest : AuthenticatedApiCommandBase<TResponse>
     where TResponse : ICommandResult
     {
@@ -26,7 +27,6 @@ namespace vetcms.ServerApplication.Common.Behaviour
             else
             {
                 throw new CommonApiLogicException(ApiLogicExceptionCode.INSUFFICIENT_PERMISSIONS, "Nem megfelelő hozzáférés.");
-
             }
         }
     }

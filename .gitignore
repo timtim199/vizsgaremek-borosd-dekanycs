@@ -482,3 +482,5 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+vetcms/src/vetcms.WebApi/vetcms.db-wal
+vetcms/src/vetcms.WebApi/vetcms.db-shm

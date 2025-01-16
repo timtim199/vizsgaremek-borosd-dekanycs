@@ -58,7 +58,7 @@ namespace vetcms.ServerApplication.Common.IAM
 
             return tokenHandler.WriteToken(token);
         }
-
+//
         public async Task<bool> ValidateToken(string token)
         {
             try

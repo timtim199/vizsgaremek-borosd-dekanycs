@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using vetcms.ServerApplication.Common.Abstractions.IAM;
 using vetcms.ServerApplication.Common.IAM;
 using vetcms.SharedModels.Common;
 using vetcms.SharedModels.Common.Abstract;
@@ -12,7 +13,7 @@ using vetcms.SharedModels.Common.ApiLogicExceptionHandling;
 
 namespace vetcms.ServerApplication.Common.Behaviour
 {
-    public class UserValidationBehavior<TRequest, TResponse>(AuthenticationCommon authenticationCommon) : IPipelineBehavior<TRequest, TResponse>
+    public class UserValidationBehavior<TRequest, TResponse>(IAuthenticationCommon authenticationCommon) : IPipelineBehavior<TRequest, TResponse>
         where TRequest : AuthenticatedApiCommandBase<TResponse>
         where TResponse : ICommandResult
     {
