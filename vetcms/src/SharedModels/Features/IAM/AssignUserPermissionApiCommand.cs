@@ -17,12 +17,12 @@ namespace vetcms.SharedModels.Features.IAM
     public record AssignUserPermissionApiCommand : AuthenticatedApiCommandBase<AssignUserPermissionApiCommandResponse>
     {
         /// <summary>
-        /// A felhasználó azonosítója.
+        /// A módosítani kívánt felhasználó azonosítója.
         /// </summary>
         public int Id { get; init; }
 
         /// <summary>
-        /// A felhasználó jogosultságainak halmaza.
+        /// A felhasználó új jogosultságainak halmaza.
         /// </summary>
         public string PermissionSet { get; set; }
 
@@ -35,28 +35,18 @@ namespace vetcms.SharedModels.Features.IAM
             return new EntityPermissions(PermissionSet);
         }
 
-        /// <summary>
-        /// Visszaadja az API végpontot.
-        /// </summary>
-        /// <returns>Az API végpont.</returns>
+
         public override string GetApiEndpoint()
         {
             return Path.Join(ApiBaseUrl, "/api/v1/iam/assign-permission");
         }
 
-        /// <summary>
-        /// Visszaadja az API metódust.
-        /// </summary>
-        /// <returns>Az API metódus.</returns>
+
         public override HttpMethodEnum GetApiMethod()
         {
             return HttpMethodEnum.Put;
         }
 
-        /// <summary>
-        /// Visszaadja a szükséges jogosultságokat.
-        /// </summary>
-        /// <returns>A szükséges jogosultságok tömbje.</returns>
         public override PermissionFlags[] GetRequiredPermissions()
         {
             return [PermissionFlags.CAN_ASSIGN_PERMISSIONS];
@@ -64,7 +54,7 @@ namespace vetcms.SharedModels.Features.IAM
     }
 
     /// <summary>
-    /// Felhasználói jogosultságok hozzárendelésére szolgáló API parancs érvényesítője.
+    /// Felhasználói jogosultságok hozzárendelésére szolgáló API parancs bemeneti validátora.
     /// </summary>
     public class AssignUserPermissionApiCommandValidator : AbstractValidator<AssignUserPermissionApiCommand>
     {
@@ -89,14 +79,9 @@ namespace vetcms.SharedModels.Features.IAM
             Success = success;
         }
 
-        /// <summary>
-        /// A parancs sikerességét jelző tulajdonság.
-        /// </summary>
+
         public bool Success { get; set; }
 
-        /// <summary>
-        /// A parancs üzenetét tartalmazó tulajdonság.
-        /// </summary>
         public string Message { get; set; }
     }
 }

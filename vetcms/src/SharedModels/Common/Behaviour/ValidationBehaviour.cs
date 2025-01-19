@@ -11,7 +11,7 @@ using vetcms.SharedModels.Common.Abstract;
 namespace vetcms.SharedModels.Common.Behaviour
 {
     /// <summary>
-    /// Érvényesítési viselkedés osztály, amely az API parancsok érvényesítését kezeli.
+    /// Validátor behaviour, amely az API parancsok bemeneti valiálását végzi.
     /// </summary>
     /// <typeparam name="TRequest">Az API kérés típusa.</typeparam>
     /// <typeparam name="TResponse">Az API válasz típusa.</typeparam>
@@ -21,17 +21,14 @@ namespace vetcms.SharedModels.Common.Behaviour
     {
         private readonly IEnumerable<IValidator<TRequest>> _validators;
 
-        /// <summary>
-        /// Létrehoz egy új példányt a ValidationBehaviour osztályból.
-        /// </summary>
-        /// <param name="validators">Az érvényesítők gyűjteménye.</param>
+
         public ValidationBehaviour(IEnumerable<IValidator<TRequest>> validators)
         {
             _validators = validators;
         }
 
         /// <summary>
-        /// Kezeli a kérést és végrehajtja az érvényesítést.
+        /// Kezeli a kérést és végrehajtja a validálást.
         /// </summary>
         /// <param name="request">Az API kérés.</param>
         /// <param name="next">A következő kezelő a pipeline-ban.</param>

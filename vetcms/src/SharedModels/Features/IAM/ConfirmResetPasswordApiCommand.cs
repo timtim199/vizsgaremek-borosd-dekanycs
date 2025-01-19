@@ -30,19 +30,12 @@ namespace vetcms.SharedModels.Features.IAM
         /// </summary>
         public string NewPassword { get; set; } = string.Empty;
 
-        /// <summary>
-        /// Visszaadja az API végpontot.
-        /// </summary>
-        /// <returns>Az API végpont.</returns>
         public override string GetApiEndpoint()
         {
             return Path.Join(ApiBaseUrl, "/api/v1/iam/reset-password/confirm");
         }
 
-        /// <summary>
-        /// Visszaadja az API metódust.
-        /// </summary>
-        /// <returns>Az API metódus.</returns>
+
         public override HttpMethodEnum GetApiMethod()
         {
             return HttpMethodEnum.Post;
@@ -50,7 +43,7 @@ namespace vetcms.SharedModels.Features.IAM
     }
 
     /// <summary>
-    /// Az API parancs érvényesítője, amely megerősíti a jelszó visszaállítását.
+    /// Az API parancs bemeneti validátora.
     /// </summary>
     public class ConfirmResetPasswordApiCommandValidator : AbstractValidator<ConfirmResetPasswordApiCommand>
     {

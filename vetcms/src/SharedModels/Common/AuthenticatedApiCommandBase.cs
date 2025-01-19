@@ -26,7 +26,7 @@ namespace vetcms.SharedModels.Common
         public string? BearerToken { get; set; }
 
         /// <summary>
-        /// Visszaadja a szükséges jogosultságokat.
+        /// Visszaadja a végrehajtáshoz szükséges jogosultságokat.
         /// </summary>
         /// <returns>A szükséges jogosultságok tömbje.</returns>
         public abstract PermissionFlags[] GetRequiredPermissions();
