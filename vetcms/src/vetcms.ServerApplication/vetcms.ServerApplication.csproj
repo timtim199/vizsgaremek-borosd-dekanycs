@@ -41,7 +41,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\SharedModels\vetcms.SharedModels.csproj" />
+    <ProjectReference Include="..\SharedModels\vetcms.SharedModels.csproj" />
   </ItemGroup>
 
 </Project>
