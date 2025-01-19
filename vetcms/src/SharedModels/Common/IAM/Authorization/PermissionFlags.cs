@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace vetcms.SharedModels.Common.IAM.Authorization
 {
     /// <summary>
-    /// Jogosultsági zászlók felsorolása.
+    /// Jogosultsági "zászlók" felsorolása.
     /// </summary>
     public enum PermissionFlags
     {

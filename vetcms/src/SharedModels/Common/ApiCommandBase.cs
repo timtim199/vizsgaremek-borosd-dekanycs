@@ -18,15 +18,15 @@ namespace vetcms.SharedModels.Common
         internal const string ApiBaseUrl = "https://localhost:7129";
 
         /// <summary>
-        /// Visszaadja az API végpontot.
+        /// Visszaadja a parancs API végpontját.
         /// </summary>
         /// <returns>Az API végpont.</returns>
         public abstract string GetApiEndpoint();
 
         /// <summary>
-        /// Visszaadja az API metódust.
+        /// Visszaadja az parancs HTTP metódusát.
         /// </summary>
-        /// <returns>Az API metódus.</returns>
+        /// <returns>A HTTP metódus.</returns>
         public abstract HttpMethodEnum GetApiMethod();
     }
 }

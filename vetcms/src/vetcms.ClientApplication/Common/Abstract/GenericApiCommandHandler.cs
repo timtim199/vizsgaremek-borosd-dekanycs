@@ -26,7 +26,7 @@ namespace vetcms.ClientApplication.Common.Abstract
         }
 
         /// <summary>
-        /// Kezeli a kérést és végrehajtja az érvényesítést.
+        /// Kezeli a kérést.
         /// </summary>
         /// <param name="request">Az API kérés.</param>
         /// <param name="cancellationToken">A lemondási token.</param>
