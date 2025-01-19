@@ -3,17 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "vetcms.ServerApplication", "src\vetcms.Application\vetcms.ServerApplication.csproj", "{8D31DD97-6378-4DA7-AB3E-0A0EEC517938}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "vetcms.ServerApplication", "src\vetcms.ServerApplication\vetcms.ServerApplication.csproj", "{8D31DD97-6378-4DA7-AB3E-0A0EEC517938}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{14E1D375-184B-4EDA-8A52-D3556C1582D9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "vetcms.WebApi", "src\vetcms.WebApi\vetcms.WebApi.csproj", "{3FC32995-E575-4930-B032-EADE0CF5505E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "vetcms.SharedModels", "SharedModels\vetcms.SharedModels.csproj", "{A27BF9FE-F1CB-4A22-86EE-C7DF3670DF68}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "vetcms.SharedModels", "src\SharedModels\vetcms.SharedModels.csproj", "{A27BF9FE-F1CB-4A22-86EE-C7DF3670DF68}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{F4E0B1A6-442D-4DBA-BC98-7860B4F7E4DC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "vetcms.ClientApplication", "vetcms.ClientApplication\vetcms.ClientApplication.csproj", "{0CF13B1F-254A-4E00-A35D-4B0E290E9EBA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "vetcms.ClientApplication", "src\vetcms.ClientApplication\vetcms.ClientApplication.csproj", "{0CF13B1F-254A-4E00-A35D-4B0E290E9EBA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "vetcms.BrowserPresentation", "src\vetcms.BrowserPresentation\vetcms.BrowserPresentation.csproj", "{CF37AC65-4AD5-4A4C-8D7C-9526C8CC3FF4}"
 EndProject
