@@ -22,10 +22,16 @@ jobs:
         dotnet-version: 8.0.x
 
     - name: Restore dependencies
-      run: dotnet restore
+      run: |
+        cd vetcms
+        dotnet restore
 
     - name: Build solution
-      run: dotnet build --no-restore
+      run: |
+        cd vetcms
+        dotnet build --no-restore
 
     - name: Run tests
-      run: dotnet test --no-build --verbosity normal
+      run: |
+        cd vetcms
+        dotnet test --no-build --verbosity normal
