@@ -156,7 +156,7 @@ namespace vetcms.ServerApplicationTests.E2ETests.Features.IAM
             var response = await client.PostAsJsonAsync("/api/v1/iam/reset-password/begin", command);
 
             var result = await response.Content.ReadFromJsonAsync<ConfirmResetPasswordApiCommandResponse>();
-            Assert.Contains("Mezők helyes kitöltése kötelező", result.Message);
+            Assert.Contains("A mezőket helyesen kell kitölteni", result.Message);
         }
 
         [Fact]
@@ -173,7 +173,7 @@ namespace vetcms.ServerApplicationTests.E2ETests.Features.IAM
             var response = await client.PostAsJsonAsync("/api/v1/iam/reset-password/confirm", command);
 
             var result = await response.Content.ReadFromJsonAsync<ConfirmResetPasswordApiCommandResponse>();
-            Assert.Contains("Mezők helyes kitöltése kötelező", result.Message);
+            Assert.Contains("A mezőket helyesen kell kitölteni", result.Message);
         }
 
         [Fact]
@@ -190,7 +190,7 @@ namespace vetcms.ServerApplicationTests.E2ETests.Features.IAM
             var response = await client.PostAsJsonAsync("/api/v1/iam/reset-password/confirm", command);
 
             var result = await response.Content.ReadFromJsonAsync<ConfirmResetPasswordApiCommandResponse>();
-            Assert.Contains("Mezők helyes kitöltése kötelező", result.Message);
+            Assert.Contains("A mezőket helyesen kell kitölteni", result.Message);
         }
 
         public void Dispose()
