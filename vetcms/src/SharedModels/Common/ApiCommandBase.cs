@@ -8,6 +8,10 @@ using vetcms.SharedModels.Common.Abstract;
 
 namespace vetcms.SharedModels.Common
 {
+    /// <summary>
+    /// Az API parancsok alap osztálya.
+    /// </summary>
+    /// <typeparam name="T">A parancs eredményének típusa.</typeparam>
     public abstract record ApiCommandBase<T> : IRequest<T>
         where T : ICommandResult
     {

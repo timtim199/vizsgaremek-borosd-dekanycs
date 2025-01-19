@@ -8,6 +8,10 @@ using vetcms.SharedModels.Common.IAM.Authorization;
 
 namespace vetcms.SharedModels.Common
 {
+    /// <summary>
+    /// Az autentikált API parancsok alap osztálya.
+    /// </summary>
+    /// <typeparam name="T">A parancs eredményének típusa.</typeparam>
     public abstract record AuthenticatedApiCommandBase<T> : ApiCommandBase<T>
         where T : ICommandResult
     {

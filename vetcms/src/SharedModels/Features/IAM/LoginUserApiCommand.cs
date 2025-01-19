@@ -10,9 +10,19 @@ using vetcms.SharedModels.Common.IAM.Authorization;
 
 namespace vetcms.SharedModels.Features.IAM
 {
+    /// <summary>
+    /// Az API parancs, amely a felhasználó bejelentkezését kezeli.
+    /// </summary>
     public record LoginUserApiCommand() : UnauthenticatedApiCommandBase<LoginUserApiCommandResponse>
     {
+        /// <summary>
+        /// A felhasználó e-mail címe.
+        /// </summary>
         public string Email { get; init; }
+
+        /// <summary>
+        /// A felhasználó jelszava.
+        /// </summary>
         public string Password { get; init; }
 
         /// <summary>
@@ -34,6 +44,9 @@ namespace vetcms.SharedModels.Features.IAM
         }
     }
 
+    /// <summary>
+    /// Az API parancs érvényesítője, amely a felhasználó bejelentkezését kezeli.
+    /// </summary>
     public class LoginUserCommandValidator : AbstractValidator<LoginUserApiCommand>
     {
         public LoginUserCommandValidator()
@@ -43,12 +56,35 @@ namespace vetcms.SharedModels.Features.IAM
         }
     }
 
+    /// <summary>
+    /// Az API parancs válasza, amely a felhasználó bejelentkezését kezeli.
+    /// </summary>
     public record LoginUserApiCommandResponse : ICommandResult
     {
+        /// <summary>
+        /// A parancs sikerességét jelző tulajdonság.
+        /// </summary>
         public bool Success { get; set; }
+
+        /// <summary>
+        /// A parancs üzenetét tartalmazó tulajdonság.
+        /// </summary>
         public string Message { get; set; }
+
+        /// <summary>
+        /// A felhasználó jogosultságainak halmaza.
+        /// </summary>
         public string PermissionSet { get; set; }
+
+        /// <summary>
+        /// A hozzáférési token.
+        /// </summary>
         public string AccessToken { get; set; }
+
+        /// <summary>
+        /// Visszaadja a jogosultságokat.
+        /// </summary>
+        /// <returns>Az EntityPermissions objektum.</returns>
         public EntityPermissions GetPermissions()
         {
             return new EntityPermissions(PermissionSet);

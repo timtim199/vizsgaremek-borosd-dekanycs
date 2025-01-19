@@ -32,12 +32,17 @@
 </FluentLayout>
 
 @code {
+    /// <summary>
+    /// Inicializálja a komponenst és feldolgozza az autentikációs státuszt.
+    /// </summary>
     protected override async Task OnInitializedAsync()
     {
         await ProcessAuthenticationStatus();
     }
 
-
+    /// <summary>
+    /// Feldolgozza az autentikációs státuszt és navigál, ha a felhasználó nincs bejelentkezve.
+    /// </summary>
     private async Task ProcessAuthenticationStatus()
     {
         var result = await Mediator.Send(new AuthenticatedStatusQuery(DialogService));
@@ -46,7 +51,5 @@
             ToastService.ShowWarning("Folytatáshoz előbb be kell jelentkeznie.");
             navigationManager.NavigateTo("/iam/login?redirected=true");
         }
-
     }
 }
-
