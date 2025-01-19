@@ -12,6 +12,12 @@ namespace vetcms.ClientApplication.Features.IAM.ResetPassword
 {
     internal class ResetPasswordClientCommandHandler(IMediator mediator) : IRequestHandler<ResetPasswordClientCommand, bool>
     {
+        /// <summary>
+        /// Kezeli a jelszó visszaállításának megkezdésére vonatkozó kérést.
+        /// </summary>
+        /// <param name="request">A jelszó visszaállításának megkezdésére vonatkozó kérés.</param>
+        /// <param name="cancellationToken">A lemondási token.</param>
+        /// <returns>Igaz, ha a jelszó visszaállításának megkezdése sikeres, különben hamis.</returns>
         public async Task<bool> Handle(ResetPasswordClientCommand request, CancellationToken cancellationToken)
         {
             BeginResetPasswordApiCommand beginResetPasswordApiCommand = new BeginResetPasswordApiCommand()

@@ -10,24 +10,53 @@ using vetcms.SharedModels.Common.IAM.Authorization;
 
 namespace vetcms.SharedModels.Features.IAM
 {
+    /// <summary>
+    /// Az API parancs, amely a felhasználó regisztrációját kezeli.
+    /// </summary>
     public record RegisterUserApiCommand : UnauthenticatedApiCommandBase<RegisterUserApiCommandResponse>
     {
+        /// <summary>
+        /// A felhasználó e-mail címe.
+        /// </summary>
         public string Email { get; init; }
+
+        /// <summary>
+        /// A felhasználó jelszava.
+        /// </summary>
         public string Password { get; init; }
+
+        /// <summary>
+        /// A felhasználó telefonszáma.
+        /// </summary>
         public string PhoneNumber { get; init; }
+
+        /// <summary>
+        /// A felhasználó neve.
+        /// </summary>
         public string Name { get; init; }
 
+        /// <summary>
+        /// Visszaadja az API végpontot.
+        /// </summary>
+        /// <returns>Az API végpont.</returns>
         public override string GetApiEndpoint()
         {
             return Path.Join(ApiBaseUrl, "/api/v1/iam/register");
         }
 
+        /// <summary>
+        /// Visszaadja az API metódust.
+        /// </summary>
+        /// <returns>Az API metódus.</returns>
         public override HttpMethodEnum GetApiMethod()
         {
             return HttpMethodEnum.Post;
         }
     }
 
+    /// <summary>
+    /// Az API parancs érvényesítője, amely a felhasználó regisztrációját kezeli.
+    /// </summary>
     public class RegisterUserApiCommandValidator : AbstractValidator<RegisterUserApiCommand>
     {
         public RegisterUserApiCommandValidator()
@@ -39,6 +68,9 @@ namespace vetcms.SharedModels.Features.IAM
         }
     }
 
+    /// <summary>
+    /// Az API parancs válasza, amely a felhasználó regisztrációját kezeli.
+    /// </summary>
     public record RegisterUserApiCommandResponse : ICommandResult
     {
         public RegisterUserApiCommandResponse()
@@ -51,7 +83,14 @@ namespace vetcms.SharedModels.Features.IAM
             Success = success;
         }
 
+        /// <summary>
+        /// A parancs sikerességét jelző tulajdonság.
+        /// </summary>
         public bool Success { get; set; }
+
+        /// <summary>
+        /// A parancs üzenetét tartalmazó tulajdonság.
+        /// </summary>
         public string Message { get; set; }
     }
 }

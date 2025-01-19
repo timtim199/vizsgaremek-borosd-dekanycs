@@ -29,6 +29,13 @@ namespace vetcms.ClientApplication.Common.Behaviours
             authenticationManger = _authenticationManger;
         }
 
+        /// <summary>
+        /// Kezeli a kérést és végrehajtja az érvényesítést.
+        /// </summary>
+        /// <param name="request">Az API kérés.</param>
+        /// <param name="next">A következő kezelő a csővezetékben.</param>
+        /// <param name="cancellationToken">A lemondási token.</param>
+        /// <returns>Az API válasz.</returns>
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
             try
@@ -51,6 +58,12 @@ namespace vetcms.ClientApplication.Common.Behaviours
             }
         }
         
+        /// <summary>
+        /// Kezeli az API logikai kivételt.
+        /// </summary>
+        /// <param name="request">Az API kérés.</param>
+        /// <param name="ex">Az API logikai kivétel.</param>
+        /// <returns>Az API válasz.</returns>
         private async Task<TResponse> HandleApiLogicException(TRequest request, CommonApiLogicException ex)
         {
             IDialogReference r = await request.DialogService.ShowErrorAsync(ex.GetExceptionCodeDescription(), "Hiba történt a kérés feldolgozása közben.");
