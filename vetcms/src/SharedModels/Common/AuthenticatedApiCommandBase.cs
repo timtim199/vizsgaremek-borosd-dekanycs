@@ -15,7 +15,16 @@ namespace vetcms.SharedModels.Common
         {
             
         }
+
+        /// <summary>
+        /// A Bearer token, amelyet az API hívásokhoz használnak.
+        /// </summary>
         public string? BearerToken { get; set; }
+
+        /// <summary>
+        /// Visszaadja a szükséges jogosultságokat.
+        /// </summary>
+        /// <returns>A szükséges jogosultságok tömbje.</returns>
         public abstract PermissionFlags[] GetRequiredPermissions();
     }
 }

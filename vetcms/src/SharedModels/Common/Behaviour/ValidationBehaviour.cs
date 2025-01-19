@@ -21,6 +21,13 @@ namespace vetcms.SharedModels.Common.Behaviour
             _validators = validators;
         }
 
+        /// <summary>
+        /// Kezeli a kérést és végrehajtja az érvényesítést.
+        /// </summary>
+        /// <param name="request">Az API kérés.</param>
+        /// <param name="next">A következő kezelő a pipeline-ban.</param>
+        /// <param name="cancellationToken">A lemondási token.</param>
+        /// <returns>Az API válasz.</returns>
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
             if (_validators.Any())
@@ -42,10 +49,16 @@ namespace vetcms.SharedModels.Common.Behaviour
 
             return await next();
         }
+
+        /// <summary>
+        /// Átalakítja az érvényesítési hibákat szöveges üzenetté.
+        /// </summary>
+        /// <param name="failures">Az érvényesítési hibák listája.</param>
+        /// <returns>Az érvényesítési hibák szöveges üzenete.</returns>
         private string TrasformFailures(List<ValidationFailure> failures)
         {
             StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine("Mezők helyes kitöltése kötelező: ");
+            stringBuilder.AppendLine("A mezőket helyesen kell kitölteni: ");
             failures.ForEach(f => stringBuilder.AppendLine(f.ToString()));
             return stringBuilder.ToString();
         }

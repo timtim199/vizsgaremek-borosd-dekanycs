@@ -15,12 +15,19 @@ namespace vetcms.SharedModels.Features.IAM
         public string Email { get; init; }
         public string Password { get; init; }
 
-        
+        /// <summary>
+        /// Visszaadja az API végpontot.
+        /// </summary>
+        /// <returns>Az API végpont.</returns>
         public override string GetApiEndpoint()
         {
             return Path.Join(ApiBaseUrl, "/api/v1/iam/login");
         }
 
+        /// <summary>
+        /// Visszaadja az API metódust.
+        /// </summary>
+        /// <returns>Az API metódus.</returns>
         public override HttpMethodEnum GetApiMethod()
         {
             return HttpMethodEnum.Post;

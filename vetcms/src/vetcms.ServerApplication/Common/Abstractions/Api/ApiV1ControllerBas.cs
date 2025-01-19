@@ -16,6 +16,9 @@ namespace vetcms.ServerApplication.Common.Abstractions.Api
     {
         private ISender? _mediator;
 
+        /// <summary>
+        /// Az ISender példány, amelyet a kérések közvetítésére használnak.
+        /// </summary>
         protected ISender Mediator => _mediator ??= HttpContext.RequestServices.GetService<ISender>()!;
     }
 }

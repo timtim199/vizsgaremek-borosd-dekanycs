@@ -28,11 +28,21 @@ namespace vetcms.SharedModels.Common.IAM.Authorization
             permissionSet = initialPermissions;
         }
 
+        /// <summary>
+        /// Ellenőrzi, hogy a megadott jogosultsági zászló be van-e állítva.
+        /// </summary>
+        /// <param name="flag">A jogosultsági zászló.</param>
+        /// <returns>Igaz, ha a jogosultsági zászló be van állítva, különben hamis.</returns>
         public bool HasPermissionFlag(PermissionFlags flag)
         {
             return HasFlagAtPosition((int)flag);
         }
 
+        /// <summary>
+        /// Ellenőrzi, hogy a megadott jogosultsági zászlók be vannak-e állítva.
+        /// </summary>
+        /// <param name="flags">A jogosultsági zászlók tömbje.</param>
+        /// <returns>Igaz, ha az összes jogosultsági zászló be van állítva, különben hamis.</returns>
         public bool HasPermissionFlag(params PermissionFlags[] flags)
         {
             foreach (PermissionFlags flag in flags) 
@@ -48,12 +58,21 @@ namespace vetcms.SharedModels.Common.IAM.Authorization
             return (permissionSet & (BigInteger.One << position)) != 0;
         }
 
+        /// <summary>
+        /// Törli az összes jogosultsági zászlót.
+        /// </summary>
+        /// <returns>Az aktuális EntityPermissions objektum.</returns>
         public EntityPermissions ClearAllFlags()
         {
             permissionSet = BigInteger.Zero;
             return this;
         }
 
+        /// <summary>
+        /// Eltávolítja a megadott jogosultsági zászlót.
+        /// </summary>
+        /// <param name="flag">A jogosultsági zászló.</param>
+        /// <returns>Az aktuális EntityPermissions objektum.</returns>
         public EntityPermissions RemoveFlag(PermissionFlags flag)
         {
             RemoveFlagAtPosition((int)flag);
@@ -67,12 +86,22 @@ namespace vetcms.SharedModels.Common.IAM.Authorization
 
         }
 
+        /// <summary>
+        /// Hozzáadja a megadott jogosultsági zászlót.
+        /// </summary>
+        /// <param name="flag">A jogosultsági zászló.</param>
+        /// <returns>Az aktuális EntityPermissions objektum.</returns>
         public EntityPermissions AddFlag(PermissionFlags flag)
         {
             AddFlagAtPosition((int)flag);
             return this;
         }
 
+        /// <summary>
+        /// Hozzáadja a megadott jogosultsági zászlókat.
+        /// </summary>
+        /// <param name="flags">A jogosultsági zászlók tömbje.</param>
+        /// <returns>Az aktuális EntityPermissions objektum.</returns>
         public EntityPermissions AddFlag(params PermissionFlags[] flags)
         {
             foreach(PermissionFlags permissionFlag in flags)
@@ -88,6 +117,11 @@ namespace vetcms.SharedModels.Common.IAM.Authorization
             return this;
         }
 
+        /// <summary>
+        /// Összevonja a megadott jogosultságokat az aktuális jogosultságokkal.
+        /// </summary>
+        /// <param name="other">A másik EntityPermissions objektum.</param>
+        /// <returns>Az aktuális EntityPermissions objektum.</returns>
         public EntityPermissions MergePermissions(EntityPermissions other)
         {
             permissionSet |= other.permissionSet;

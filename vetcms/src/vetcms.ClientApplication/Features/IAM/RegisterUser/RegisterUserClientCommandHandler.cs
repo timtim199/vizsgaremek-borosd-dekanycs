@@ -13,6 +13,12 @@ namespace vetcms.ClientApplication.Features.IAM.RegisterUser
 {
     internal class RegisterUserClientCommandHandler(IMediator mediator) : IRequestHandler<RegisterUserClientCommand, bool>
     {
+        /// <summary>
+        /// Kezeli a regisztrációs kérést.
+        /// </summary>
+        /// <param name="request">A regisztrációs kérés.</param>
+        /// <param name="cancellationToken">A lemondási token.</param>
+        /// <returns>Igaz, ha a regisztráció sikeres, különben hamis.</returns>
         public async Task<bool> Handle(RegisterUserClientCommand request, CancellationToken cancellationToken)
         {
             if(request.Password != request.Password2)

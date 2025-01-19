@@ -25,6 +25,12 @@ namespace vetcms.ClientApplication.Common.Abstract
 
         }
 
+        /// <summary>
+        /// Kezeli a kérést és végrehajtja az érvényesítést.
+        /// </summary>
+        /// <param name="request">Az API kérés.</param>
+        /// <param name="cancellationToken">A lemondási token.</param>
+        /// <returns>Az API válasz.</returns>
         public async Task<TResult> Handle(TCommand request, CancellationToken cancellationToken)
         {
             if(await _credentialStore.HasAccessToken())
@@ -38,6 +44,11 @@ namespace vetcms.ClientApplication.Common.Abstract
             return await ProcessResponse(response);
         }
 
+        /// <summary>
+        /// Elküldi a kérést az API végpontra.
+        /// </summary>
+        /// <param name="request">Az API kérés.</param>
+        /// <returns>Az API válasz.</returns>
         private async Task<HttpResponseMessage?> DispatchRequest(TCommand request)
         {
             switch (request.GetApiMethod())
@@ -57,6 +68,11 @@ namespace vetcms.ClientApplication.Common.Abstract
             }
         }
 
+        /// <summary>
+        /// Feldolgozza az API választ.
+        /// </summary>
+        /// <param name="response">Az API válasz.</param>
+        /// <returns>Az API válasz eredménye.</returns>
         private async Task<TResult> ProcessResponse(HttpResponseMessage? response)
         {
             if(response == null)
@@ -74,6 +90,10 @@ namespace vetcms.ClientApplication.Common.Abstract
             }
         }
 
+        /// <summary>
+        /// Kezeli a sikertelen API kérést.
+        /// </summary>
+        /// <param name="response">Az API válasz.</param>
         private async Task HandleFailedRequest(HttpResponseMessage? response)
         {
             ProblemDetails? problem = await response.Content.ReadFromJsonAsync<ProblemDetails>();
@@ -88,31 +108,62 @@ namespace vetcms.ClientApplication.Common.Abstract
                     throw new ApiCommandExecutionUnknownException(problem);
                 }
             }
-            throw new Exception("Szerveroldali hiba történt a kérés során");
+            throw new Exception("Szerver oldali hiba történt a kérés során");
         }
 
+        /// <summary>
+        /// Feldolgozza az API válasz eredményét.
+        /// </summary>
+        /// <param name="response">Az API válasz.</param>
+        /// <returns>Az API válasz eredménye.</returns>
         private async Task<TResult> ProcessResult(HttpResponseMessage response)
         {
             string content = await response.Content.ReadAsStringAsync();
             TResult? result = JsonSerializer.Deserialize<TResult>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true});
             if(result == null)
             {
-                throw new Exception("Üres vagy helytelen Http válasz.");
+                throw new Exception("Üres vagy érvénytelen Http válasz.");
             }
             return result;
         }
 
+        /// <summary>
+        /// Feldolgozza a GET kérést.
+        /// </summary>
+        /// <param name="command">Az API kérés.</param>
+        /// <returns>Az API válasz.</returns>
         private async Task<HttpResponseMessage?> ProcessGet(TCommand command)
             => await _httpClient.GetAsync(command.GetApiEndpoint());
+
+        /// <summary>
+        /// Feldolgozza a POST kérést.
+        /// </summary>
+        /// <param name="command">Az API kérés.</param>
+        /// <returns>Az API válasz.</returns>
         private async Task<HttpResponseMessage?> ProcessPost(TCommand command)
             => await _httpClient.PostAsJsonAsync(command.GetApiEndpoint(), command);
 
+        /// <summary>
+        /// Feldolgozza a PATCH kérést.
+        /// </summary>
+        /// <param name="command">Az API kérés.</param>
+        /// <returns>Az API válasz.</returns>
         private async Task<HttpResponseMessage?> ProcessPatch(TCommand command)
             => await _httpClient.PatchAsJsonAsync(command.GetApiEndpoint(), command);
 
+        /// <summary>
+        /// Feldolgozza a PUT kérést.
+        /// </summary>
+        /// <param name="command">Az API kérés.</param>
+        /// <returns>Az API válasz.</returns>
         private async Task<HttpResponseMessage?> ProcessPut(TCommand command)
             => await _httpClient.PutAsJsonAsync(command.GetApiEndpoint(), command);
 
+        /// <summary>
+        /// Feldolgozza a DELETE kérést.
+        /// </summary>
+        /// <param name="command">Az API kérés.</param>
+        /// <returns>Az API válasz.</returns>
         private async Task<HttpResponseMessage?> ProcessDelete(TCommand command)
             => await _httpClient.DeleteAsync(command.GetApiEndpoint());
     }

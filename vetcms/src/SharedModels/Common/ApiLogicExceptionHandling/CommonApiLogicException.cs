@@ -8,16 +8,36 @@ using System.Threading.Tasks;
 
 namespace vetcms.SharedModels.Common.ApiLogicExceptionHandling
 {
+    /// <summary>
+    /// Közös API logikai kivétel osztály.
+    /// </summary>
     public class CommonApiLogicException : Exception
     {
+        /// <summary>
+        /// Az API logikai kivétel kódja.
+        /// </summary>
         public ApiLogicExceptionCode ExceptionCode { get; private set; }
+
+        /// <summary>
+        /// Az API logikai kivétel üzenete.
+        /// </summary>
         public string Message { get; set; }
+
+        /// <summary>
+        /// Létrehoz egy új CommonApiLogicException példányt a megadott kóddal és üzenettel.
+        /// </summary>
+        /// <param name="code">Az API logikai kivétel kódja.</param>
+        /// <param name="message">Az API logikai kivétel üzenete.</param>
         public CommonApiLogicException(ApiLogicExceptionCode code, string message = "")
         {
             ExceptionCode = code;
             Message = message;
         }
 
+        /// <summary>
+        /// Visszaadja az API logikai kivétel kódjának leírását.
+        /// </summary>
+        /// <returns>Az API logikai kivétel kódjának leírása.</returns>
         public string GetExceptionCodeDescription()
         {
             Type type = ExceptionCode.GetType();

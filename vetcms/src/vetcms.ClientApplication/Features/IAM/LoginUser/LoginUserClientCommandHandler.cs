@@ -13,6 +13,12 @@ namespace vetcms.ClientApplication.Features.IAM.LoginUser
 {
     internal class LoginUserClientCommandHandler(IMediator mediator, AuthenticationManger authenticationManger) : IRequestHandler<LoginUserClientCommand, bool>
     {
+        /// <summary>
+        /// Kezeli a bejelentkezési kérést.
+        /// </summary>
+        /// <param name="request">A bejelentkezési kérés.</param>
+        /// <param name="cancellationToken">A lemondási token.</param>
+        /// <returns>Igaz, ha a bejelentkezés sikeres, különben hamis.</returns>
         public async Task<bool> Handle(LoginUserClientCommand request, CancellationToken cancellationToken)
         {
             LoginUserApiCommand loginUserApiCommand = new LoginUserApiCommand()

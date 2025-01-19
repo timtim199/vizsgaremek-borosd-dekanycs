@@ -13,11 +13,20 @@ namespace vetcms.SharedModels.Features.IAM
     public record BeginResetPasswordApiCommand : UnauthenticatedApiCommandBase<BeginResetPasswordApiCommandResponse>
     {
         public string Email { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Visszaadja az API végpontot.
+        /// </summary>
+        /// <returns>Az API végpont.</returns>
         public override string GetApiEndpoint()
         {
             return Path.Join(ApiBaseUrl, "/api/v1/iam/reset-password/begin");
         }
 
+        /// <summary>
+        /// Visszaadja az API metódust.
+        /// </summary>
+        /// <returns>Az API metódus.</returns>
         public override HttpMethodEnum GetApiMethod()
         {
             return HttpMethodEnum.Post;

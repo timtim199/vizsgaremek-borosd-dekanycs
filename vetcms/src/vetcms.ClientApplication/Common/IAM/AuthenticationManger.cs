@@ -21,16 +21,29 @@ namespace vetcms.ClientApplication.Common.IAM
             _presistenceDriver = presistenceDriver;
         }
 
+        /// <summary>
+        /// Elmenti a hozzáférési tokent.
+        /// </summary>
+        /// <param name="accessToken">A hozzáférési token.</param>
         internal async Task SaveAccessToken(string accessToken)
         {
             await _presistenceDriver.SaveItem(accessTokenPresistenceKey, accessToken);
         }
 
+        /// <summary>
+        /// Elmenti a jogosultsági készletet.
+        /// </summary>
+        /// <param name="set">A jogosultsági készlet.</param>
         internal async Task SavePermissionSet(string set)
         {
             await _presistenceDriver.SaveItem(permissionSetPresistenceKey, set);
         }
 
+        /// <summary>
+        /// Visszaadja a hozzáférési tokent.
+        /// </summary>
+        /// <returns>A hozzáférési token.</returns>
+        /// <exception cref="UnauthorizedAccessException">Ha a hozzáférési token nem található.</exception>
         internal async Task<string> GetAccessToken()
         {
             try
@@ -43,6 +56,11 @@ namespace vetcms.ClientApplication.Common.IAM
             }
         }
 
+        /// <summary>
+        /// Visszaadja a jogosultsági készletet.
+        /// </summary>
+        /// <returns>Az EntityPermissions objektum.</returns>
+        /// <exception cref="UnauthorizedAccessException">Ha a jogosultsági készlet nem található.</exception>
         internal async Task<EntityPermissions> GetPermissionSet()
         {
             try
@@ -55,6 +73,10 @@ namespace vetcms.ClientApplication.Common.IAM
             }
         }
 
+        /// <summary>
+        /// Ellenőrzi, hogy van-e hozzáférési token.
+        /// </summary>
+        /// <returns>Igaz, ha van hozzáférési token, különben hamis.</returns>
         internal async Task<bool> HasAccessToken()
         {
             try
@@ -72,6 +94,10 @@ namespace vetcms.ClientApplication.Common.IAM
             }
         }
 
+        /// <summary>
+        /// Ellenőrzi, hogy van-e jogosultsági készlet.
+        /// </summary>
+        /// <returns>Igaz, ha van jogosultsági készlet, különben hamis.</returns>
         internal async Task<bool> HasPermissionSet()
         {
             try
@@ -89,12 +115,24 @@ namespace vetcms.ClientApplication.Common.IAM
             }
         }
 
+        /// <summary>
+        /// Ellenőrzi, hogy a felhasználó hitelesítve van-e.
+        /// </summary>
+        /// <returns>Igaz, ha a felhasználó hitelesítve van, különben hamis.</returns>
         public async Task<bool> IsAuthenticated()
             => await HasPermissionSet() &&  await HasAccessToken();
 
+        /// <summary>
+        /// Ellenőrzi, hogy a felhasználó rendelkezik-e a megadott jogosultságokkal.
+        /// </summary>
+        /// <param name="permissions">A jogosultságok tömbje.</param>
+        /// <returns>Igaz, ha a felhasználó rendelkezik a megadott jogosultságokkal, különben hamis.</returns>
         public async Task<bool> HasPermission(params PermissionFlags[] permissions)
             => (await GetPermissionSet()).HasPermissionFlag(permissions);
 
+        /// <summary>
+        /// Törli a hitelesítési adatokat.
+        /// </summary>
         public async Task ClearAuthenticationDetails()
         {
             await _presistenceDriver.ClearItems();
