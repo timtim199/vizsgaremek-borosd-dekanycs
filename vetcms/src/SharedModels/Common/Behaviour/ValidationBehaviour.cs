@@ -10,12 +10,21 @@ using vetcms.SharedModels.Common.Abstract;
 
 namespace vetcms.SharedModels.Common.Behaviour
 {
+    /// <summary>
+    /// Érvényesítési viselkedés osztály, amely az API parancsok érvényesítését kezeli.
+    /// </summary>
+    /// <typeparam name="TRequest">Az API kérés típusa.</typeparam>
+    /// <typeparam name="TResponse">Az API válasz típusa.</typeparam>
     public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : ApiCommandBase<TResponse>
     where TResponse : ICommandResult, new()
     {
         private readonly IEnumerable<IValidator<TRequest>> _validators;
 
+        /// <summary>
+        /// Létrehoz egy új példányt a ValidationBehaviour osztályból.
+        /// </summary>
+        /// <param name="validators">Az érvényesítők gyűjteménye.</param>
         public ValidationBehaviour(IEnumerable<IValidator<TRequest>> validators)
         {
             _validators = validators;

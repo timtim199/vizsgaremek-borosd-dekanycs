@@ -3,13 +3,16 @@ using vetcms.SharedModels.Common.Behaviour;
 
 namespace vetcms.BrowserPresentation
 {
+    /// <summary>
+    /// A böngészőfüggőségek inicializálásáért felelős osztály.
+    /// </summary>
     public static class BrowserDependencyInitializer
     {
         /// <summary>
-        /// Adds the necessary dependencies to the services.
+        /// Hozzáadja a szükséges függőségeket a szolgáltatásokhoz.
         /// </summary>
-        /// <param name="services">The collection of services.</param>
-        /// <returns>The updated collection of services.</returns>
+        /// <param name="services">A szolgáltatások gyűjteménye.</param>
+        /// <returns>A frissített szolgáltatások gyűjteménye.</returns>
         public static IServiceCollection AddDependencies(this IServiceCollection services)
         {
             services.AddBrowserPresistence();

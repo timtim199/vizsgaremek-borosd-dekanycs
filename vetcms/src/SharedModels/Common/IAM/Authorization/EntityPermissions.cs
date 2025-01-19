@@ -9,20 +9,34 @@ using System.Threading.Tasks;
 //https://www.rapidtables.com/convert/number/base-converter.html
 namespace vetcms.SharedModels.Common.IAM.Authorization
 {
+    /// <summary>
+    /// Az entitás jogosultságait kezelő osztály.
+    /// </summary>
     public class EntityPermissions
     {
         private BigInteger permissionSet;
 
+        /// <summary>
+        /// Létrehoz egy új EntityPermissions példányt alapértelmezett jogosultságokkal.
+        /// </summary>
         public EntityPermissions()
         {
             permissionSet = BigInteger.Zero;
         }
 
+        /// <summary>
+        /// Létrehoz egy új EntityPermissions példányt a megadott kezdeti jogosultságokkal.
+        /// </summary>
+        /// <param name="initialPermissions">A kezdeti jogosultságok sztring formátumban.</param>
         public EntityPermissions(string initialPermissions)
         {
             permissionSet = BigInteger.Parse(initialPermissions);
         }
 
+        /// <summary>
+        /// Létrehoz egy új EntityPermissions példányt a megadott kezdeti jogosultságokkal.
+        /// </summary>
+        /// <param name="initialPermissions">A kezdeti jogosultságok BigInteger formátumban.</param>
         public EntityPermissions(BigInteger initialPermissions)
         {
             permissionSet = initialPermissions;

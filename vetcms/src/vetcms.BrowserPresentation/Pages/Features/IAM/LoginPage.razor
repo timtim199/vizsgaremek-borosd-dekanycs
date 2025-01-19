@@ -66,6 +66,9 @@
     [SupplyParameterFromQuery]
     public bool? redirected { get; set; }
 
+    /// <summary>
+    /// Inicializálja a komponenst és megjeleníti az értesítést, ha a felhasználó átirányításra került.
+    /// </summary>
     protected override  Task OnInitializedAsync()
     {
         if(redirected.HasValue && redirected.Value)
@@ -75,11 +78,17 @@
         return Task.CompletedTask;
     }
 
+    /// <summary>
+    /// Navigál a jelszó visszaállítási oldalra.
+    /// </summary>
     private void PasswordResetStart()
     {
         Navigation.NavigateTo("/iam/lost-pass");
     }
 
+    /// <summary>
+    /// Kezeli a bejelentkezési folyamatot.
+    /// </summary>
     private async void Login()
     {
         LoginUserClientCommand userClienCommand = new LoginUserClientCommand(DialogService)
@@ -90,6 +99,10 @@
         await Mediator.Send(userClienCommand);
     }
 
+    /// <summary>
+    /// Visszaadja a megfelelő ikont a jelszó láthatóságához.
+    /// </summary>
+    /// <returns>Az ikon.</returns>
     private Icon ChangeIcon()
     {
         if (ShowPassword)
@@ -101,11 +114,18 @@
             return new Icons.Regular.Size16.Eye();
         }
     }
+
+    /// <summary>
+    /// Navigál a regisztrációs oldalra.
+    /// </summary>
     private void NavigateToRegisterPage()
     {
         Navigation.NavigateTo("/iam/register");
     }
 
+    /// <summary>
+    /// Átváltja a jelszó láthatóságát.
+    /// </summary>
     private void ToglePasswordVisibility()
     {
         ShowPassword = !ShowPassword;

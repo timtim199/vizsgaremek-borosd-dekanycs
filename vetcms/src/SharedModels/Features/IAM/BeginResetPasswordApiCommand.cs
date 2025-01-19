@@ -10,8 +10,14 @@ using vetcms.SharedModels.Common.IAM.Authorization;
 
 namespace vetcms.SharedModels.Features.IAM
 {
+    /// <summary>
+    /// Az API parancs, amely elindítja a jelszó visszaállítási folyamatot.
+    /// </summary>
     public record BeginResetPasswordApiCommand : UnauthenticatedApiCommandBase<BeginResetPasswordApiCommandResponse>
     {
+        /// <summary>
+        /// A felhasználó e-mail címe.
+        /// </summary>
         public string Email { get; set; } = string.Empty;
 
         /// <summary>
@@ -33,6 +39,9 @@ namespace vetcms.SharedModels.Features.IAM
         }
     }
 
+    /// <summary>
+    /// Az API parancs érvényesítője, amely elindítja a jelszó visszaállítási folyamatot.
+    /// </summary>
     public class BeginResetPasswordApiCommandValidator : AbstractValidator<BeginResetPasswordApiCommand>
     {
         public BeginResetPasswordApiCommandValidator()
@@ -41,9 +50,19 @@ namespace vetcms.SharedModels.Features.IAM
         }
     }
 
+    /// <summary>
+    /// Az API parancs válasza, amely elindítja a jelszó visszaállítási folyamatot.
+    /// </summary>
     public record BeginResetPasswordApiCommandResponse : ICommandResult
     {
+        /// <summary>
+        /// A parancs sikerességét jelző tulajdonság.
+        /// </summary>
         public bool Success { get; set; }
+
+        /// <summary>
+        /// A parancs üzenetét tartalmazó tulajdonság.
+        /// </summary>
         public string Message { get; set; } = string.Empty;
 
         public BeginResetPasswordApiCommandResponse()
