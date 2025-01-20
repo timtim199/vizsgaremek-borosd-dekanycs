@@ -85,8 +85,11 @@
             Password = pass1,
             Password2 = pass2
         };
-        await Mediator.Send(registerUserClientCommand);
-        NavigateToLogin();
+        bool result = await Mediator.Send(registerUserClientCommand);
+        if(result)
+        {
+            NavigateToLogin();
+        }
     }
 
 
