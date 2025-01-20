@@ -1,6 +1,4 @@
-﻿// File: tests/vetcms.ServerApplicationTests/UnitTests/Features/IAM/DeleteUserCommandHandlerUnitTests.cs
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Moq;
