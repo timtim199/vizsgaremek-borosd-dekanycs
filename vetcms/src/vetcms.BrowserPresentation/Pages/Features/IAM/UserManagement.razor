@@ -1,0 +1,68 @@
+﻿@page "/iam/user-management"
+<FluentCard>
+    <FluentGrid>
+        <FluentGridItem xs="12">
+            <FluentToolbar id="toolbar-fluent-components">
+                <FluentButton Appearance="Appearance.Accent">Kijelöltek törlése</FluentButton>
+                <FluentButton Appearance="Appearance.Accent">Csoportos jogosultság módosítás</FluentButton>
+                <FluentSearch @bind-Value=value1 Label="With a label" AutoComplete="off"/>
+            </FluentToolbar>
+        </FluentGridItem>
+        <FluentGridItem xs="12">
+            @if(people != null)
+            {
+                <FluentDataGrid Items="@people">
+                    <SelectColumn TGridItem="Person"
+                                  SelectMode="DataGridSelectMode.Multiple"
+                                  SelectFromEntireRow="true"
+                                  OnSelect="@(e => e.Item.Selected = e.Selected)"
+                                  SelectAll="@(people.All(p => p.Selected))"
+                                  SelectAllChanged="@(all => people.ToList().ForEach(p => p.Selected = (all == true)))" />
+                    <PropertyColumn Property="@(p => p.PersonId)" Sortable="true" />
+                    <PropertyColumn Property="@(p => p.Name)" Sortable="true" />
+                    <PropertyColumn Property="@(p => p.BirthDate)" Format="yyyy-MM-dd" Sortable="true" />
+                </FluentDataGrid>
+            }
+        </FluentGridItem>
+    </FluentGrid>
+</FluentCard>
+
+@code {
+    private string value1 = "one";
+    private FluentMenuButton menubutton = new();
+    private string comboboxValue = "Option 1";
+    private bool check1 = true;
+    IQueryable<Person> people = new[]
+    {
+        new Person(10895, "Jean Martin", new DateOnly(1985, 3, 16)),
+        new Person(10944, "António Langa", new DateOnly(1991, 12, 1)),
+        new Person(11203, "Julie Smith", new DateOnly(1958, 10, 10)),
+        new Person(11205, "Nur Sari", new DateOnly(1922, 4, 27)),
+        new Person(11898, "Jose Hernandez", new DateOnly(2011, 5, 3)),
+        new Person(12130, "Kenji Sato", new DateOnly(2004, 1, 9)),
+    }.AsQueryable();
+
+    private Dictionary<string, string> items = new Dictionary<string, string>()
+    {
+        {"0078D4","Windows"},
+        {"D83B01","Office"},
+        {"464EB8","Teams"},
+        {"107C10","Xbox"},
+        {"8661C5","Visual Studio"},
+        {"F2C811","Power BI"},
+        {"0066FF","Power Automate"},
+        {"742774","Power Apps"},
+        {"0B556A","Power Virtual Agents"}
+    };
+
+    private void HandleOnMenuChanged(MenuChangeEventArgs args)
+    {
+    }
+
+    record Person(int PersonId, string Name, DateOnly BirthDate)
+    {
+        public bool Selected { get; set; } = false;
+    };
+
+    
+}
