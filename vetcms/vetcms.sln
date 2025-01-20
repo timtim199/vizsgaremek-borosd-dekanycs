@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "vetcms.BrowserPresentation"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{F0309E4C-D04E-4062-A5A6-3200998E5D31}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "vetcms.ServerApplicationTests", "tests\vetcms.ServerApplicationTests\vetcms.ServerApplicationTests.csproj", "{3FCE1694-68A4-4971-B0DB-CCC817EE8E5D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "vetcms.ServerApplicationTests", "tests\vetcms.ServerApplicationTests\vetcms.ServerApplicationTests.csproj", "{3FCE1694-68A4-4971-B0DB-CCC817EE8E5D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
