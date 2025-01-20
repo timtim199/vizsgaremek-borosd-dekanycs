@@ -69,8 +69,6 @@ namespace vetcms.ServerApplication.Common.Abstractions.Data
 
         public async Task<bool> ExistAsync(int id)
         {
-
-
             return await Entities.AnyAsync(e => e.Id == id);
         }
 

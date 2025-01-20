@@ -23,5 +23,9 @@ namespace vetcms.SharedModels.Common.IAM.Authorization
         /// Felhasználók listázásának jogosultsága.
         /// </summary>
         CAN_LIST_USERS,
+        /// <summary>
+        /// Felhasználók törlésének jogosultsága.
+        /// </summary>
+        CAN_DELETE_USERS,
     }
 }
