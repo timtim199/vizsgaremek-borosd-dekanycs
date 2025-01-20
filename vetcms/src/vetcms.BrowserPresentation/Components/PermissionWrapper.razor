@@ -1,0 +1,31 @@
+﻿@using vetcms.ClientApplication.Common.IAM.Commands.CheckPermissionQuery;
+@inject MediatR.IMediator Mediator
+
+
+@if (QueryResult)
+{
+    @ChildContent
+}
+
+@code {
+    [Parameter]
+    public PermissionFlags[] RequiredPermissions { get; set; }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    public bool QueryResult { get; set; } = false;
+
+
+    private async Task HasPermission()
+    {
+        var query = new CheckPermissionQuery(RequiredPermissions);
+        QueryResult = await Mediator.Send(query);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        QueryResult = false; 
+        await HasPermission();
+    }
+}
