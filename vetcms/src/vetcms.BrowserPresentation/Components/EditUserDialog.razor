@@ -1,0 +1,40 @@
+@using vetcms.ClientApplication.Common.CommandAbstraction;
+@implements IDialogContentComponent<IUserFieldRelatedCommand>
+
+<FluentGrid>
+    <FluentGridItem xs="12" sm="6">
+        <FluentTextField @bind-Value="Content.Email" Label="Email" TextFieldType="TextFieldType.Email"/>
+    </FluentGridItem>
+    <FluentGridItem xs="12" sm="6">
+        <FluentTextField @bind-Value="Content.VisibleName" Label="Megjelenített név" />
+    </FluentGridItem>
+    <FluentGridItem xs="12" sm="6">
+        <FluentTextField @bind-Value="Content.FirstName" Label="Keresztnév" />
+    </FluentGridItem>
+    <FluentGridItem xs="12" sm="6">
+        <FluentTextField @bind-Value="Content.LastName" Label="Vezetéknév" />
+    </FluentGridItem>
+    <FluentGridItem xs="12" sm="6">
+        <FluentTextField @bind-Value="Content.Address" Label="Lakcím" />
+    </FluentGridItem>
+    <FluentGridItem xs="12" sm="6">
+        <FluentDatePicker Label="Days view" AriaLabel="To" @bind-Value="@SelectedValue"/>
+    </FluentGridItem>
+    <FluentGridItem xs="12" sm="6">
+        <FluentTextField @bind-Value="Content.PhoneNumber" TextFieldType="TextFieldType.Tel" Label="Irányítószám" />
+    </FluentGridItem>
+</FluentGrid>
+
+@code {
+    [Parameter]
+    public IUserFieldRelatedCommand Content { get; set; }
+
+    [CascadingParameter]
+    public FluentDialog? Dialog { get; set; }
+
+    public DateTime dof { get; set; }
+    private DateTime? SelectedValue = DateTime.Today.AddDays(-2);
+
+    //public string dof { get => Content.DateOfBirth.ToString(); set => Content.DateOfBirth = DateTime.Parse(value); }
+
+}

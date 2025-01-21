@@ -1,26 +1,53 @@
 ﻿@page "/iam/user-management"
-<FluentCard>
+@using vetcms.BrowserPresentation.Components
+@using vetcms.ClientApplication.Common.CommandAbstraction
+@inject IDialogService DialogService
+
+<FluentCard style="overflow:auto;">
     <FluentGrid>
         <FluentGridItem xs="12">
-            <FluentToolbar id="toolbar-fluent-components">
-                <FluentButton Appearance="Appearance.Accent">Kijelöltek törlése</FluentButton>
-                <FluentButton Appearance="Appearance.Accent">Csoportos jogosultság módosítás</FluentButton>
-                <FluentSearch @bind-Value=value1 Label="With a label" AutoComplete="off"/>
+            <FluentToolbar id="toolbar-fluent-components" style="width:100%">
+                <PermissionWrapper RequiredPermissions="[PermissionFlags.CAN_ASSIGN_PERMISSIONS]">
+                    <FluentButton @onclick="@OpenDialogAsync" style="padding-bottom: 5px;" IconStart="@(new Icons.Regular.Size16.PersonAdd())" Appearance="Appearance.Accent">Új felhasználó</FluentButton>
+                </PermissionWrapper>
+                <PermissionWrapper RequiredPermissions="[PermissionFlags.CAN_ASSIGN_PERMISSIONS]">
+                    <FluentButton style="padding-bottom: 5px;" IconStart="@(new Icons.Regular.Size16.KeyMultiple())" Appearance="Appearance.Accent">Jogosultság módosítás</FluentButton>
+                </PermissionWrapper>
+                <PermissionWrapper RequiredPermissions="[PermissionFlags.CAN_ASSIGN_PERMISSIONS]">
+                    <FluentButton style="padding-bottom: 5px;" IconStart="@(new Icons.Regular.Size16.PersonDelete())" Appearance="Appearance.Accent">Törlés</FluentButton>
+                </PermissionWrapper>
+                <div slot="end">
+                    <FluentSearch  @bind-Value=value1 AutoComplete="off"/>
+                </div>
             </FluentToolbar>
         </FluentGridItem>
         <FluentGridItem xs="12">
             @if(people != null)
             {
-                <FluentDataGrid Items="@people">
+                <FluentDataGrid 
+                Items="@people"
+                Virtualize="true"
+                ItemSize="46"
+                GenerateHeader="GenerateHeaderOption.Sticky"
+                Style="min-width: max-content;"
+                >
                     <SelectColumn TGridItem="Person"
-                                  SelectMode="DataGridSelectMode.Multiple"
-                                  SelectFromEntireRow="true"
-                                  OnSelect="@(e => e.Item.Selected = e.Selected)"
-                                  SelectAll="@(people.All(p => p.Selected))"
-                                  SelectAllChanged="@(all => people.ToList().ForEach(p => p.Selected = (all == true)))" />
+                    SelectMode="DataGridSelectMode.Multiple"
+                    SelectFromEntireRow="false"
+                    OnSelect="@(e => e.Item.Selected = e.Selected)"
+                    SelectAll="@(people.All(p => p.Selected))"
+                    SelectAllChanged="@(all => people.ToList().ForEach(p => p.Selected = (all == true)))" />
                     <PropertyColumn Property="@(p => p.PersonId)" Sortable="true" />
                     <PropertyColumn Property="@(p => p.Name)" Sortable="true" />
                     <PropertyColumn Property="@(p => p.BirthDate)" Format="yyyy-MM-dd" Sortable="true" />
+                    <TemplateColumn Title="Actions" Align="@Align.End">
+                        <PermissionWrapper RequiredPermissions="[PermissionFlags.CAN_EDIT_OTHER_USERS]">
+                            <FluentButton aria-label="Szerkesztés" IconStart="@(new Icons.Regular.Size16.Edit())" />
+                        </PermissionWrapper>
+                        <PermissionWrapper RequiredPermissions="[PermissionFlags.CAN_VIEW_OTHERS_ANIMALS]">
+                            <FluentButton aria-label="Hozzárendelt páciensek megtekintése" IconStart="@(new Icons.Regular.Size16.AnimalCat())"/>
+                        </PermissionWrapper>
+                    </TemplateColumn>
                 </FluentDataGrid>
             }
         </FluentGridItem>
@@ -42,18 +69,27 @@
         new Person(12130, "Kenji Sato", new DateOnly(2004, 1, 9)),
     }.AsQueryable();
 
-    private Dictionary<string, string> items = new Dictionary<string, string>()
+    protected override void OnInitialized()
     {
-        {"0078D4","Windows"},
-        {"D83B01","Office"},
-        {"464EB8","Teams"},
-        {"107C10","Xbox"},
-        {"8661C5","Visual Studio"},
-        {"F2C811","Power BI"},
-        {"0066FF","Power Automate"},
-        {"742774","Power Apps"},
-        {"0B556A","Power Virtual Agents"}
-    };
+        GeneratePeople(100);
+    }
+
+    private Dictionary<string, string> items = new Dictionary<string, string>();
+    private void GeneratePeople(int count)
+    {
+        var random = new Random();
+        var names = new[] { "Jean Martin", "António Langa", "Julie Smith", "Nur Sari", "Jose Hernandez", "Kenji Sato" };
+        var peopleList = new List<Person>();
+
+        for (int i = 0; i < count; i++)
+        {
+            var name = names[random.Next(names.Length)];
+            var birthDate = new DateOnly(random.Next(1920, 2020), random.Next(1, 13), random.Next(1, 29));
+            peopleList.Add(new Person(i + 1, name, birthDate));
+        }
+
+        people = peopleList.AsQueryable();
+    }
 
     private void HandleOnMenuChanged(MenuChangeEventArgs args)
     {
@@ -63,6 +99,60 @@
     {
         public bool Selected { get; set; } = false;
     };
+
+    record SimleUser() : IUserFieldRelatedCommand
+    {
+        public int TargetUserId { get; set; }
+        public string Email { get; set; }
+        public string PhoneNumber { get; set; }
+        public string VisibleName { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Address { get; set; }
+        public DateTime DateOfBirth { get; set; }
+    }
+
+    private SimleUser simpleUser = new SimleUser()
+    {
+        TargetUserId = 1,
+        Email = "asd@saad.com",
+        PhoneNumber = "123456789",
+        VisibleName = "VisibleNameasd",
+        FirstName = "FirstNameasd",
+        LastName = "LastNameasd",
+        Address = "Addressasd",
+        DateOfBirth = DateTime.Now
+    };
+
+    private async Task OpenDialogAsync()
+    {
+        Console.WriteLine($"Open dialog centered");
+
+        DialogParameters parameters = new()
+        {
+            Title = $"Hello {simpleUser.VisibleName}",
+            PrimaryAction = "Save",
+            PrimaryActionEnabled = true,
+            SecondaryAction = "Cancel",
+            TrapFocus = true,
+            Modal = true,
+            PreventScroll = true 
+        };
+
+        IDialogReference dialog = await DialogService.ShowDialogAsync<EditUserDialog>(simpleUser, parameters);
+        DialogResult? result = await dialog.Result;
+        
+        
+        if (result.Data is not null)
+        {
+            SimleUser? simplePerson = result.Data as SimleUser;
+            Console.WriteLine($"Dialog closed by {simplePerson?.VisibleName} - Canceled: {result.Cancelled}");
+        }
+        else
+        {
+            Console.WriteLine($"Dialog closed - Canceled: {result.Cancelled}");
+        }
+    }
 
     
 }

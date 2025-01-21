@@ -1,0 +1,18 @@
+{
+    "configurations": [
+        {
+            "name": "C#: vetcms.WebApi [https]",
+            "type": "dotnet",
+            "request": "launch",
+            "projectPath": "${workspaceFolder}/vetcms/src/vetcms.WebApi/vetcms.WebApi.csproj",
+            "launchConfigurationId": "TargetFramework=;https"
+        },
+        {
+            "name": "C#: vetcms.BrowserPresentation [https]",
+            "type": "dotnet",
+            "request": "launch",
+            "projectPath": "${workspaceFolder}/vetcms/src/vetcms.BrowserPresentation/vetcms.BrowserPresentation.csproj",
+            "launchConfigurationId": "TargetFramework=;https"
+        }
+    ]
+}
