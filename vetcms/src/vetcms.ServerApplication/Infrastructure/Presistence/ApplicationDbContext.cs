@@ -13,6 +13,8 @@ namespace vetcms.ServerApplication.Infrastructure.Presistence
     public class ApplicationDbContext : DbContext
     {
         DbSet<User> Users { get; set; }
+        DbSet<AnimalBreed> AnimalBreeds { get; set; }
+        DbSet<AnimalType> AnimalTypes { get; set; }
 
         public ApplicationDbContext()
         {
