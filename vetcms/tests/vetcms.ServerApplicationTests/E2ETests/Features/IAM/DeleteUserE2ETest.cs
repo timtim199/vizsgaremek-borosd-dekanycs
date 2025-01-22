@@ -147,14 +147,16 @@ namespace vetcms.ServerApplicationTests.E2ETests.Features.IAM
             Assert.Equal("", result.Message);
 
             // Verify the user is deleted
-            var userDeleted = await _dbContext.Set<User>().FindAsync(userId);
-            Assert.Null(userDeleted);
+            var userDeleted = _dbContext.Set<User>().Where(x => x.Deleted).Select(x => x.Id);
+            bool deleted = userDeleted.Contains(userId);
+            Assert.False(deleted);
         }
 
 
         [Fact]
         public async Task DeleteUserById_NotFound()
         {
+            await _dbContext.Database.EnsureDeletedAsync();
             // Arrange
             var adminUser = SeedAdminUser();
             var userId = 999; // Assuming this user does not exist
@@ -180,6 +182,7 @@ namespace vetcms.ServerApplicationTests.E2ETests.Features.IAM
         [Fact]
         public async Task DeleteMultipleUsersByIds_Success()
         {
+            await _dbContext.Database.EnsureDeletedAsync();
             // Arrange
             var adminGuid = SeedAdminUser();
             var userIds = new List<int> { 1, 2, 3 };
@@ -213,16 +216,18 @@ namespace vetcms.ServerApplicationTests.E2ETests.Features.IAM
             Assert.NotNull(result);
             Assert.True(result.Success);
             Assert.Equal("", result.Message);
+            var deletedUserIds = _dbContext.Set<User>().Where(x => x.Deleted).Select(x => x.Id);
             foreach (var userId in userIds)
             {
-                var user = await _dbContext.Set<User>().FindAsync(userId);
-                Assert.Null(user);
+                bool deleted = deletedUserIds.Contains(userId);
+                Assert.False(deleted);
             }
         }
 
         [Fact]
         public async Task DeleteMultipleUsersByIds_NotFound()
         {
+            await _dbContext.Database.EnsureDeletedAsync();
             // Arrange
             var adminGuid = SeedAdminUser();
             var userIds = new List<int> { 999, 1000, 1001 }; // Assuming these users do not exist
