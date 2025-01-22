@@ -8,7 +8,7 @@
         <FluentGridItem xs="12">
             <FluentToolbar id="toolbar-fluent-components" style="width:100%">
                 <PermissionWrapper RequiredPermissions="[PermissionFlags.CAN_ASSIGN_PERMISSIONS]">
-                    <FluentButton @onclick="@OpenDialogAsync" style="padding-bottom: 5px;" IconStart="@(new Icons.Regular.Size16.PersonAdd())" Appearance="Appearance.Accent">Új felhasználó</FluentButton>
+                    <FluentButton @onclick="@OpenCreateUserDialog" style="padding-bottom: 5px;" IconStart="@(new Icons.Regular.Size16.PersonAdd())" Appearance="Appearance.Accent">Új felhasználó</FluentButton>
                 </PermissionWrapper>
                 <PermissionWrapper RequiredPermissions="[PermissionFlags.CAN_ASSIGN_PERMISSIONS]">
                     <FluentButton style="padding-bottom: 5px;" IconStart="@(new Icons.Regular.Size16.KeyMultiple())" Appearance="Appearance.Accent">Jogosultság módosítás</FluentButton>
@@ -59,6 +59,8 @@
     private FluentMenuButton menubutton = new();
     private string comboboxValue = "Option 1";
     private bool check1 = true;
+
+
     IQueryable<Person> people = new[]
     {
         new Person(10895, "Jean Martin", new DateOnly(1985, 3, 16)),
@@ -100,7 +102,7 @@
         public bool Selected { get; set; } = false;
     };
 
-    record SimleUser() : IUserFieldRelatedCommand
+    record SimleUser2() : IUserFieldRelatedCommand
     {
         public int TargetUserId { get; set; }
         public string Email { get; set; }
@@ -109,31 +111,24 @@
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Address { get; set; }
-        public DateTime DateOfBirth { get; set; }
+        public DateTime? DateOfBirth { get; set; }
     }
 
-    private SimleUser simpleUser = new SimleUser()
-    {
-        TargetUserId = 1,
-        Email = "asd@saad.com",
-        PhoneNumber = "123456789",
-        VisibleName = "VisibleNameasd",
-        FirstName = "FirstNameasd",
-        LastName = "LastNameasd",
-        Address = "Addressasd",
-        DateOfBirth = DateTime.Now
-    };
 
-    private async Task OpenDialogAsync()
+    private async Task OpenCreateUserDialog()
     {
-        Console.WriteLine($"Open dialog centered");
+        Console.WriteLine($"Open dialog create user");
+
+        SimleUser2 simpleUser = new SimleUser2()
+        {
+        };
 
         DialogParameters parameters = new()
         {
-            Title = $"Hello {simpleUser.VisibleName}",
-            PrimaryAction = "Save",
+            Title = $"Új felhasználó létrehozása",
+            PrimaryAction = "Mentés",
             PrimaryActionEnabled = true,
-            SecondaryAction = "Cancel",
+            SecondaryAction = "Mégsem",
             TrapFocus = true,
             Modal = true,
             PreventScroll = true 
@@ -141,17 +136,88 @@
 
         IDialogReference dialog = await DialogService.ShowDialogAsync<EditUserDialog>(simpleUser, parameters);
         DialogResult? result = await dialog.Result;
-        
-        
+
+
+
         if (result.Data is not null)
         {
-            SimleUser? simplePerson = result.Data as SimleUser;
-            Console.WriteLine($"Dialog closed by {simplePerson?.VisibleName} - Canceled: {result.Cancelled}");
+            SimleUser2? simplePerson = result.Data as SimleUser2;
+            Console.WriteLine($"create user Dialog closed by {simplePerson?.VisibleName} - Canceled: {result.Cancelled}");
+            if(!result.Cancelled)
+            {
+                await SubmitNewUserData(simplePerson);
+            }
         }
         else
         {
-            Console.WriteLine($"Dialog closed - Canceled: {result.Cancelled}");
+            Console.WriteLine($"create user Dialog closed - Canceled: {result.Cancelled}");
         }
+    }
+
+    private async Task OpenEditUserDialog(int id)
+    {
+        Console.WriteLine($"Open dialog edit user");
+
+        var simpleUser = await LoadEditUserData(id);
+
+        DialogParameters parameters = new()
+            {
+                Title = $"Felhasználó szerkesztése",
+                PrimaryAction = "Mentés",
+                PrimaryActionEnabled = true,
+                SecondaryAction = "Mégsem",
+                TrapFocus = true,
+                Modal = true,
+                PreventScroll = true
+            };
+
+        IDialogReference dialog = await DialogService.ShowDialogAsync<EditUserDialog>(simpleUser, parameters);
+        DialogResult? result = await dialog.Result;
+
+
+
+        if (result.Data is not null)
+        {
+            SimleUser2? simplePerson = result.Data as SimleUser2;
+            Console.WriteLine($"Edit user Dialog closed by {simplePerson?.VisibleName} - Canceled: {result.Cancelled}");
+            if (!result.Cancelled)
+            {
+                await SubmitEditUserData(simplePerson);
+            }
+        }
+        else
+        {
+            Console.WriteLine($"Edit user Dialog closed - Canceled: {result.Cancelled}");
+        }
+    }
+
+    private async Task<SimleUser2> LoadEditUserData(int id)
+    {
+        SimleUser2 simpleUser = new SimleUser2()
+        {
+            TargetUserId = 1,
+            Email = "asd@saad.com",
+            PhoneNumber = "123456789",
+            VisibleName = "VisibleNameasd",
+            FirstName = "FirstNameasd",
+            LastName = "LastNameasd",
+            Address = "Addressasd",
+            DateOfBirth = DateTime.Now
+        };
+        await Task.Delay(1000);
+        return simpleUser;
+    }
+
+    private async Task SubmitNewUserData(SimleUser2 newUser)
+    {
+        await Task.Delay(1000);
+        Console.WriteLine($"Submit new user data");
+    }
+
+    private async Task SubmitEditUserData(SimleUser2 newUser)
+    {
+        await Task.Delay(1000);
+        Console.WriteLine($"Submit edit user data");
     }
 
     

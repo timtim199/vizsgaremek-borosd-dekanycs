@@ -15,7 +15,7 @@ namespace vetcms.SharedModels.Common
     public abstract record ApiCommandBase<T> : IRequest<T>
         where T : ICommandResult
     {
-        internal const string ApiBaseUrl = "https://curly-orbit-qprw4wwg4j7cx79w-5042.app.github.dev";
+        internal const string ApiBaseUrl = "https://localhost:7129";
 
         /// <summary>
         /// Visszaadja a parancs API végpontját.
