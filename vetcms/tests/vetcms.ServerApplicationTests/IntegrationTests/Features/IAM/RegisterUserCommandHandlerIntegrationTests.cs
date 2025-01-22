@@ -23,7 +23,7 @@ namespace vetcms.ServerApplicationTests.IntegrationTests.Features.IAM
         public RegisterUserCommandHandlerIntegrationTests()
         {
             _dbContextOptions = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(databaseName: "TestDatabase")
+                .UseInMemoryDatabase(databaseName: "TestDatabase_RegisterUserIntegrationTest")
                 .Options;
 
             _dbContext = new ApplicationDbContext(_dbContextOptions);

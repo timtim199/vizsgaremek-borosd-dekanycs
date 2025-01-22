@@ -29,7 +29,7 @@ namespace vetcms.ServerApplicationTests.IntegrationTests.Features.IAM
         public LoginUserCommandHandlerIntegrationTests()
         {
             _dbContextOptions = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(databaseName: "TestDatabase")
+                .UseInMemoryDatabase(databaseName: "TestDatabase_LoginUserIntegrationTest")
                 .Options;
 
             _dbContext = new ApplicationDbContext(_dbContextOptions);

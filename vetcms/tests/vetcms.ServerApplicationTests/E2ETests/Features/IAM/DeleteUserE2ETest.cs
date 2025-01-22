@@ -47,7 +47,7 @@ namespace vetcms.ServerApplicationTests.E2ETests.Features.IAM
 
                     services.AddDbContext<ApplicationDbContext>(options =>
                     {
-                        options.UseInMemoryDatabase("TestDatabase");
+                        options.UseInMemoryDatabase("TestDb_DeleteUser");
                     });
 
                     services.AddScoped<IAuthenticationCommon, AuthenticationCommon>();

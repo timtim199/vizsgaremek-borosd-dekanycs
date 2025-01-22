@@ -24,7 +24,7 @@ namespace vetcms.ServerApplicationTests.IntegrationTests.Features.IAM
         public DeleteUserCommandHandlerIntegrationTests()
         {
             _dbContextOptions = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(databaseName: "TestDatabase")
+                .UseInMemoryDatabase(databaseName: "TestDatabase_DeleteUserIntegrationTest")
                 .Options;
 
             _dbContext = new ApplicationDbContext(_dbContextOptions);
