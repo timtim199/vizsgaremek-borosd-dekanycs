@@ -1,10 +1,14 @@
 ﻿@page "/iam/user-management"
 @using vetcms.BrowserPresentation.Components
+@using vetcms.BrowserPresentation.Services
 @using vetcms.ClientApplication.Common.CommandAbstraction
 @inject IDialogService DialogService
-
+@inject ToastBuilderService toastBuilderService;
+<div>
+    
+</div>
 <FluentCard style="overflow:auto;">
-    <FluentGrid>
+    <FluentGrid >
         <FluentGridItem xs="12">
             <FluentToolbar id="toolbar-fluent-components" style="width:100%">
                 <PermissionWrapper RequiredPermissions="[PermissionFlags.CAN_ASSIGN_PERMISSIONS]">
@@ -22,44 +26,68 @@
             </FluentToolbar>
         </FluentGridItem>
         <FluentGridItem xs="12">
+            <div style="position: sticky;">
+                
+            </div>
+            
             @if(people != null)
             {
-                <FluentDataGrid 
-                Items="@people"
-                Virtualize="true"
-                ItemSize="46"
-                GenerateHeader="GenerateHeaderOption.Sticky"
-                Style="min-width: max-content;"
-                >
-                    <SelectColumn TGridItem="Person"
-                    SelectMode="DataGridSelectMode.Multiple"
-                    SelectFromEntireRow="false"
-                    OnSelect="@(e => e.Item.Selected = e.Selected)"
-                    SelectAll="@(people.All(p => p.Selected))"
-                    SelectAllChanged="@(all => people.ToList().ForEach(p => p.Selected = (all == true)))" />
-                    <PropertyColumn Property="@(p => p.PersonId)" Sortable="true" />
-                    <PropertyColumn Property="@(p => p.Name)" Sortable="true" />
-                    <PropertyColumn Property="@(p => p.BirthDate)" Format="yyyy-MM-dd" Sortable="true" />
-                    <TemplateColumn Title="Actions" Align="@Align.End">
-                        <PermissionWrapper RequiredPermissions="[PermissionFlags.CAN_EDIT_OTHER_USERS]">
-                            <FluentButton aria-label="Szerkesztés" IconStart="@(new Icons.Regular.Size16.Edit())" />
-                        </PermissionWrapper>
-                        <PermissionWrapper RequiredPermissions="[PermissionFlags.CAN_VIEW_OTHERS_ANIMALS]">
-                            <FluentButton aria-label="Hozzárendelt páciensek megtekintése" IconStart="@(new Icons.Regular.Size16.AnimalCat())"/>
-                        </PermissionWrapper>
-                    </TemplateColumn>
-                </FluentDataGrid>
+                <div style="overflow:auto;" tabindex="-1">
+                    <FluentDataGrid
+                    Virtualize="true"
+                    ItemsProvider="personProvider"
+                    ItemSize="46"
+                    GenerateHeader="GenerateHeaderOption.Sticky"
+                    Style="min-width: max-content;"
+                    >
+                        <SelectColumn 
+                        TGridItem="Person"
+                        SelectMode="DataGridSelectMode.Multiple"
+                        SelectFromEntireRow="false"
+                        OnSelect="@(e => e.Item.Selected = e.Selected)"
+                        SelectAll="@(people.All(p => p.Selected))"
+                        SelectAllChanged="@(all => people.ToList().ForEach(p => p.Selected = (all == true)))" 
+                        />
+                        <PropertyColumn Property="@(p => p.PersonId)" Sortable="true" />
+                        <PropertyColumn Property="@(p => p.Name)" Sortable="true" />
+                        <PropertyColumn Property="@(p => p.BirthDate)" Format="yyyy-MM-dd" Sortable="true" />
+                        <TemplateColumn Title="Actions" Align="@Align.End">
+                            <PermissionWrapper RequiredPermissions="[PermissionFlags.CAN_EDIT_OTHER_USERS]">
+                                <FluentButton aria-label="Szerkesztés" OnClick="@(async ()=> await OpenEditUserDialog(context))" IconStart="@(new Icons.Regular.Size16.Edit())" />
+                            </PermissionWrapper>
+                            <PermissionWrapper RequiredPermissions="[PermissionFlags.CAN_VIEW_OTHERS_ANIMALS]">
+                                <FluentButton  OnClick="@(() => Console.WriteLine("Delete clicked"))" aria-label="Hozzárendelt páciensek megtekintése" IconStart="@(new Icons.Regular.Size16.AnimalCat())"/>
+                            </PermissionWrapper>
+                            
+                        </TemplateColumn>
+                    </FluentDataGrid>
+                </div>
+
+
             }
+        </FluentGridItem>
+        <FluentGridItem xs="12">
+            <FluentPaginator State="@pagination">
+                <SummaryTemplate>
+                    There are <strong>@(pagination.TotalItemCount ?? 0)</strong> rows
+                </SummaryTemplate>
+                <PaginationTextTemplate>
+                    This is page <strong>@(pagination.CurrentPageIndex + 1)</strong> out of a total of <strong>@(pagination.LastPageIndex + 1)</strong> pages
+                </PaginationTextTemplate>
+            </FluentPaginator>
         </FluentGridItem>
     </FluentGrid>
 </FluentCard>
 
 @code {
     private string value1 = "one";
+    bool overlayVisible = true;
     private FluentMenuButton menubutton = new();
     private string comboboxValue = "Option 1";
-    private bool check1 = true;
-
+    private bool check1 = false;
+    PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
+    GridItemsProvider<Person> personProvider = default!;
+    private static string _id = "progressToast";
 
     IQueryable<Person> people = new[]
     {
@@ -71,9 +99,16 @@
         new Person(12130, "Kenji Sato", new DateOnly(2004, 1, 9)),
     }.AsQueryable();
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         GeneratePeople(100);
+        personProvider = async req =>{
+            await Task.Delay(1000);
+            return GridItemsProviderResult.From(
+                items: people.Skip(req.StartIndex).Take(req.Count.HasValue ? req.Count.Value : 10).ToList(),
+                totalItemCount: people.Count());
+        };
+
     }
 
     private Dictionary<string, string> items = new Dictionary<string, string>();
@@ -154,22 +189,25 @@
         }
     }
 
-    private async Task OpenEditUserDialog(int id)
+    private async Task OpenEditUserDialog(Person person)
     {
+        string toastId = toastBuilderService.ShowIndeterminateProgressToast( "Kérjük várjon...", "Felhasználó adatainak betöltése");
+        int id = person.PersonId;
         Console.WriteLine($"Open dialog edit user");
+        toastBuilderService.CloseToast(toastId);
 
         var simpleUser = await LoadEditUserData(id);
 
         DialogParameters parameters = new()
-            {
-                Title = $"Felhasználó szerkesztése",
-                PrimaryAction = "Mentés",
-                PrimaryActionEnabled = true,
-                SecondaryAction = "Mégsem",
-                TrapFocus = true,
-                Modal = true,
-                PreventScroll = true
-            };
+        {
+            Title = $"Felhasználó szerkesztése",
+            PrimaryAction = "Mentés",
+            PrimaryActionEnabled = true,
+            SecondaryAction = "Mégsem",
+            TrapFocus = true,
+            Modal = true,
+            PreventScroll = true
+        };
 
         IDialogReference dialog = await DialogService.ShowDialogAsync<EditUserDialog>(simpleUser, parameters);
         DialogResult? result = await dialog.Result;
@@ -189,6 +227,7 @@
         {
             Console.WriteLine($"Edit user Dialog closed - Canceled: {result.Cancelled}");
         }
+        overlayVisible = false;
     }
 
     private async Task<SimleUser2> LoadEditUserData(int id)

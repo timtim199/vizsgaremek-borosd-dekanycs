@@ -1,7 +1,7 @@
 @using vetcms.ClientApplication.Common.CommandAbstraction;
 @implements IDialogContentComponent<IUserFieldRelatedCommand>
 
-<FluentGrid>
+<FluentGrid style="z-index: 1000;">
     <FluentGridItem xs="12" sm="6">
         <FluentTextField @bind-Value="Content.Email" Label="Email" TextFieldType="TextFieldType.Email"/>
     </FluentGridItem>
