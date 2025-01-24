@@ -19,11 +19,6 @@ namespace vetcms.SharedModels.Features.IAM
         public string Email { get; init; }
 
         /// <summary>
-        /// A felhasználó jelszava.
-        /// </summary>
-        public string Password { get; init; }
-
-        /// <summary>
         /// A felhasználó telefonszáma.
         /// </summary>
         public string PhoneNumber { get; init; }
@@ -56,7 +51,6 @@ namespace vetcms.SharedModels.Features.IAM
         public CreateUserApiCommandValidator()
         {
             RuleFor(x => x.Email).NotEmpty().EmailAddress();
-            RuleFor(x => x.Password).NotEmpty();
             RuleFor(x => x.Name).NotEmpty();
             RuleFor(x => x.PhoneNumber).Length(11);
         }
