@@ -3,7 +3,8 @@
 @using vetcms.BrowserPresentation.Services
 @using vetcms.ClientApplication.Common.CommandAbstraction
 @inject IDialogService DialogService
-@inject ToastBuilderService toastBuilderService;
+@inject IToastService ToastService;
+
 <div>
     
 </div>
@@ -12,16 +13,16 @@
         <FluentGridItem xs="12">
             <FluentToolbar id="toolbar-fluent-components" style="width:100%">
                 <PermissionWrapper RequiredPermissions="[PermissionFlags.CAN_ASSIGN_PERMISSIONS]">
-                    <FluentButton @onclick="@OpenCreateUserDialog" style="padding-bottom: 5px;" IconStart="@(new Icons.Regular.Size16.PersonAdd())" Appearance="Appearance.Accent">Új felhasználó</FluentButton>
+                    <FluentButton Disabled="isBusy" @onclick="@OpenCreateUserDialog" style="padding-bottom: 5px;" IconStart="@(new Icons.Regular.Size16.PersonAdd())" Appearance="Appearance.Accent">Új felhasználó</FluentButton>
                 </PermissionWrapper>
                 <PermissionWrapper RequiredPermissions="[PermissionFlags.CAN_ASSIGN_PERMISSIONS]">
-                    <FluentButton style="padding-bottom: 5px;" IconStart="@(new Icons.Regular.Size16.KeyMultiple())" Appearance="Appearance.Accent">Jogosultság módosítás</FluentButton>
+                    <FluentButton Disabled="isBusy" style="padding-bottom: 5px;" IconStart="@(new Icons.Regular.Size16.KeyMultiple())" Appearance="Appearance.Accent">Jogosultság módosítás</FluentButton>
                 </PermissionWrapper>
                 <PermissionWrapper RequiredPermissions="[PermissionFlags.CAN_ASSIGN_PERMISSIONS]">
-                    <FluentButton style="padding-bottom: 5px;" IconStart="@(new Icons.Regular.Size16.PersonDelete())" Appearance="Appearance.Accent">Törlés</FluentButton>
+                    <FluentButton Disabled="isBusy" style="padding-bottom: 5px;" IconStart="@(new Icons.Regular.Size16.PersonDelete())" Appearance="Appearance.Accent">Törlés</FluentButton>
                 </PermissionWrapper>
                 <div slot="end">
-                    <FluentSearch  @bind-Value=value1 AutoComplete="off"/>
+                    <FluentSearch Disabled="isBusy" @bind-Value=searchValue AutoComplete="off"/>
                 </div>
             </FluentToolbar>
         </FluentGridItem>
@@ -41,22 +42,22 @@
                     Style="min-width: max-content;"
                     >
                         <SelectColumn 
-                        TGridItem="Person"
-                        SelectMode="DataGridSelectMode.Multiple"
-                        SelectFromEntireRow="false"
-                        OnSelect="@(e => e.Item.Selected = e.Selected)"
-                        SelectAll="@(people.All(p => p.Selected))"
-                        SelectAllChanged="@(all => people.ToList().ForEach(p => p.Selected = (all == true)))" 
+                            TGridItem="Person"
+                            SelectMode="DataGridSelectMode.Multiple"
+                            SelectFromEntireRow="false"
+                            OnSelect="@(e => e.Item.Selected = e.Selected)"
+                            SelectAll="@(people.All(p => p.Selected))"
+                            SelectAllChanged="@(all => people.ToList().ForEach(p => p.Selected = (all == true)))" 
                         />
                         <PropertyColumn Property="@(p => p.PersonId)" Sortable="true" />
                         <PropertyColumn Property="@(p => p.Name)" Sortable="true" />
                         <PropertyColumn Property="@(p => p.BirthDate)" Format="yyyy-MM-dd" Sortable="true" />
                         <TemplateColumn Title="Actions" Align="@Align.End">
                             <PermissionWrapper RequiredPermissions="[PermissionFlags.CAN_EDIT_OTHER_USERS]">
-                                <FluentButton aria-label="Szerkesztés" OnClick="@(async ()=> await OpenEditUserDialog(context))" IconStart="@(new Icons.Regular.Size16.Edit())" />
+                                <FluentButton Disabled="isBusy" aria-label="Szerkesztés" OnClick="@(async ()=> await OpenEditUserDialog(context))" IconStart="@(new Icons.Regular.Size16.Edit())" />
                             </PermissionWrapper>
                             <PermissionWrapper RequiredPermissions="[PermissionFlags.CAN_VIEW_OTHERS_ANIMALS]">
-                                <FluentButton  OnClick="@(() => Console.WriteLine("Delete clicked"))" aria-label="Hozzárendelt páciensek megtekintése" IconStart="@(new Icons.Regular.Size16.AnimalCat())"/>
+                                <FluentButton Disabled="isBusy" OnClick="@(() => Console.WriteLine("Delete clicked"))" aria-label="Hozzárendelt páciensek megtekintése" IconStart="@(new Icons.Regular.Size16.AnimalCat())"/>
                             </PermissionWrapper>
                             
                         </TemplateColumn>
@@ -66,28 +67,13 @@
 
             }
         </FluentGridItem>
-        <FluentGridItem xs="12">
-            <FluentPaginator State="@pagination">
-                <SummaryTemplate>
-                    There are <strong>@(pagination.TotalItemCount ?? 0)</strong> rows
-                </SummaryTemplate>
-                <PaginationTextTemplate>
-                    This is page <strong>@(pagination.CurrentPageIndex + 1)</strong> out of a total of <strong>@(pagination.LastPageIndex + 1)</strong> pages
-                </PaginationTextTemplate>
-            </FluentPaginator>
-        </FluentGridItem>
     </FluentGrid>
 </FluentCard>
 
 @code {
-    private string value1 = "one";
-    bool overlayVisible = true;
-    private FluentMenuButton menubutton = new();
-    private string comboboxValue = "Option 1";
-    private bool check1 = false;
-    PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
+    private string searchValue = "one";
     GridItemsProvider<Person> personProvider = default!;
-    private static string _id = "progressToast";
+    bool isBusy = false;
 
     IQueryable<Person> people = new[]
     {
@@ -191,12 +177,10 @@
 
     private async Task OpenEditUserDialog(Person person)
     {
-        string toastId = toastBuilderService.ShowIndeterminateProgressToast( "Kérjük várjon...", "Felhasználó adatainak betöltése");
+        isBusy = true;
         int id = person.PersonId;
         Console.WriteLine($"Open dialog edit user");
-        toastBuilderService.CloseToast(toastId);
-
-        var simpleUser = await LoadEditUserData(id);
+        var simpleUser = await ToastService.ShowIndeterminateProgressToast(LoadEditUserData(id), "Kérjük várjon...", "Felhasználó adatainak betöltése");
 
         DialogParameters parameters = new()
         {
@@ -220,14 +204,15 @@
             Console.WriteLine($"Edit user Dialog closed by {simplePerson?.VisibleName} - Canceled: {result.Cancelled}");
             if (!result.Cancelled)
             {
-                await SubmitEditUserData(simplePerson);
+                await ToastService.ShowIndeterminateProgressToast(SubmitEditUserData(simplePerson), "Kérjük várjon...", "Felhasználó adatainak mentése");
             }
         }
         else
         {
             Console.WriteLine($"Edit user Dialog closed - Canceled: {result.Cancelled}");
         }
-        overlayVisible = false;
+
+        isBusy = false;
     }
 
     private async Task<SimleUser2> LoadEditUserData(int id)
