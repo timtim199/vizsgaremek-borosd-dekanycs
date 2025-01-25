@@ -10,7 +10,7 @@ using vetcms.SharedModels.Features.IAM;
 
 namespace vetcms.ServerApplication.Features.IAM.CreateUser
 {
-    public partial class CreateUserController : ApiV1ControllerBase
+    public partial class IamController : ApiV1ControllerBase
     {
         [HttpPost("create-user")]
         public async Task<ICommandResult> CreateUser(CreateUserApiCommand command)

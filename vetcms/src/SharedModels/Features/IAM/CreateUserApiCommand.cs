@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 using vetcms.SharedModels.Common;
@@ -28,12 +29,17 @@ namespace vetcms.SharedModels.Features.IAM
         /// </summary>
         public string Name { get; init; }
 
+        public string PermissionSet { get; set; }
 
         public override string GetApiEndpoint()
         {
             return Path.Join(ApiBaseUrl, "/api/v1/iam/create-user");
         }
 
+        public EntityPermissions GetPermissions()
+        {
+            return new EntityPermissions(PermissionSet);
+        }
 
         public override HttpMethodEnum GetApiMethod()
         {
@@ -57,7 +63,7 @@ namespace vetcms.SharedModels.Features.IAM
     }
 
 
-    public class CreateUserApiCommandResponse : ICommandResult
+    public record CreateUserApiCommandResponse : ICommandResult
     {
         public bool Success { get; set; }
         public string Message { get; set; } = string.Empty;

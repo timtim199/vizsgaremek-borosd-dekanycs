@@ -17,14 +17,15 @@ namespace vetcms.ServerApplication.Infrastructure.Presistence.Repository
 
         public string GetCodeByUser(User user)
         {
-            var result = Where((u) => u.User == user).Select(u => u.Code).First();
+            var result = Entities.Include(p => p.User).Where((u) => u.User == user).Select(u => u.Code).First();
             return result;
         }
 
         public User GetUserByCode(string code)
         {
-            var result = Where(u => u.Code == code).Select(u => u.User).First();
-            return result;
+            var result = Entities.Include(p => p.User).Where((u) => u.Code == code.ToUpper() && !u.Deleted).First();
+            return result.User;
         }
+        
     }
 }
