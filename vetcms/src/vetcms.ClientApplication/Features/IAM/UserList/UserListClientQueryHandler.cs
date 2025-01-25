@@ -38,7 +38,7 @@ namespace vetcms.ClientApplication.Features.IAM.UserList
 
 
         //TODO: Csak tesztelésmiatt van itt, törölni kell
-        private static IQueryable<UserDto> Users;
+        internal static IQueryable<UserDto> Users;
         private static void GenerateUsers(int count)
         {
             var random = new Random();

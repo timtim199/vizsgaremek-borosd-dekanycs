@@ -22,6 +22,10 @@ namespace vetcms.SharedModels.Common.Dto
 
         public EntityPermissions GetPermissions()
         {
+            if(string.IsNullOrEmpty(PermissionSet))
+            {
+                return new EntityPermissions();
+            }
             return new EntityPermissions(PermissionSet);
         }
 

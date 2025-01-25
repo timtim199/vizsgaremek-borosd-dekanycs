@@ -2,6 +2,9 @@
 @using vetcms.BrowserPresentation.Components
 @using vetcms.BrowserPresentation.Services
 @using vetcms.ClientApplication.Common.CommandAbstraction
+@using vetcms.ClientApplication.Features.IAM.CreateNewUser
+@using vetcms.ClientApplication.Features.IAM.DeleteUser
+@using vetcms.ClientApplication.Features.IAM.ModifyUser
 @using vetcms.ClientApplication.Features.IAM.UserList
 @using vetcms.SharedModels.Common.Dto
 @inject IDialogService DialogService
@@ -19,9 +22,6 @@
                     <FluentButton Disabled="isBusy" @onclick="@OpenCreateUserDialog" style="padding-bottom: 5px;" IconStart="@(new Icons.Regular.Size16.PersonAdd())" Appearance="Appearance.Accent">Új felhasználó</FluentButton>
                 </PermissionWrapper>
                 <PermissionWrapper RequiredPermissions="[PermissionFlags.CAN_ASSIGN_PERMISSIONS]">
-                    <FluentButton Disabled="isBusy" style="padding-bottom: 5px;" IconStart="@(new Icons.Regular.Size16.KeyMultiple())" Appearance="Appearance.Accent">Jogosultság módosítás</FluentButton>
-                </PermissionWrapper>
-                <PermissionWrapper RequiredPermissions="[PermissionFlags.CAN_ASSIGN_PERMISSIONS]">
                     <FluentButton Disabled="isBusy" @onclick="@DeleteUsers" style="padding-bottom: 5px;" IconStart="@(new Icons.Regular.Size16.PersonDelete())" Appearance="Appearance.Accent">Törlés</FluentButton>
                 </PermissionWrapper>
                 <div slot="end">
@@ -30,9 +30,6 @@
             </FluentToolbar>
         </FluentGridItem>
         <FluentGridItem xs="12">
-            <div style="position: sticky;">
-                
-            </div>
             <FluentDataGrid
             Virtualize="true"
             ItemsProvider="personProvider"
@@ -119,14 +116,24 @@
 
     public async Task DeleteUsers()
     {
+        if(!selectedUsers.Any())
+        {
+            DialogService.ShowError("Nincsenek elemek kijelölve!");
+            return;
+        }
         isBusy = true;
         var dialog = await DialogService.ShowConfirmationAsync("Biztosan el szeretnéd távolítani a felhasználókat?");
         var result = await dialog.Result;
         bool canceled = result.Cancelled;
 
+        DeleteUserClientCommand command = new DeleteUserClientCommand()
+        {
+            UserIds = selectedUsers.Select(u => u.Id).ToList()
+        };
+
         if(!canceled)
         {
-            await ToastService.ShowIndeterminateProgressToast(Task.Delay(5000), "Kérjük várjon...", "Felhasználók törlése folyamatban...");
+            await ToastService.ShowIndeterminateProgressToast(Mediator.Send(command), "Kérjük várjon...", "Felhasználók törlése folyamatban...");
         }
 
         isBusy = false;
@@ -219,12 +226,23 @@
 
     private async Task SubmitNewUserData(UserDto newUser)
     {
-        throw new NotImplementedException();
+        CreateNewUserClientCommand command = new CreateNewUserClientCommand()
+        {
+            NewUserModel = newUser
+        };
+
+        await Mediator.Send(command);
     }
 
-    private async Task SubmitEditUserData(UserDto newUser)
+    private async Task SubmitEditUserData(UserDto editedUser)
     {
-        throw new NotImplementedException();
+        ModifyUserClientCommand command = new ModifyUserClientCommand()
+        {
+            UserId = editedUser.Id,
+            ModifiedUserDto = editedUser
+        };
+
+        await Mediator.Send(command);
     }
 
     
