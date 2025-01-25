@@ -1,7 +1,8 @@
 @using System.Globalization
 @using vetcms.ClientApplication.Common.CommandAbstraction;
+@using vetcms.SharedModels.Common.Dto
 @using vetcms.SharedModels.Common.IAM.Authorization;
-@implements IDialogContentComponent<IUserFieldRelatedCommand>
+@implements IDialogContentComponent<UserDto>
 
 <FluentGrid>
     <FluentGridItem xs="12" md="6">
@@ -43,7 +44,7 @@
 
 @code {
     [Parameter]
-    public IUserFieldRelatedCommand Content { get;  set; }
+    public UserDto Content { get;  set; }
 
     [CascadingParameter]
     public FluentDialog? Dialog { get; set; }
@@ -51,16 +52,16 @@
     private IEnumerable<PermissionFlags>? AssignedFlags;
     private List<PermissionFlags> AvaliableFlags = PermissionFlags.GetValues(typeof(PermissionFlags)).Cast<PermissionFlags>().ToList();
 
-
-    record SimleUser1() : IUserFieldRelatedCommand
+    protected override async Task OnInitializedAsync()
     {
-        public int TargetUserId { get; set; }
-        public string Email { get; set; }
-        public string PhoneNumber { get; set; }
-        public string VisibleName { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Address { get; set; }
-        public DateTime? DateOfBirth { get; set; }
+        AssignedFlags = new List<PermissionFlags>();
+        foreach (PermissionFlags flags in AvaliableFlags)
+        {
+            if (Content.GetPermissions().HasPermissionFlag(flags))
+            {
+                AssignedFlags.Append(flags);
+            }
+        }
     }
+
 }
