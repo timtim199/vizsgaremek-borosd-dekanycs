@@ -25,14 +25,14 @@ namespace vetcms.ServerApplication.Infrastructure.Communication.Mail
             await SendEmailAsync(passwordReset.User.Email, "VETCMS: Elfelejtett jelszó", TemplateCatalog.PasswordReset, fields);
         }
 
-        public async Task SendFirstAuthenticationEmailAsync(FirstTimeAuthenticationCode firstTimeAuthenticationModel)
+        public async Task SendFirstAuthenticationEmailAsync(FirstTimeAuthenticationCode authModel)
         {
             var fields = new Dictionary<TemplateField, string>
             {
-                { TemplateField.URL, $"https://localhost/iam/first-time-login/{firstTimeAuthenticationModel.Code}" },
-                { TemplateField.visible_name, firstTimeAuthenticationModel.User.VisibleName }
+                { TemplateField.URL, $"https://localhost/iam/first-time-login/{authModel.Code}" },
+                { TemplateField.visible_name, authModel.User.VisibleName }
             };
-            await SendEmailAsync(firstTimeAuthenticationModel.User.Email, "VETCMS: Első belépés", TemplateCatalog.AdminCreateUser, fields);
+            await SendEmailAsync(authModel.User.Email, "VETCMS: Első belépés", TemplateCatalog.AdminCreateUser, fields);
         }
 
         private async Task SendEmailAsync(string toEmail, string subject, string templateName, Dictionary<TemplateField, string> fields)
@@ -64,5 +64,6 @@ namespace vetcms.ServerApplication.Infrastructure.Communication.Mail
 
             return template;
         }
+
     }
 }
