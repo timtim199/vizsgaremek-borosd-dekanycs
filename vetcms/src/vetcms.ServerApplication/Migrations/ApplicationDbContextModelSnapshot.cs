@@ -49,7 +49,7 @@ namespace vetcms.Application.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("FirstTimeAuthenticationCodes");
+                    b.ToTable("FirstTimeAuthenticationCodes", (string)null);
                 });
 
             modelBuilder.Entity("vetcms.ServerApplication.Domain.Entity.PasswordReset", b =>
@@ -88,7 +88,7 @@ namespace vetcms.Application.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("PasswordReset");
+                    b.ToTable("PasswordReset", (string)null);
                 });
 
             modelBuilder.Entity("vetcms.ServerApplication.Domain.Entity.User", b =>
@@ -134,7 +134,7 @@ namespace vetcms.Application.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("vetcms.ServerApplication.Domain.Entity.FirstTimeAuthenticationCode", b =>

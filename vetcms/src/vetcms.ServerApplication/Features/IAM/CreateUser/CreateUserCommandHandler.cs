@@ -33,13 +33,13 @@ namespace vetcms.ServerApplication.Features.IAM.CreateUser
             {
                 //await userRepository.AddAsync(newUser);
                 string token = GenerateCode();
-                FirstTimeAuthenticationCode code = new FirstTimeAuthenticationCode()
+                FirstTimeAuthenticationCode firstTimeAuthModel = new FirstTimeAuthenticationCode()
                 {
                     User = newUser,
                     Code = token
                 };
-                await firstTimeAuthenticationCodeRepository.AddAsync(code);
-                await mailService.SendFirstAuthenticationEmailAsync(token, newUser.VisibleName);
+                await firstTimeAuthenticationCodeRepository.AddAsync(firstTimeAuthModel);
+                await mailService.SendFirstAuthenticationEmailAsync(firstTimeAuthModel);
 
                 return await Task.FromResult(new CreateUserApiCommandResponse(true));
             }

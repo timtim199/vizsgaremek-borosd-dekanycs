@@ -25,14 +25,14 @@ namespace vetcms.ServerApplication.Infrastructure.Communication.Mail
             await SendEmailAsync(passwordReset.User.Email, "VETCMS: Elfelejtett jelszó", TemplateCatalog.PasswordReset, fields);
         }
 
-        public async Task SendFirstAuthenticationEmailAsync(string url, string visibleName)
+        public async Task SendFirstAuthenticationEmailAsync(FirstTimeAuthenticationCode firstTimeAuthenticationModel)
         {
             var fields = new Dictionary<TemplateField, string>
             {
-                { TemplateField.URL, url },
-                { TemplateField.visible_name, visibleName }
+                { TemplateField.URL, $"https://localhost/iam/first-time-login/{firstTimeAuthenticationModel.Code}" },
+                { TemplateField.visible_name, firstTimeAuthenticationModel.User.VisibleName }
             };
-            await SendEmailAsync(visibleName, "VETCMS: Első belépés", TemplateCatalog.AdminCreateUser, fields);
+            await SendEmailAsync(firstTimeAuthenticationModel.User.Email, "VETCMS: Első belépés", TemplateCatalog.AdminCreateUser, fields);
         }
 
         private async Task SendEmailAsync(string toEmail, string subject, string templateName, Dictionary<TemplateField, string> fields)
