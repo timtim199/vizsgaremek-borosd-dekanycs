@@ -185,3 +185,9 @@ code {
         right: unset;
     }
 }
+
+
+.multiple-select-box fluent-select::part(listbox) {
+    border-radius: unset; /* Remove rounded corners of multi-select component within container */
+    box-shadow: unset;
+}
