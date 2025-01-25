@@ -10,8 +10,9 @@ namespace vetcms.ClientApplication.Features.IAM.UserList
 {
     public class UserListClientQuery : IClientCommand<UserListClientQueryResponse>
     {
-        public string SearchQuery { get; set; }
-        public int Skip { get; set; }
+        public int? UserId { get; set; }
+        public string? SearchQuery { get; set; }
+        public int? Skip { get; set; }
         public int Take { get; set; }
     }
 }

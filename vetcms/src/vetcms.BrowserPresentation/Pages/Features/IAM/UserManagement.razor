@@ -206,7 +206,15 @@
 
     private async Task<UserDto> LoadEditUserData(int id)
     {
-        throw new NotImplementedException();
+        var query = new UserListClientQuery()
+        {
+            UserId = id,
+            Take = 1
+        };
+
+        var data = await Mediator.Send(query);
+
+        return data.UserQueryResult.FirstOrDefault();
     }
 
     private async Task SubmitNewUserData(UserDto newUser)

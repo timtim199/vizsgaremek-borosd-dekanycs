@@ -35,10 +35,13 @@
             Label="Egyéni jogosultságok:"
             Items="AvaliableFlags"
             Multiple="true"
-            OptionValue="@(p => p.ToString())"
             OptionText="@(p => Enum.GetName(typeof(PermissionFlags), p))"
-            @bind-SelectedOptions="AssignedFlags" />
+            OptionValue="@(p => p.ToString())"
+            SelectedOptions="AssignedFlags"
+                            SelectedOptionsChanged="SelectionChanged" />
     </FluentGridItem>
+
+
 </FluentGrid>
 
 
@@ -52,16 +55,24 @@
     private IEnumerable<PermissionFlags>? AssignedFlags;
     private List<PermissionFlags> AvaliableFlags = PermissionFlags.GetValues(typeof(PermissionFlags)).Cast<PermissionFlags>().ToList();
 
+    void SelectionChanged(IEnumerable<PermissionFlags> permissionFlags)
+    {
+        AssignedFlags = permissionFlags;
+        Content.OverwritePermissions(new EntityPermissions().AddFlag(AssignedFlags.ToArray()));
+    }
+
     protected override async Task OnInitializedAsync()
     {
-        AssignedFlags = new List<PermissionFlags>();
+        await base.OnInitializedAsync();
+        List<PermissionFlags> permissionFlags = new List<PermissionFlags>();
         foreach (PermissionFlags flags in AvaliableFlags)
         {
             if (Content.GetPermissions().HasPermissionFlag(flags))
             {
-                AssignedFlags.Append(flags);
+                permissionFlags.Add(flags);
             }
         }
+        AssignedFlags = permissionFlags;
     }
 
 }
