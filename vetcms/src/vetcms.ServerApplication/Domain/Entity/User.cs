@@ -17,7 +17,7 @@ namespace vetcms.ServerApplication.Domain.Entity
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public string VisibleName { get; set; }
-        public string Password { get; set; }
+        public string Password { get; set; } = "";
         public List<PasswordReset> PasswordResets { get; set; } = new();
 
         public string PermissionSet { get; private set; } = new EntityPermissions().AddFlag(PermissionFlags.CAN_LOGIN).ToString();
