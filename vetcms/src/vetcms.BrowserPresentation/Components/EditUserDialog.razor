@@ -1,0 +1,78 @@
+@using System.Globalization
+@using vetcms.ClientApplication.Common.CommandAbstraction;
+@using vetcms.SharedModels.Common.Dto
+@using vetcms.SharedModels.Common.IAM.Authorization;
+@implements IDialogContentComponent<UserDto>
+
+<FluentGrid>
+    <FluentGridItem xs="12" md="6">
+        <FluentGrid>
+            <FluentGridItem xs="12" sm="6">
+                <FluentTextField Style="width: 100%" @bind-Value="Content.Email" Label="Email" TextFieldType="TextFieldType.Email"/>
+            </FluentGridItem>
+            <FluentGridItem xs="12" sm="6">
+                <FluentTextField Style="width: 100%" @bind-Value="Content.VisibleName" Label="Megjelenített név" TextFieldType="TextFieldType.Text" />
+            </FluentGridItem>
+            <FluentGridItem xs="12" sm="6">
+                <FluentTextField Style="width: 100%" @bind-Value="Content.FirstName" Label="Keresztnév" TextFieldType="TextFieldType.Text" />
+            </FluentGridItem>
+            <FluentGridItem xs="12" sm="6">
+                <FluentTextField Style="width: 100%" @bind-Value="Content.LastName" Label="Vezetéknév" TextFieldType="TextFieldType.Text"/>
+            </FluentGridItem>
+            <FluentGridItem xs="12" sm="6">
+                <FluentTextField Style="width: 100%" @bind-Value="Content.Address" Label="Lakcím"/>
+            </FluentGridItem>
+            <FluentGridItem xs="12" sm="6">
+                <FluentDatePicker  Style="width: 100%" Label="Születési dátum" @bind-Value="Content.DateOfBirth" />
+            </FluentGridItem>
+            <FluentGridItem xs="12" sm="6">
+                <FluentTextField Style="width: 100%" @bind-Value="Content.PhoneNumber" TextFieldType="TextFieldType.Tel" Label="Telefonszám" />
+            </FluentGridItem>
+        </FluentGrid>
+    </FluentGridItem>
+    <FluentGridItem xs="12" md="6">
+        <MyListboxComponent TOption="PermissionFlags"
+            Label="Egyéni jogosultságok:"
+            Items="AvaliableFlags"
+            Multiple="true"
+            OptionText="@(p => Enum.GetName(typeof(PermissionFlags), p))"
+            OptionValue="@(p => p.ToString())"
+            SelectedOptions="AssignedFlags"
+                            SelectedOptionsChanged="SelectionChanged" />
+    </FluentGridItem>
+
+
+</FluentGrid>
+
+
+@code {
+    [Parameter]
+    public UserDto Content { get;  set; }
+
+    [CascadingParameter]
+    public FluentDialog? Dialog { get; set; }
+
+    private IEnumerable<PermissionFlags>? AssignedFlags;
+    private List<PermissionFlags> AvaliableFlags = PermissionFlags.GetValues(typeof(PermissionFlags)).Cast<PermissionFlags>().ToList();
+
+    void SelectionChanged(IEnumerable<PermissionFlags> permissionFlags)
+    {
+        AssignedFlags = permissionFlags;
+        Content.OverwritePermissions(new EntityPermissions().AddFlag(AssignedFlags.ToArray()));
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        List<PermissionFlags> permissionFlags = new List<PermissionFlags>();
+        foreach (PermissionFlags flags in AvaliableFlags)
+        {
+            if (Content.GetPermissions().HasPermissionFlag(flags))
+            {
+                permissionFlags.Add(flags);
+            }
+        }
+        AssignedFlags = permissionFlags;
+    }
+
+}

@@ -12,10 +12,13 @@ namespace vetcms.ClientApplication.Common.IAM.Commands.CheckPermissionQuery
     {
         public async Task<bool> Handle(CheckPermissionQuery request, CancellationToken cancellationToken)
         {
-            Console.WriteLine("Permission query: " + string.Join(", ", request.RequestedPermissions.Select(p => p.ToString()))); // TODO: Remove this line
             if (await authenticationManger.IsAuthenticated())
             {
-                return await authenticationManger.HasPermission(request.RequestedPermissions);
+                bool result = await authenticationManger.HasPermission(request.RequestedPermissions);
+                Console.WriteLine("Permission query: " + string.Join(", ", request.RequestedPermissions.Select(p => p.ToString()))+ $"Result: {result}"); // TODO: Remove this line
+                //return result;
+                return true; // TODO: Remove this line
+
             }
             else
                 return false;

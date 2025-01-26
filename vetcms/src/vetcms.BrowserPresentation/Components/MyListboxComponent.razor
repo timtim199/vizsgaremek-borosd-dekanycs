@@ -1,0 +1,26 @@
+﻿@*https://github.com/microsoft/fluentui-blazor/issues/3140*@
+
+@typeparam TOption
+
+<div class="multiple-select-box">
+    <FluentSelect TOption="TOption"
+            Items="Items"
+            Multiple="Multiple"
+            Label="@Label"
+            OptionValue="OptionValue"
+            OptionText="OptionText"
+            Id="Id"
+                  SelectedOptions="SelectedOptions" 
+                  SelectedOptionsChanged="SelectedOptionsChanged" />
+</div>
+
+@code {
+    [Parameter] public IEnumerable<TOption> Items { get; set; } = Enumerable.Empty<TOption>();
+    [Parameter] public IEnumerable<TOption>? SelectedOptions { get; set; } = Enumerable.Empty<TOption>();
+    [Parameter] public bool Multiple { get; set; }
+    [Parameter] public string? Label { get; set; }
+    [Parameter] public string? Id { get; set; }
+    [Parameter] public Func<TOption, string?> OptionValue { get; set; }
+    [Parameter] public Func<TOption, string?> OptionText { get; set; }
+    [Parameter] public EventCallback<IEnumerable<TOption>?> SelectedOptionsChanged { get; set; }
+}
