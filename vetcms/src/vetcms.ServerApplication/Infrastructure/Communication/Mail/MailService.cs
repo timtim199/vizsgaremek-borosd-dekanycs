@@ -1,4 +1,7 @@
-﻿using System;
+﻿using MediatR;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -8,11 +11,13 @@ using System.Text;
 using System.Threading.Tasks;
 using vetcms.ServerApplication.Common.Abstractions;
 using vetcms.ServerApplication.Domain.Entity;
+using vetcms.ServerApplication.Features.Misc.AutomatedEmailPreview;
+using vetcms.SharedModels.Common.ApiLogicExceptionHandling;
 
 [assembly: InternalsVisibleTo("vetcms.ServerApplication.Tests")]
 namespace vetcms.ServerApplication.Infrastructure.Communication.Mail
 {
-    internal class MailService(IMailDeliveryProviderWrapper mailServiceWrapper) : IMailService
+    internal class MailService(IMailDeliveryProviderWrapper mailServiceWrapper, IServiceScopeFactory serviceScopeFactory) : IMailService
     {
         public async Task SendPasswordResetEmailAsync(PasswordReset passwordReset)
         {
@@ -39,8 +44,33 @@ namespace vetcms.ServerApplication.Infrastructure.Communication.Mail
         {
             var template = GetTemplate(templateName);
             var body = ReplaceFields(template, fields);
+            try
+            {
+                await mailServiceWrapper.SendEmailAsync(toEmail, subject, body);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Failed to send email!");
+                Console.WriteLine(ex.ToString());
+                string path = await SubmitEmailToPreview(toEmail, subject, body);
+                throw new CommonApiLogicException(ApiLogicExceptionCode.SEND_EMAIL_FAILED, $"[BEMUTATÓ CÉLJÁBÓL] A kiküldött emailt megtekintheti a következő linken: {path}");
+            }
+        }
 
-            await mailServiceWrapper.SendEmailAsync(toEmail, subject, body);
+        private async Task<string> SubmitEmailToPreview(string to, string subject, string body)
+        {
+            using (var scope = serviceScopeFactory.CreateScope())
+            {
+                ISender mediator = scope.ServiceProvider.GetService<ISender>();
+                NewPreviewableEmailCommand command = new NewPreviewableEmailCommand()
+                {
+                    From = "no-reply@vetcms.hu",
+                    To = to,
+                    HtmlContent = body,
+                    Subject = subject
+                };
+                return await mediator.Send(command);
+            }
         }
 
         private string GetTemplate(string template)

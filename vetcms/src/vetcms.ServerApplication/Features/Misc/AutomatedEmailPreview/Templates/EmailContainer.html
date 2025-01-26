@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email megtekintése</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .email-container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .email-header {
+            background-color: #f7f7f7;
+            padding: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+
+            .email-header h1 {
+                font-size: 18px;
+                margin: 0;
+                color: #333;
+            }
+
+            .email-header p {
+                margin: 5px 0;
+                font-size: 14px;
+                color: #666;
+            }
+
+        .email-content {
+            padding: 20px;
+            color: #333;
+            font-size: 16px;
+        }
+
+            .email-content p {
+                margin: 10px 0;
+            }
+
+            .email-content * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+            a:hover {
+                text-decoration: underline;
+            }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="email-header">
+            <p><strong>Tárgy:</strong> {{email_subject}}</p>
+            <p><strong>Küldõ:</strong> {{email_from}}</p>
+            <p><strong>Címzett:</strong> {{email_to}}</p>
+            <p><strong>Idõbélyeg:</strong> {{email_timestamp}}</p>
+        </div>
+        <div class="email-content">
+            <iframe src="{{email_src}}" style="height:600px; width:100%">
+            </iframe>
+        </div>
+    </div>
+</body>
+</html>

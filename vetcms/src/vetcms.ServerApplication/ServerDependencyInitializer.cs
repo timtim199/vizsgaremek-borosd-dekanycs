@@ -15,6 +15,7 @@ using vetcms.ServerApplication.Common.Abstractions.Data;
 using vetcms.ServerApplication.Common.Abstractions.IAM;
 using vetcms.ServerApplication.Common.Behaviour;
 using vetcms.ServerApplication.Features.IAM.SuperUser;
+using vetcms.ServerApplication.Domain.Entity;
 
 namespace vetcms.ServerApplication
 {
@@ -94,6 +95,7 @@ namespace vetcms.ServerApplication
         private static void InitializeRepositoryComponents(this IServiceCollection services, SecuredConfiguration configuration)
         {
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IRepositoryBase<SentEmail>, SentEmailRepository>();
             services.AddScoped<IFirstTimeAuthenticationCodeRepository, FirstTimeAuthenticationCodeRepository>();
         }
 
