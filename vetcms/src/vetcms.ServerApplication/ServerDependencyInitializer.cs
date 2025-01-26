@@ -92,6 +92,7 @@ namespace vetcms.ServerApplication
         private static void InitializeRepositoryComponents(this IServiceCollection services, SecuredConfiguration configuration)
         {
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IFirstTimeAuthenticationCodeRepository, FirstTimeAuthenticationCodeRepository>();
         }
 
         private static void AddInMemoryDatabase(this IServiceCollection services, SecuredConfiguration configuration)
