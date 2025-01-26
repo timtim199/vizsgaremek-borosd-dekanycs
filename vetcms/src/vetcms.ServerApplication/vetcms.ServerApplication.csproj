@@ -13,10 +13,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Infrastructure\Communication\Mail\MailTemplates\ModifyOtherUserTemplate.html" />
     <None Remove="Infrastructure\Communication\Mail\MailTemplates\PasswordResetTemplate.html" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Infrastructure\Communication\Mail\MailTemplates\ModifyOtherUserTemplate.html" />
     <EmbeddedResource Include="Infrastructure\Communication\Mail\MailTemplates\PasswordResetTemplate.html" />
   </ItemGroup>
 

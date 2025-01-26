@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil módosítása</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .email-container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .email-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+            .email-header h1 {
+                font-size: 24px;
+                color: #444;
+            }
+
+        .email-body {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .code {
+            display: inline-block;
+            background: #f8f8f8;
+            padding: 10px 20px;
+            font-size: 18px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            color: #333;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+
+        .email-footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #888;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="email-header">
+            <h1>Profil módosítása</h1>
+        </div>
+        <div class="email-body">
+            <p>Kedves {{visible_name}}!</p>
+            <p>A rendszergazda módosította az Ön profilját. Az alábbiakban megtalálja az aktuális bejelentkezési adatait:</p>
+
+            <ul>
+                <li><strong>Email-cím:</strong> {{email}}</li>
+                <li><strong>Jelszó:</strong> {{changed_password}}</li>
+            </ul>
+            <p>Ha nem Ön kérte ezeket a módosításokat, vagy problémát tapasztal, kérjük, lépjen kapcsolatba ügyfélszolgálatunkkal azonnal.</p>
+        </div>
+        <div class="email-footer">
+            <p>&copy; {{year}} VETCMS. Minden jog fenntartva.</p>
+        </div>
+    </div>
+</body>
+</html>

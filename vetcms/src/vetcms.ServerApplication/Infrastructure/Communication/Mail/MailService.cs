@@ -25,6 +25,20 @@ namespace vetcms.ServerApplication.Infrastructure.Communication.Mail
             await SendEmailAsync(passwordReset.User.Email, "VETCMS: Elfelejtett jelszó", TemplateCatalog.PasswordReset, fields);
         }
 
+        public async Task SendModifyOtherUserEmailAsync(User user, string changedPassword)
+        {
+            var fields = new Dictionary<TemplateField, string>
+            {
+                { TemplateField.visible_name, user.VisibleName },
+                { TemplateField.email, user.Email },
+                { TemplateField.changed_password, changedPassword == "" ? "A jelszava változatlan" : changedPassword.ToString() }
+            };
+
+            await SendEmailAsync(user.Email, "VETCMS: Felhasználó módosítás", TemplateCatalog.ModifyOtherUser, fields);
+        }
+
+
+
         private async Task SendEmailAsync(string toEmail, string subject, string templateName, Dictionary<TemplateField, string> fields)
         {
             var template = GetTemplate(templateName);
