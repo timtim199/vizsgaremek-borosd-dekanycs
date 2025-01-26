@@ -1,0 +1,98 @@
+﻿@layout UnauthenticatedLayout
+@page "/iam/first-time-signin/{code}"
+@using vetcms.BrowserPresentation.Services
+@using vetcms.ClientApplication.Features.IAM.FirstTimeSignin
+@using vetcms.ClientApplication.Features.IAM.ResetPassword
+@inject NavigationManager Navigation
+@inject MediatR.IMediator Mediator
+@inject IDialogService DialogService
+@inject IToastService ToastService;
+
+<FluentGrid Justify="JustifyContent.Center">
+    <FluentGridItem xs="12" sm="6" md="4" lg="3">
+        <FluentCard>
+
+            <FluentGrid Justify="JustifyContent.Center">
+
+                <FluentGridItem xs="12" sm="12" md="12" lg="12">
+                    <h3 style="text-align:center">
+                        Első használat – Jelszó létrehozása
+                    </h3>
+                </FluentGridItem>
+
+                <FluentGridItem xs="12" sm="12" md="12" lg="12">
+                    <p style="opacity: 0.8; font-size: smaller; text-align:center">Kérjük, adja meg a bejelentkezéshez használni kívánt jelszavát</p>
+                </FluentGridItem>
+
+                <FluentGridItem xs="12" sm="12" md="12" lg="12">
+                    <FluentTextField Disabled="true" @bind-Value="code" Label="Biztonsági kód" TextFieldType="TextFieldType.Text" Required Style="width: 100%;">
+                    </FluentTextField>
+                </FluentGridItem>
+
+                <FluentGridItem xs="12" sm="12" md="12" lg="12">
+                    <FluentTextField @bind-Value="pass1" Label="Jelszó" TextFieldType="@(ShowPassword ? TextFieldType.Text : TextFieldType.Password)" Required Style="width: 100%;">
+                        <FluentIcon Value="@GetPasswordVisiblityIcon()" @onclick="ToglePasswordVisibility" Color="@Color.Neutral" Slot="end" />
+                    </FluentTextField>
+                </FluentGridItem>
+
+                <FluentGridItem xs="12" sm="12" md="12" lg="12">
+                    <FluentTextField @bind-Value="pass2" Label="Jelszó megerősítése" TextFieldType="@(ShowPassword ? TextFieldType.Text : TextFieldType.Password)" Required Style="width: 100%;">
+                        <FluentIcon Value="@GetPasswordVisiblityIcon()" @onclick="ToglePasswordVisibility" Color="@Color.Neutral" Slot="end" />
+                    </FluentTextField>
+                </FluentGridItem>
+
+                <FluentGridItem xs="12" sm="12" md="6" lg="6" Justify="JustifyContent.Center">
+                    <FluentButton @onclick="ChangePassword" Appearance="Appearance.Accent">
+                        Mentés
+                    </FluentButton>
+                </FluentGridItem>
+
+            </FluentGrid>
+
+        </FluentCard>
+    </FluentGridItem>
+</FluentGrid>
+
+@code {
+    [Parameter]
+    public string? code { get; set; }
+
+    private bool ShowPassword = false;
+    string email = string.Empty, pass1 = string.Empty, pass2 = string.Empty;
+
+    private async void ChangePassword()
+    {
+        FirstTimeSigninCommand command = new()
+        {
+            VerificationCode = code,
+            NewPassword = pass1,
+            NewPasswordConfirmation = pass2
+        };
+
+        bool result = await ToastService.ShowIndeterminateProgressToast(Mediator.Send(command), "Kérjük várjon...", "Adatok feldolgozása folyamatban.");
+
+        if (result)
+        {
+            Navigation.NavigateTo("/iam/login?redirected=true");
+        }
+    }
+
+
+    private Icon GetPasswordVisiblityIcon()
+    {
+        if (ShowPassword)
+        {
+            return new Icons.Regular.Size16.EyeOff();
+        }
+        else
+        {
+            return new Icons.Regular.Size16.Eye();
+        }
+    }
+
+    private void ToglePasswordVisibility()
+    {
+        ShowPassword = !ShowPassword;
+    }
+
+}
