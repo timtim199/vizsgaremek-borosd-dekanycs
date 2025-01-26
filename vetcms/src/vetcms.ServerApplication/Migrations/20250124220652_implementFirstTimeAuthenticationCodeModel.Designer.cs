@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using vetcms.ServerApplication.Infrastructure.Presistence;
 
@@ -10,9 +11,11 @@ using vetcms.ServerApplication.Infrastructure.Presistence;
 namespace vetcms.Application.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250124220652_implementFirstTimeAuthenticationCodeModel")]
+    partial class implementFirstTimeAuthenticationCodeModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.0");
@@ -97,18 +100,11 @@ namespace vetcms.Application.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<DateTime>("Created")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("CreatedByUserId")
                         .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("TEXT");
 
                     b.Property<bool>("Deleted")
                         .HasColumnType("INTEGER");
@@ -117,19 +113,11 @@ namespace vetcms.Application.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<DateTime>("LastModified")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("LastModifiedByUserId")
                         .HasColumnType("INTEGER");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
 
                     b.Property<string>("Password")
                         .IsRequired()
