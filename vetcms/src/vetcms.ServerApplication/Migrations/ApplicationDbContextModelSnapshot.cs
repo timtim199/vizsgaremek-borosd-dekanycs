@@ -138,6 +138,41 @@ namespace vetcms.Application.Migrations
                     b.ToTable("MedicalPillUsageLogs");
                 });
 
+            modelBuilder.Entity("vetcms.ServerApplication.Domain.Entity.FirstTimeAuthenticationCode", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("CreatedByUserId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("LastModified")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("LastModifiedByUserId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("FirstTimeAuthenticationCodes");
+                });
+
             modelBuilder.Entity("vetcms.ServerApplication.Domain.Entity.PasswordReset", b =>
                 {
                     b.Property<int>("Id")
@@ -183,11 +218,18 @@ namespace vetcms.Application.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("Created")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("CreatedByUserId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("Deleted")
                         .HasColumnType("INTEGER");
@@ -196,11 +238,19 @@ namespace vetcms.Application.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("LastModified")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("LastModifiedByUserId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -262,6 +312,17 @@ namespace vetcms.Application.Migrations
                     b.Navigation("Pill");
 
                     b.Navigation("UsedBy");
+                });
+
+            modelBuilder.Entity("vetcms.ServerApplication.Domain.Entity.FirstTimeAuthenticationCode", b =>
+                {
+                    b.HasOne("vetcms.ServerApplication.Domain.Entity.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("vetcms.ServerApplication.Domain.Entity.PasswordReset", b =>

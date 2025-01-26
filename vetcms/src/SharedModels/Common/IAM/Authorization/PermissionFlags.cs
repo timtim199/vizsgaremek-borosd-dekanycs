@@ -23,5 +23,6 @@ namespace vetcms.SharedModels.Common.IAM.Authorization
         /// Felhasználók listázásának jogosultsága.
         /// </summary>
         CAN_LIST_USERS,
+        CAN_CREATE_USER,
     }
 }

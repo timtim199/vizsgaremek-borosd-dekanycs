@@ -18,6 +18,7 @@ namespace vetcms.ServerApplication.Infrastructure.Presistence
         DbSet<MedicalPillStock> MedicalPillStock { get; set; }
         DbSet<MedicalPillStockAlert> MedicalPillStockAlerts { get; set; }
         DbSet<MedicalPillUsageLog> MedicalPillUsageLogs { get; set; }
+        DbSet<FirstTimeAuthenticationCode> FirstTimeAuthenticationCodes { get; set; }
 
         public ApplicationDbContext()
         {

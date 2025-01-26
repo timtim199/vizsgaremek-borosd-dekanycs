@@ -96,7 +96,11 @@
                 Username = username,
                 Password = password
         };
-        await Mediator.Send(userClienCommand);
+        bool result = await Mediator.Send(userClienCommand);
+        if(result)
+        {
+            Navigation.NavigateTo("/");
+        }
     }
 
     /// <summary>
