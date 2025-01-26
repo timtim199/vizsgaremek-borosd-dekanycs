@@ -15,7 +15,7 @@ namespace vetcms.ServerApplication.Domain.Entity
         [Key]
         public int Id { get; set; }
         public string Email { get; set; }
-        public string PhoneNumber { get; set; }
+        public string PhoneNumber { get; set; } = string.Empty;
         public string VisibleName { get; set; }
         public string Address { get; set; } = string.Empty;
         public DateTime DateOfBirth { get; set; } 

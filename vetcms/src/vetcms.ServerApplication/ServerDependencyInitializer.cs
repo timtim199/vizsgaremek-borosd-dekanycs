@@ -14,6 +14,7 @@ using vetcms.ServerApplication.Infrastructure.Communication.Mail;
 using vetcms.ServerApplication.Common.Abstractions.Data;
 using vetcms.ServerApplication.Common.Abstractions.IAM;
 using vetcms.ServerApplication.Common.Behaviour;
+using vetcms.ServerApplication.Features.IAM.SuperUser;
 
 namespace vetcms.ServerApplication
 {
@@ -54,6 +55,7 @@ namespace vetcms.ServerApplication
             services.InitializeRepositoryComponents(configuration);
             services.AddCommunicationServices(configuration);
             services.AddScoped<IAuthenticationCommon, AuthenticationCommon>();
+            services.AddHostedService<SuperUserInitializer>();
             return services;
         }
 
