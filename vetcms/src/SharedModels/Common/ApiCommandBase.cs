@@ -15,7 +15,8 @@ namespace vetcms.SharedModels.Common
     public abstract record ApiCommandBase<T> : IRequest<T>
         where T : ICommandResult
     {
-        internal const string ApiBaseUrl = "https://localhost:7129";
+        //[Obslete("A field használata nem ajánlott, használja az BrowserPresentation/wwwroot/appsettings.json-t.")]
+        public string ApiBaseUrl = "";
 
         /// <summary>
         /// Visszaadja a parancs API végpontját.

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using vetcms.ClientApplication.Common.Abstract;
 using vetcms.ClientApplication.Common.IAM;
 using vetcms.SharedModels.Features.IAM;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace vetcms.ClientApplication.Features.IAM.ResetPassword
 {
@@ -39,8 +40,8 @@ namespace vetcms.ClientApplication.Features.IAM.ResetPassword
 
         internal class ResetPasswordApiCommandHandler : GenericApiCommandHandler<BeginResetPasswordApiCommand, BeginResetPasswordApiCommandResponse>
         {
-            public ResetPasswordApiCommandHandler(HttpClient httpClient, AuthenticationManger credentialStore)
-                : base(httpClient, credentialStore)
+            public ResetPasswordApiCommandHandler(IServiceScopeFactory serviceScopeFactory)
+                : base(serviceScopeFactory)
             {
             }
         }

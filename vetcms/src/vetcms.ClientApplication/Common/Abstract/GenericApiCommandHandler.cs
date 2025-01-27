@@ -1,5 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -18,12 +20,23 @@ namespace vetcms.ClientApplication.Common.Abstract
     {
         private readonly HttpClient _httpClient;
         private readonly AuthenticationManger _credentialStore;
-        public GenericApiCommandHandler(HttpClient httpClient, AuthenticationManger credentialStore)
+        private readonly IConfiguration _configuration;
+        private readonly string _apiBaseUrl;
+//        public GenericApiCommandHandler(HttpClient httpClient, AuthenticationManger credentialStore, IConfiguration configuration)
+//        {
+//            _httpClient = httpClient;
+//            _credentialStore = credentialStore;
+//
+//        }
+        public GenericApiCommandHandler(IServiceScopeFactory serviceScopeFactory)
         {
-            _httpClient = httpClient;
-            _credentialStore = credentialStore;
-
+            var scope = serviceScopeFactory.CreateScope();
+            _httpClient = scope.ServiceProvider.GetRequiredService<HttpClient>();
+            _credentialStore = scope.ServiceProvider.GetRequiredService<AuthenticationManger>();
+            _configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
+            _apiBaseUrl = _configuration["Host:ApiBase"];
         }
+        
 
         /// <summary>
         /// Kezeli a kérést.
@@ -133,7 +146,7 @@ namespace vetcms.ClientApplication.Common.Abstract
         /// <param name="command">Az API kérés.</param>
         /// <returns>Az API válasz.</returns>
         private async Task<HttpResponseMessage?> ProcessGet(TCommand command)
-            => await _httpClient.GetAsync(command.GetApiEndpoint());
+            => await _httpClient.GetAsync($"{_apiBaseUrl}{command.GetApiEndpoint()}");
 
         /// <summary>
         /// Feldolgozza a POST kérést.
@@ -141,7 +154,7 @@ namespace vetcms.ClientApplication.Common.Abstract
         /// <param name="command">Az API kérés.</param>
         /// <returns>Az API válasz.</returns>
         private async Task<HttpResponseMessage?> ProcessPost(TCommand command)
-            => await _httpClient.PostAsJsonAsync(command.GetApiEndpoint(), command);
+            => await _httpClient.PostAsJsonAsync($"{_apiBaseUrl}{command.GetApiEndpoint()}", command);
 
         /// <summary>
         /// Feldolgozza a PATCH kérést.
@@ -149,7 +162,7 @@ namespace vetcms.ClientApplication.Common.Abstract
         /// <param name="command">Az API kérés.</param>
         /// <returns>Az API válasz.</returns>
         private async Task<HttpResponseMessage?> ProcessPatch(TCommand command)
-            => await _httpClient.PatchAsJsonAsync(command.GetApiEndpoint(), command);
+            => await _httpClient.PatchAsJsonAsync($"{_apiBaseUrl}{command.GetApiEndpoint()}", command);
 
         /// <summary>
         /// Feldolgozza a PUT kérést.
@@ -157,7 +170,7 @@ namespace vetcms.ClientApplication.Common.Abstract
         /// <param name="command">Az API kérés.</param>
         /// <returns>Az API válasz.</returns>
         private async Task<HttpResponseMessage?> ProcessPut(TCommand command)
-            => await _httpClient.PutAsJsonAsync(command.GetApiEndpoint(), command);
+            => await _httpClient.PutAsJsonAsync($"{_apiBaseUrl}{command.GetApiEndpoint()}", command);
 
         /// <summary>
         /// Feldolgozza a DELETE kérést.
@@ -165,6 +178,6 @@ namespace vetcms.ClientApplication.Common.Abstract
         /// <param name="command">Az API kérés.</param>
         /// <returns>Az API válasz.</returns>
         private async Task<HttpResponseMessage?> ProcessDelete(TCommand command)
-            => await _httpClient.DeleteAsync(command.GetApiEndpoint());
+            => await _httpClient.DeleteAsync($"{_apiBaseUrl}{command.GetApiEndpoint()}");
     }
 }
