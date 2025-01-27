@@ -1,10 +1,10 @@
 using Microsoft.FluentUI.AspNetCore.Components;
 
-namespace vetcms.BrowserPresentation.Services
+namespace vetcms.BrowserPresentation.Utility
 {
     internal static class ToastServiceExtenstions
     {
-        public static string ShowIndeterminateProgressToast(this IToastService toastService, string title, string? description, int closeAfter = int.MaxValue)
+        public static string ShowIndeterminateProgressToast(this IToastService toastService, string title, string? description = "", int closeAfter = int.MaxValue)
         {
             Console.WriteLine("ToastBuilderService.ShowIndeterminateProgressToast");
             string toastId = Guid.NewGuid().ToString();
@@ -23,7 +23,7 @@ namespace vetcms.BrowserPresentation.Services
             return toastId;
         }
 
-        public static Task<T> ShowIndeterminateProgressToast<T>(this IToastService toastService, Task<T> Until, string title, string? description, int closeAfter = int.MaxValue)
+        public static Task<T> ShowIndeterminateProgressToast<T>(this IToastService toastService, Task<T> Until, string title, string? description = "", int closeAfter = int.MaxValue)
         {
             string toastId = toastService.ShowIndeterminateProgressToast(title, description, closeAfter);
             Until.ContinueWith((task) =>
@@ -34,7 +34,7 @@ namespace vetcms.BrowserPresentation.Services
             return Until;
         }
 
-        public static Task ShowIndeterminateProgressToast(this IToastService toastService, Task Until, string title, string? description, int closeAfter = int.MaxValue)
+        public static Task ShowIndeterminateProgressToast(this IToastService toastService, Task Until, string title, string? description = "", int closeAfter = int.MaxValue)
         {
             string toastId = toastService.ShowIndeterminateProgressToast(title, description, closeAfter);
             Until.ContinueWith((task) =>

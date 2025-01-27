@@ -28,6 +28,7 @@ namespace vetcms.ClientApplication.Features.IAM.ResetPassword
             BeginResetPasswordApiCommandResponse response = await mediator.Send(beginResetPasswordApiCommand);
             if (response.Success)
             {
+                request.DialogService.ShowSuccess(response.Message, "Siker");
                 return true;
             }
             else

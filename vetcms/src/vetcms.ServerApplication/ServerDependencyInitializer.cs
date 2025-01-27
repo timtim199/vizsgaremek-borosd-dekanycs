@@ -62,14 +62,18 @@ namespace vetcms.ServerApplication
 
         private static void AddCommunicationServices(this IServiceCollection services, SecuredConfiguration configuration)
         {
-            services.AddSingleton<IMailDeliveryProviderWrapper>(p =>
-                new MailgunServiceWrapper(
-                    configuration.GetValue<string>("MailServices:Mailgun:Domain"),
-                    configuration.GetValue<string>("MailServices:Mailgun:ApiKey"),
-                    configuration.GetValue<string>("MailServices:Mailgun:Sender")
-                    )
-            );
-            services.AddSingleton<IMailService, MailService>();
+            if(configuration.GetValue<bool>("MailServices:UseOnlyLocal"))
+            {
+                services.AddScoped<IMailDeliveryProviderWrapper, LocalMailDeliveryServiceWrapper>();
+            }
+            else
+            {
+                services.AddScoped<IMailDeliveryProviderWrapper>(p =>
+                    new MailgunServiceWrapper(configuration)
+                );
+            }
+            
+            services.AddScoped<IMailService, MailService>();
         }
 
         private static void InitializeDatabaseDriver(this IServiceCollection services, SecuredConfiguration configuration)

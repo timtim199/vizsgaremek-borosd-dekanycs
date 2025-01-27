@@ -10,10 +10,11 @@ using vetcms.ServerApplication.Common.Abstractions.Data;
 using vetcms.ServerApplication.Domain.Entity;
 using vetcms.ServerApplication.Infrastructure.Presistence.Repository;
 using vetcms.SharedModels.Features.IAM;
+using Microsoft.Extensions.Configuration;
 
 namespace vetcms.ServerApplication.Features.IAM.ResetPassword
 {
-    internal class BeginResetPasswordCommandHandler(IUserRepository userRepository, IMailService mailService) : IRequestHandler<BeginResetPasswordApiCommand, BeginResetPasswordApiCommandResponse>
+    internal class BeginResetPasswordCommandHandler(IUserRepository userRepository, IMailService mailService, IConfiguration config) : IRequestHandler<BeginResetPasswordApiCommand, BeginResetPasswordApiCommandResponse>
     {
         public async Task<BeginResetPasswordApiCommandResponse> Handle(BeginResetPasswordApiCommand request, CancellationToken cancellationToken)
         {
@@ -31,8 +32,16 @@ namespace vetcms.ServerApplication.Features.IAM.ResetPassword
         private async Task<BeginResetPasswordApiCommandResponse> ProcessRequest(BeginResetPasswordApiCommand request)
         {
             PasswordReset resetPasswordEntity = await CreatePasswordResetEntity(request);
-            await SendResetEmail(request, resetPasswordEntity);
+            int id = await SendResetEmail(request, resetPasswordEntity);
 
+            if(config.GetValue<bool>("MailServices:UseOnlyLocal"))
+            {
+                return new BeginResetPasswordApiCommandResponse(true)
+                {
+                    Message = $"[BEMUTATÓ MÓD] Az email elküldése sikeres volt. A bemutató céljából az alábbi linken nyitható meg: {mailService.GetEmailPreviewRoute(id)}"
+                };
+
+            }
             return new BeginResetPasswordApiCommandResponse(true);
         }
 
@@ -51,11 +60,11 @@ namespace vetcms.ServerApplication.Features.IAM.ResetPassword
             return resetPasswordEntity;
         }
 
-        private async Task SendResetEmail(BeginResetPasswordApiCommand request, PasswordReset resetPasswordEntity)
+        private async Task<int> SendResetEmail(BeginResetPasswordApiCommand request, PasswordReset resetPasswordEntity)
         {
             User user = userRepository.GetByEmail(request.Email);
             resetPasswordEntity.User = user;
-            await mailService.SendPasswordResetEmailAsync(resetPasswordEntity);
+            return await mailService.SendPasswordResetEmailAsync(resetPasswordEntity);
         }
 
         private string GenerateToken()
