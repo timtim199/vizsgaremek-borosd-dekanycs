@@ -1,4 +1,7 @@
-﻿using System;
+﻿using MediatR;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -8,13 +11,15 @@ using System.Text;
 using System.Threading.Tasks;
 using vetcms.ServerApplication.Common.Abstractions;
 using vetcms.ServerApplication.Domain.Entity;
+using vetcms.ServerApplication.Features.Misc.AutomatedEmailPreview;
+using vetcms.SharedModels.Common.ApiLogicExceptionHandling;
 
 [assembly: InternalsVisibleTo("vetcms.ServerApplication.Tests")]
 namespace vetcms.ServerApplication.Infrastructure.Communication.Mail
 {
-    internal class MailService(IMailDeliveryProviderWrapper mailServiceWrapper) : IMailService
+    internal class MailService(IMailDeliveryProviderWrapper mailServiceWrapper, IServiceScopeFactory serviceScopeFactory) : IMailService
     {
-        public async Task SendPasswordResetEmailAsync(PasswordReset passwordReset)
+        public async Task<int> SendPasswordResetEmailAsync(PasswordReset passwordReset)
         {
             var fields = new Dictionary<TemplateField, string>
             {
@@ -22,25 +27,24 @@ namespace vetcms.ServerApplication.Infrastructure.Communication.Mail
                 { TemplateField.visible_name, passwordReset.User.VisibleName }
             };
 
-            await SendEmailAsync(passwordReset.User.Email, "VETCMS: Elfelejtett jelszó", TemplateCatalog.PasswordReset, fields);
+            return await SendEmailAsync(passwordReset.User.Email, "VETCMS: Elfelejtett jelszó", TemplateCatalog.PasswordReset, fields);
         }
 
-        public async Task SendFirstAuthenticationEmailAsync(FirstTimeAuthenticationCode authModel)
+        public async Task<int> SendFirstAuthenticationEmailAsync(FirstTimeAuthenticationCode authModel)
         {
             var fields = new Dictionary<TemplateField, string>
             {
                 { TemplateField.URL, $"https://localhost/iam/first-time-login/{authModel.Code}" },
                 { TemplateField.visible_name, authModel.User.VisibleName }
             };
-            await SendEmailAsync(authModel.User.Email, "VETCMS: Első belépés", TemplateCatalog.AdminCreateUser, fields);
+            return await SendEmailAsync(authModel.User.Email, "VETCMS: Első belépés", TemplateCatalog.AdminCreateUser, fields);
         }
 
-        private async Task SendEmailAsync(string toEmail, string subject, string templateName, Dictionary<TemplateField, string> fields)
+        private async Task<int> SendEmailAsync(string toEmail, string subject, string templateName, Dictionary<TemplateField, string> fields)
         {
             var template = GetTemplate(templateName);
             var body = ReplaceFields(template, fields);
-
-            await mailServiceWrapper.SendEmailAsync(toEmail, subject, body);
+            return await mailServiceWrapper.SendEmailAsync(toEmail, subject, body);
         }
 
         private string GetTemplate(string template)
@@ -65,5 +69,9 @@ namespace vetcms.ServerApplication.Infrastructure.Communication.Mail
             return template;
         }
 
+        public string GetEmailPreviewRoute(int emailId)
+        {
+            return $"/api/v1/misc/email-preview/{emailId}";
+        }
     }
 }

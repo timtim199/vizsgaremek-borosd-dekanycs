@@ -14,6 +14,6 @@ namespace vetcms.ServerApplication.Common.Abstractions
         /// <param name="toEmail">Recipient's email address.</param>
         /// <param name="subject">Subject of the email.</param>
         /// <param name="body">HTML or plain-text content of the email.</param>
-        public Task SendEmailAsync(string toEmail, string subject, string body);
+        public Task<int> SendEmailAsync(string toEmail, string subject, string body);
     }
 }

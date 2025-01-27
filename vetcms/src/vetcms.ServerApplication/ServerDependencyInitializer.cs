@@ -14,6 +14,8 @@ using vetcms.ServerApplication.Infrastructure.Communication.Mail;
 using vetcms.ServerApplication.Common.Abstractions.Data;
 using vetcms.ServerApplication.Common.Abstractions.IAM;
 using vetcms.ServerApplication.Common.Behaviour;
+using vetcms.ServerApplication.Features.IAM.SuperUser;
+using vetcms.ServerApplication.Domain.Entity;
 
 namespace vetcms.ServerApplication
 {
@@ -54,19 +56,24 @@ namespace vetcms.ServerApplication
             services.InitializeRepositoryComponents(configuration);
             services.AddCommunicationServices(configuration);
             services.AddScoped<IAuthenticationCommon, AuthenticationCommon>();
+            services.AddHostedService<SuperUserInitializer>();
             return services;
         }
 
         private static void AddCommunicationServices(this IServiceCollection services, SecuredConfiguration configuration)
         {
-            services.AddSingleton<IMailDeliveryProviderWrapper>(p =>
-                new MailgunServiceWrapper(
-                    configuration.GetValue<string>("MailServices:Mailgun:Domain"),
-                    configuration.GetValue<string>("MailServices:Mailgun:ApiKey"),
-                    configuration.GetValue<string>("MailServices:Mailgun:Sender")
-                    )
-            );
-            services.AddSingleton<IMailService, MailService>();
+            if(configuration.GetValue<bool>("MailServices:UseOnlyLocal"))
+            {
+                services.AddScoped<IMailDeliveryProviderWrapper, LocalMailDeliveryServiceWrapper>();
+            }
+            else
+            {
+                services.AddScoped<IMailDeliveryProviderWrapper>(p =>
+                    new MailgunServiceWrapper(configuration)
+                );
+            }
+            
+            services.AddScoped<IMailService, MailService>();
         }
 
         private static void InitializeDatabaseDriver(this IServiceCollection services, SecuredConfiguration configuration)
@@ -92,6 +99,7 @@ namespace vetcms.ServerApplication
         private static void InitializeRepositoryComponents(this IServiceCollection services, SecuredConfiguration configuration)
         {
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IRepositoryBase<SentEmail>, SentEmailRepository>();
             services.AddScoped<IFirstTimeAuthenticationCodeRepository, FirstTimeAuthenticationCodeRepository>();
         }
 

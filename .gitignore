@@ -485,3 +485,4 @@ $RECYCLE.BIN/
 *.swp
 vetcms/src/vetcms.WebApi/vetcms.db-wal
 vetcms/src/vetcms.WebApi/vetcms.db-shm
+vetcms/src/vetcms.BrowserPresentation/wwwroot/appsettings.json

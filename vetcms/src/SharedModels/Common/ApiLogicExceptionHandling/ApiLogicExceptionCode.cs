@@ -14,6 +14,8 @@ namespace vetcms.SharedModels.Common.ApiLogicExceptionHandling
         [Description("Bejelentkezés szükséges.")]
         INVALID_AUTHENTICATION = 401001,
         [Description("Nem rendelkezik megfelelő jogosultságokkal.")]
-        INSUFFICIENT_PERMISSIONS = 403001
+        INSUFFICIENT_PERMISSIONS = 40300,
+        [Description("Sikertelen email küldés")]
+        SEND_EMAIL_FAILED = 500001,
     }
 }

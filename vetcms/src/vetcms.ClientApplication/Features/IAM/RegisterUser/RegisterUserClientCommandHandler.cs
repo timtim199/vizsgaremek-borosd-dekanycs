@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using vetcms.ClientApplication.Common.Abstract;
 using vetcms.ClientApplication.Common.IAM;
 using vetcms.SharedModels.Features.IAM;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace vetcms.ClientApplication.Features.IAM.RegisterUser
 {
@@ -51,8 +52,8 @@ namespace vetcms.ClientApplication.Features.IAM.RegisterUser
 
         internal class RegisterUserApiCommandHandler : GenericApiCommandHandler<RegisterUserApiCommand, RegisterUserApiCommandResponse>
         {
-            public RegisterUserApiCommandHandler(HttpClient httpClient, AuthenticationManger credentialStore)
-                : base(httpClient, credentialStore)
+            public RegisterUserApiCommandHandler(IServiceScopeFactory serviceScopeFactory)
+                : base(serviceScopeFactory)
             {
             }
         }

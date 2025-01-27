@@ -1,10 +1,12 @@
-﻿using RestSharp;
+﻿using Microsoft.Extensions.Configuration;
+using RestSharp;
 using RestSharp.Authenticators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using vetcms.ServerApplication.Common;
 using vetcms.ServerApplication.Common.Abstractions;
 
 namespace vetcms.ServerApplication.Infrastructure.Communication.Mail
@@ -21,6 +23,17 @@ namespace vetcms.ServerApplication.Infrastructure.Communication.Mail
             _apiKey = apiKey;
             _senderEmail = senderEmail;
         }
+        
+        public MailgunServiceWrapper(SecuredConfiguration configuration)
+        {
+            _domain =  configuration.GetValue<string>("MailServices:Mailgun:Domain");
+            _apiKey = configuration.GetValue<string>("MailServices:Mailgun:ApiKey");
+            _senderEmail = configuration.GetValue<string>("MailServices:Mailgun:Sender");
+        }
+
+        public MailgunServiceWrapper()
+        {
+        }
 
         private RestClient PrepareClient()
         {
@@ -32,7 +45,7 @@ namespace vetcms.ServerApplication.Infrastructure.Communication.Mail
             return client;
         }
 
-        public async Task SendEmailAsync(string toEmail, string subject, string body)
+        public async Task<int> SendEmailAsync(string toEmail, string subject, string body)
         {
             var client = PrepareClient();
             var request = new RestRequest();
@@ -49,6 +62,7 @@ namespace vetcms.ServerApplication.Infrastructure.Communication.Mail
             {
                 throw new Exception($"Failed to send email: {response.Content}");
             }
+            return 0;
         }
     }
 }

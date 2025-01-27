@@ -8,6 +8,7 @@ using vetcms.ClientApplication.Common.Abstract;
 using vetcms.ClientApplication.Common.IAM;
 using vetcms.SharedModels.Common.Abstract;
 using vetcms.SharedModels.Features.IAM;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace vetcms.ClientApplication.Features.IAM.LoginUser
 {
@@ -43,8 +44,8 @@ namespace vetcms.ClientApplication.Features.IAM.LoginUser
 
     internal class LoginUserApiCommandHandler : GenericApiCommandHandler<LoginUserApiCommand, LoginUserApiCommandResponse>
     {
-        public LoginUserApiCommandHandler(HttpClient httpClient, AuthenticationManger credentialStore)
-            : base(httpClient, credentialStore)
+        public LoginUserApiCommandHandler(IServiceScopeFactory serviceScopeFactory)
+            : base(serviceScopeFactory)
         {
         }
     }

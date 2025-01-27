@@ -1,0 +1,5 @@
+{
+    "Host" : {
+        "ApiBase" : "https://localhost:5042"
+    }
+}

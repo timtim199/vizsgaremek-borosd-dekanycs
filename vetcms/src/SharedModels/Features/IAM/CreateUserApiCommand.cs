@@ -48,7 +48,7 @@ namespace vetcms.SharedModels.Features.IAM
 
         public override PermissionFlags[] GetRequiredPermissions()
         {
-            return [PermissionFlags.CAN_CREATE_USER];
+            return [PermissionFlags.CAN_ADD_NEW_USERS];
         }
     }
 
