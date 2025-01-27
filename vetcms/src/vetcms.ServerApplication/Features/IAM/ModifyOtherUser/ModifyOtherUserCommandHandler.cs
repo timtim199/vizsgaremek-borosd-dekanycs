@@ -18,30 +18,25 @@ namespace vetcms.ServerApplication.Features.IAM.ModifyOtherUser
         string passwordChanged = "";
         public async Task<ModifyOtherUserApiCommandResponse> Handle(ModifyOtherUserApiCommand request, CancellationToken cancellationToken)
         {
-            try
-            {
-                var user = await userRepository.GetByIdAsync(request.Id);
-                user = ModifyUser(request, user);
-                await userRepository.UpdateAsync(user);
-
-                await mailService.SendModifyOtherUserEmailAsync(user, passwordChanged);
-                return new ModifyOtherUserApiCommandResponse()
-                {
-                    Success = true,
-                    Message = "Felhasználó módosítva."
-                };
-
-            }
-            catch(NotFoundException ex)
+            User user;
+            if(!await userRepository.ExistAsync(request.Id))
             {
                 return new ModifyOtherUserApiCommandResponse()
                 {
                     Success = false,
-                    Message = "Nincs ilyen felhasználó."
+                    Message = "Nem létező felhasznló"
                 };
             }
+            user = await userRepository.GetByIdAsync(request.Id);
+            user = ModifyUser(request, user);
+            await userRepository.UpdateAsync(user);
 
-
+            await mailService.SendModifyOtherUserEmailAsync(user, passwordChanged);
+            return new ModifyOtherUserApiCommandResponse()
+            {
+                Success = true,
+                Message = "Felhasználó módosítva."
+            };
         }
 
         private User ModifyUser(ModifyOtherUserApiCommand request, User user)
